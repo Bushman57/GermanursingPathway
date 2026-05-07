@@ -12,10 +12,10 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg warm-gradient flex items-center justify-center">
-              <span className="font-heading text-sm font-bold text-warm-foreground">KD</span>
+              <span className="font-heading text-sm font-bold text-warm-foreground">GNP</span>
             </div>
             <span className="font-heading text-lg font-bold text-foreground">
-              Kenya<span className="text-warm">Desk</span>
+              German<span className="text-warm">Pathway</span>
             </span>
           </Link>
 
