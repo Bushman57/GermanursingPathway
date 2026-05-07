@@ -8,8 +8,8 @@ import { Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({
     meta: [
-      { title: "How It Works — KenyaDesk" },
-      { name: "description", content: "Learn how KenyaDesk helps Kenyan teachers find teaching positions in Germany step by step." },
+      { title: "How It Works — German Nursing Pathway" },
+      { name: "description", content: "Learn how German Nursing Pathway supports Kenyan healthcare professionals step by step." },
     ],
   }),
   component: HowItWorks,

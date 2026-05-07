@@ -15,9 +15,9 @@ import eligibilityNurse from "@/assets/eligibility-nurse.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "KenyaDesk — Germany Care Path for Kenyan Healthcare Professionals" },
+      { title: "German Nursing Pathway — Germany Care Path for Kenyan Healthcare Professionals" },
       { name: "description", content: "A comprehensive pathway for Kenyan nurses, clinical officers, and healthcare workers to secure employment in Germany." },
-      { property: "og:title", content: "KenyaDesk — Germany Care Path Program" },
+      { property: "og:title", content: "German Nursing Pathway — Germany Care Path Program" },
       { property: "og:description", content: "Connecting Kenyan healthcare professionals with career opportunities in Germany." },
     ],
   }),
@@ -86,7 +86,7 @@ function Index() {
               </h2>
               <div className="w-16 h-1 bg-warm mt-4 mb-6 rounded-full" />
               <p className="text-muted-foreground leading-relaxed text-lg">
-                The Germany Care Path Program is designed by KenyaDesk to support Kenyan Certified
+                The Germany Care Path Program is designed by German Nursing Pathway to support Kenyan Certified
                 Nursing Assistants (CNAs), nurses, and health support workers in securing employment
                 opportunities in Germany. The comprehensive package includes:
               </p>
@@ -265,7 +265,7 @@ function Index() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="font-heading text-3xl sm:text-4xl font-bold text-foreground">
-              Why Choose <span className="text-warm">KenyaDesk?</span>
+              Why Choose <span className="text-warm">German Nursing Pathway?</span>
             </h2>
           </div>
           <div className="grid sm:grid-cols-3 gap-8">
@@ -398,7 +398,7 @@ function Index() {
             </Button>
           </div>
           <p className="mt-6 text-muted-foreground text-sm">
-            📞 (+254) 718-266-072 &nbsp;·&nbsp; ✉️ info@kenyadesk.com
+            📞 (+254) 718-266-072 &nbsp;·&nbsp; ✉️ info@germannursingpathway.com
           </p>
         </div>
       </section>

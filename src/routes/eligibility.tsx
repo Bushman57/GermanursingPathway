@@ -8,7 +8,7 @@ import { ArrowRight, ArrowLeft, CheckCircle, AlertCircle, User, Briefcase, Gradu
 export const Route = createFileRoute("/eligibility")({
   head: () => ({
     meta: [
-      { title: "Check Eligibility — KenyaDesk" },
+      { title: "Check Eligibility — German Nursing Pathway" },
       { name: "description", content: "Check your eligibility to teach in Germany in just 3 minutes." },
     ],
   }),

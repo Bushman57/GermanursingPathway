@@ -8,14 +8,14 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 rounded-lg warm-gradient flex items-center justify-center">
-                <span className="font-heading text-sm font-bold text-warm-foreground">KD</span>
+                <span className="font-heading text-sm font-bold text-warm-foreground">GNP</span>
               </div>
               <span className="font-heading text-lg font-bold">
-                Kenya<span className="text-warm">Desk</span>
+                German<span className="text-warm">Pathway</span>
               </span>
             </div>
             <p className="text-primary-foreground/70 text-sm leading-relaxed">
-              Connecting Kenyan professionals with career opportunities in Germany.
+              Connecting Kenyan healthcare professionals with career opportunities in Germany.
             </p>
           </div>
           <div>
@@ -29,13 +29,13 @@ export function Footer() {
           <div>
             <h4 className="font-heading font-semibold mb-4">Contact</h4>
             <div className="space-y-2 text-sm text-primary-foreground/70">
-              <p>info@kenyadesk.com</p>
+              <p>info@germannursingpathway.com</p>
               <p>Nairobi, Kenya</p>
             </div>
           </div>
         </div>
         <div className="mt-10 pt-6 border-t border-primary-foreground/10 text-center text-sm text-primary-foreground/50">
-          © {new Date().getFullYear()} KenyaDesk. All rights reserved.
+          © {new Date().getFullYear()} German Nursing Pathway. All rights reserved.
         </div>
       </div>
     </footer>
