@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { scholarships } from "@/lib/scholarships";
 import { Calendar, MapPin, GraduationCap, Award, ArrowRight, Search } from "lucide-react";
 import { useState } from "react";
+import germanUniversities from "@/assets/german-universities.jpg";
 
 export const Route = createFileRoute("/scholarships")({
   head: () => ({
@@ -63,34 +64,54 @@ function ScholarshipsPage() {
 
       {/* Intro copy */}
       <section className="py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 text-muted-foreground leading-relaxed">
-          <p>
-            Do you want to study in Germany for free? Great news! A wide range of fully funded scholarships
-            in Germany are available for international students for the academic year 2026-2027. These
-            scholarships cover tuition fees (Germany already offers free education at most public
-            universities), monthly stipends, accommodation support, health insurance, and travel
-            allowances, making Germany one of the most affordable and accessible study destinations in
-            Europe.
-          </p>
-          <p>
-            Germany is home to world-class universities such as <strong className="text-foreground">TU Munich</strong>,{" "}
-            <strong className="text-foreground">Heidelberg University</strong>,{" "}
-            <strong className="text-foreground">LMU Munich</strong>,{" "}
-            <strong className="text-foreground">RWTH Aachen</strong>,{" "}
-            <strong className="text-foreground">University of Freiburg</strong>, and{" "}
-            <strong className="text-foreground">Humboldt University of Berlin</strong>. Whether you're applying
-            for undergraduate, master's, or PhD programs, Germany offers generous funding options through
-            programs like <strong className="text-foreground">DAAD Scholarships</strong>,{" "}
-            <strong className="text-foreground">Erasmus+</strong>, <strong className="text-foreground">KAAD</strong>,{" "}
-            <strong className="text-foreground">Friedrich Ebert Foundation</strong>, and other prestigious
-            foundations.
-          </p>
-          <p>
-            In this section, you will find the latest scholarships in Germany, along with eligibility
-            requirements, complete benefits, and step-by-step application guidance. Start your educational
-            journey today and explore opportunities to study at top German universities at little to no
-            cost.
-          </p>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+            <div className="space-y-6 text-muted-foreground leading-relaxed order-2 lg:order-1">
+              <p>
+                Do you want to study in Germany for free? Great news! A wide range of fully funded
+                scholarships in Germany are available for international students for the academic year
+                2026-2027. These scholarships cover tuition fees (Germany already offers free education at
+                most public universities), monthly stipends, accommodation support, health insurance, and
+                travel allowances, making Germany one of the most affordable and accessible study
+                destinations in Europe.
+              </p>
+              <p>
+                Germany is home to world-class universities such as{" "}
+                <strong className="text-foreground">TU Munich</strong>,{" "}
+                <strong className="text-foreground">Heidelberg University</strong>,{" "}
+                <strong className="text-foreground">LMU Munich</strong>,{" "}
+                <strong className="text-foreground">RWTH Aachen</strong>,{" "}
+                <strong className="text-foreground">University of Freiburg</strong>, and{" "}
+                <strong className="text-foreground">Humboldt University of Berlin</strong>. Whether you're
+                applying for undergraduate, master's, or PhD programs, Germany offers generous funding
+                options through programs like{" "}
+                <strong className="text-foreground">DAAD Scholarships</strong>,{" "}
+                <strong className="text-foreground">Erasmus+</strong>,{" "}
+                <strong className="text-foreground">KAAD</strong>,{" "}
+                <strong className="text-foreground">Friedrich Ebert Foundation</strong>, and other
+                prestigious foundations.
+              </p>
+              <p>
+                In this section, you will find the latest scholarships in Germany, along with eligibility
+                requirements, complete benefits, and step-by-step application guidance. Start your
+                educational journey today and explore opportunities to study at top German universities at
+                little to no cost.
+              </p>
+            </div>
+            <div className="order-1 lg:order-2">
+              <div className="rounded-2xl overflow-hidden shadow-xl border border-border">
+                <img
+                  src={germanUniversities}
+                  alt="List of top universities in Germany"
+                  className="w-full h-auto object-cover"
+                  loading="lazy"
+                />
+              </div>
+              <p className="mt-3 text-xs text-muted-foreground text-center">
+                Top German universities welcoming international students
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
