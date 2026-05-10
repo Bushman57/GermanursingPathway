@@ -26,6 +26,9 @@ export function Navbar() {
             <Link to="/how-it-works" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               How It Works
             </Link>
+            <Link to="/scholarships" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Scholarships
+            </Link>
             <Link to="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               About
             </Link>
@@ -52,6 +55,9 @@ export function Navbar() {
             </Link>
             <Link to="/how-it-works" className="block text-sm font-medium text-foreground py-2" onClick={() => setMobileOpen(false)}>
               How It Works
+            </Link>
+            <Link to="/scholarships" className="block text-sm font-medium text-foreground py-2" onClick={() => setMobileOpen(false)}>
+              Scholarships
             </Link>
             <Link to="/about" className="block text-sm font-medium text-foreground py-2" onClick={() => setMobileOpen(false)}>
               About

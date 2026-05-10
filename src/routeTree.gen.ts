@@ -9,11 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ScholarshipsRouteImport } from './routes/scholarships'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as EligibilityRouteImport } from './routes/eligibility'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ScholarshipsSlugRouteImport } from './routes/scholarships.$slug'
 
+const ScholarshipsRoute = ScholarshipsRouteImport.update({
+  id: '/scholarships',
+  path: '/scholarships',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
@@ -34,18 +41,27 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScholarshipsSlugRoute = ScholarshipsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ScholarshipsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/eligibility': typeof EligibilityRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/scholarships': typeof ScholarshipsRouteWithChildren
+  '/scholarships/$slug': typeof ScholarshipsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/eligibility': typeof EligibilityRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/scholarships': typeof ScholarshipsRouteWithChildren
+  '/scholarships/$slug': typeof ScholarshipsSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +69,34 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/eligibility': typeof EligibilityRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/scholarships': typeof ScholarshipsRouteWithChildren
+  '/scholarships/$slug': typeof ScholarshipsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/eligibility' | '/how-it-works'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/eligibility'
+    | '/how-it-works'
+    | '/scholarships'
+    | '/scholarships/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/eligibility' | '/how-it-works'
-  id: '__root__' | '/' | '/about' | '/eligibility' | '/how-it-works'
+  to:
+    | '/'
+    | '/about'
+    | '/eligibility'
+    | '/how-it-works'
+    | '/scholarships'
+    | '/scholarships/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/eligibility'
+    | '/how-it-works'
+    | '/scholarships'
+    | '/scholarships/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,10 +104,18 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   EligibilityRoute: typeof EligibilityRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  ScholarshipsRoute: typeof ScholarshipsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/scholarships': {
+      id: '/scholarships'
+      path: '/scholarships'
+      fullPath: '/scholarships'
+      preLoaderRoute: typeof ScholarshipsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/how-it-works': {
       id: '/how-it-works'
       path: '/how-it-works'
@@ -99,14 +144,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/scholarships/$slug': {
+      id: '/scholarships/$slug'
+      path: '/$slug'
+      fullPath: '/scholarships/$slug'
+      preLoaderRoute: typeof ScholarshipsSlugRouteImport
+      parentRoute: typeof ScholarshipsRoute
+    }
   }
 }
+
+interface ScholarshipsRouteChildren {
+  ScholarshipsSlugRoute: typeof ScholarshipsSlugRoute
+}
+
+const ScholarshipsRouteChildren: ScholarshipsRouteChildren = {
+  ScholarshipsSlugRoute: ScholarshipsSlugRoute,
+}
+
+const ScholarshipsRouteWithChildren = ScholarshipsRoute._addFileChildren(
+  ScholarshipsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   EligibilityRoute: EligibilityRoute,
   HowItWorksRoute: HowItWorksRoute,
+  ScholarshipsRoute: ScholarshipsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
