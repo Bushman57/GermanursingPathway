@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { scholarships } from "@/lib/scholarships";
-import { Calendar, MapPin, GraduationCap, Award, ArrowRight, Search } from "lucide-react";
+import { Calendar, Award, ArrowRight, Search } from "lucide-react";
 import { useState } from "react";
 import germanUniversities from "@/assets/german-universities.jpg";
 
@@ -67,14 +67,6 @@ function ScholarshipsPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
             <div className="space-y-6 text-muted-foreground leading-relaxed order-2 lg:order-1">
-              <p>
-                Do you want to study in Germany for free? Great news! A wide range of fully funded
-                scholarships in Germany are available for international students for the academic year
-                2026-2027. These scholarships cover tuition fees (Germany already offers free education at
-                most public universities), monthly stipends, accommodation support, health insurance, and
-                travel allowances, making Germany one of the most affordable and accessible study
-                destinations in Europe.
-              </p>
               <p>
                 Germany is home to world-class universities such as{" "}
                 <strong className="text-foreground">TU Munich</strong>,{" "}
@@ -158,35 +150,58 @@ function ScholarshipsPage() {
             {filtered.map((s) => (
               <article
                 key={s.slug}
-                className="group bg-card border border-border rounded-2xl overflow-hidden hover:shadow-xl hover:border-warm/40 transition-all flex flex-col"
+                className="group bg-card border border-border rounded-xl overflow-hidden hover:shadow-xl hover:border-warm/40 transition-all flex flex-col"
               >
-                <div className="hero-gradient px-5 py-5 relative">
-                  <Badge className="bg-warm text-warm-foreground hover:bg-warm border-0 text-[10px]">
-                    {s.funding}
-                  </Badge>
-                  <h3 className="font-heading text-lg font-semibold text-primary-foreground mt-3 leading-snug line-clamp-2">
-                    {s.title}
-                  </h3>
-                  <p className="text-primary-foreground/70 text-xs mt-1">{s.provider}</p>
-                </div>
                 <div className="p-5 flex-1 flex flex-col">
-                  <p className="text-sm text-muted-foreground line-clamp-3">{s.shortDescription}</p>
-                  <div className="mt-4 space-y-2 text-xs">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <GraduationCap className="w-3.5 h-3.5 text-warm" /> {s.degreeLevel}
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <MapPin className="w-3.5 h-3.5 text-warm" /> {s.location}
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Calendar className="w-3.5 h-3.5 text-warm" /> Deadline: {s.deadline}
-                    </div>
-                  </div>
-                  <Button variant="warm" size="sm" className="mt-5 w-full" asChild>
+                  <h3 className="font-heading text-base font-semibold text-foreground leading-snug line-clamp-2 group-hover:text-warm transition-colors">
                     <Link to="/scholarships/$slug" params={{ slug: s.slug }}>
-                      Learn More <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                      {s.title}
                     </Link>
-                  </Button>
+                  </h3>
+
+                  {/* Metadata chip strip — funding, school, degree, category, eligibility, country */}
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    <Badge
+                      className={`border-0 text-[10px] font-medium ${
+                        s.funding.toLowerCase().includes("fully")
+                          ? "bg-success/15 text-success hover:bg-success/15"
+                          : "bg-warm/15 text-warm hover:bg-warm/15"
+                      }`}
+                    >
+                      {s.funding}
+                    </Badge>
+                    <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border border-primary/20 text-[10px] font-medium">
+                      {s.provider}
+                    </Badge>
+                    <Badge className="bg-muted text-muted-foreground hover:bg-muted border border-border text-[10px] font-medium">
+                      {s.degreeLevel}
+                    </Badge>
+                    <Badge className="bg-muted text-muted-foreground hover:bg-muted border border-border text-[10px] font-medium">
+                      {s.category}
+                    </Badge>
+                    <Badge className="bg-muted text-muted-foreground hover:bg-muted border border-border text-[10px] font-medium">
+                      International Students
+                    </Badge>
+                    <Badge className="bg-muted text-muted-foreground hover:bg-muted border border-border text-[10px] font-medium">
+                      {s.hostCountry}
+                    </Badge>
+                  </div>
+
+                  <p className="text-sm text-muted-foreground line-clamp-3 mt-4">
+                    {s.shortDescription}
+                  </p>
+
+                  <div className="mt-auto pt-4 border-t border-border flex items-center justify-between gap-3">
+                    <span className="text-xs text-muted-foreground flex items-center gap-1.5 min-w-0">
+                      <Calendar className="w-3.5 h-3.5 text-warm shrink-0" />
+                      <span className="truncate">{s.deadline}</span>
+                    </span>
+                    <Button variant="warm" size="sm" asChild>
+                      <Link to="/scholarships/$slug" params={{ slug: s.slug }}>
+                        Details <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
               </article>
             ))}
