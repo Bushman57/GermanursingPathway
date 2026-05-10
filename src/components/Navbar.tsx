@@ -56,6 +56,9 @@ export function Navbar() {
             <Link to="/how-it-works" className="block text-sm font-medium text-foreground py-2" onClick={() => setMobileOpen(false)}>
               How It Works
             </Link>
+            <Link to="/scholarships" className="block text-sm font-medium text-foreground py-2" onClick={() => setMobileOpen(false)}>
+              Scholarships
+            </Link>
             <Link to="/about" className="block text-sm font-medium text-foreground py-2" onClick={() => setMobileOpen(false)}>
               About
             </Link>
