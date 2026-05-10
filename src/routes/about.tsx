@@ -5,6 +5,17 @@ import {
   Heart, Target, Shield,
   Eye, BadgeCheck, HandCoins, Handshake, LifeBuoy, UserCheck,
 } from "lucide-react";
+import imageHero from "@/assets/image_hero.png";
+import heroBridge from "@/assets/hero-bridge.jpg";
+import programOverview from "@/assets/program-overview.jpg";
+import eligibilityNurse from "@/assets/eligibility-nurse.jpg";
+
+const galleryImages = [
+  { src: imageHero, alt: "Your career in Germany starts here" },
+  { src: heroBridge, alt: "Bridge to opportunity in Germany" },
+  { src: programOverview, alt: "Healthcare professionals reviewing documents" },
+  { src: eligibilityNurse, alt: "Kenyan nurse working in a German hospital" },
+];
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -29,7 +40,7 @@ function About() {
             </p>
           </div>
 
-          <div className="prose prose-lg mx-auto mb-16">
+          <div className="prose prose-lg mx-auto">
             <p className="text-muted-foreground leading-relaxed text-center">
               German Nursing Pathway was founded with a simple mission: to help qualified Kenyan healthcare
               professionals build fulfilling careers in Germany. We handle the complex process of qualification
@@ -37,7 +48,36 @@ function About() {
               for patients.
             </p>
           </div>
+        </div>
 
+        {/* Gallery strip — auto-scrolling 3-up marquee */}
+        <section className="py-16 mt-8 overflow-hidden bg-card/40">
+          <div className="text-center mb-10 px-4">
+            <h2 className="font-heading text-2xl sm:text-3xl font-bold text-foreground">
+              Glimpses of <span className="text-warm">Your Journey</span>
+            </h2>
+            <div className="w-12 h-1 bg-warm mt-3 mx-auto rounded-full" />
+          </div>
+          <div className="relative">
+            <div className="flex gap-6 w-max animate-marquee hover:[animation-play-state:paused]">
+              {[...galleryImages, ...galleryImages].map((img, i) => (
+                <div
+                  key={i}
+                  className="shrink-0 w-[80vw] sm:w-[45vw] lg:w-[31vw] rounded-2xl overflow-hidden shadow-lg border border-border bg-card"
+                >
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="w-full h-64 sm:h-72 lg:h-80 object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
           <div className="grid sm:grid-cols-3 gap-8">
             {[
               { icon: Heart, title: "Our Mission", desc: "Empower Kenyan educators to access global career opportunities and build better futures for themselves and their families." },
