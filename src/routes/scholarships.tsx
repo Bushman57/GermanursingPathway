@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { ChatWidget } from "@/components/ChatWidget";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { scholarships } from "@/lib/scholarships";
@@ -216,6 +217,21 @@ function ScholarshipsPage() {
       </section>
 
       <Footer />
+
+      <ChatWidget
+        title="Scholarship Assistant"
+        subtitle="Upload docs · get matched"
+        greeting="Hello! 📚 I can help match you to scholarships and review your documents. Upload your transcripts, certificates, or CV — or just ask a question."
+        enableUploads
+        accent="primary"
+        suggestions={[
+          "Which scholarships fit me?",
+          "What documents do I need?",
+          "Review my transcript",
+          "DAAD vs Erasmus+?",
+        ]}
+        acceptFileTypes=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+      />
     </div>
   );
 }
