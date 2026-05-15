@@ -405,6 +405,18 @@ function Index() {
       </section>
 
       <Footer />
+
+      <ChatWidget
+        title="Ask a question"
+        subtitle="Quick answers about Germany pathways"
+        greeting="Hi 👋 Curious about working or studying in Germany? Ask me anything — eligibility, costs, German language, deadlines, or next steps."
+        suggestions={[
+          "Am I eligible?",
+          "How much does it cost?",
+          "What German level do I need?",
+          "How long does it take?",
+        ]}
+      />
     </div>
   );
 }
