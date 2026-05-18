@@ -4,21 +4,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@font-face {
-  font-family: 'Space Grotesk';
-  font-style: normal;
-  font-weight: 300 700;
-  font-display: swap;
-  src: url(https://fonts.gstatic.com/s/spacegrotesk/v16/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2) format('woff2');
-}
-
-@font-face {
-  font-family: 'DM Sans';
-  font-style: normal;
-  font-weight: 300 700;
-  font-display: swap;
-  src: url(https://fonts.gstatic.com/s/dmsans/v15/rP2tp2ywxg089UriI5-g4vlH9VoD8A.woff2) format('woff2');
-}
+/* Fonts: loaded via Google Fonts in index.html (do not hardcode gstatic .woff2 URLs — they 404 when Google updates files) */
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
