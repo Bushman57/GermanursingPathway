@@ -1,0 +1,70 @@
+{
+  "nav": {
+    "home": "Home",
+    "howItWorks": "How It Works",
+    "scholarships": "Scholarships",
+    "partners": "Partners",
+    "resources": "Resources",
+    "about": "About",
+    "register": "Register Interest",
+    "eligibility": "Check Readiness",
+    "whatsapp": "Join WhatsApp",
+    "portal": "Student Portal"
+  },
+  "hero": {
+    "title": "Connecting Kenyan care with German opportunity",
+    "subtitle": "Your journey into German nursing starts here",
+    "roles": "Nurses · Clinical Officers · CNAs · Health Support Workers",
+    "description": "A verified pathway to nursing scholarships, Ausbildung, language training, and healthcare careers in Germany.",
+    "register": "Register Interest",
+    "whatsapp": "Join WhatsApp Community",
+    "readiness": "Check Your Readiness"
+  },
+  "register": {
+    "title": "Register Your Interest",
+    "subtitle": "Tell us about yourself — our team will follow up with next steps.",
+    "fullName": "Full Name",
+    "email": "Email",
+    "phone": "Phone (optional)",
+    "qualification": "Nursing Qualification",
+    "germanLevel": "Current German Level",
+    "timeline": "When do you plan to start?",
+    "message": "Anything else we should know? (optional)",
+    "submit": "Submit Registration",
+    "success": "Thank you! We have received your details and will be in touch soon.",
+    "whatsappPrompt": "Join our WhatsApp community for updates while you wait.",
+    "selectQualification": "Select qualification",
+    "selectTimeline": "Select timeline",
+    "qualifications": {
+      "cna": "CNA / Nursing Assistant",
+      "diploma": "Diploma in Nursing",
+      "bsc": "BSc Nursing",
+      "clinical": "Clinical Officer",
+      "other": "Other healthcare qualification"
+    },
+    "timelines": {
+      "3m": "Within 3 months",
+      "6m": "Within 6 months",
+      "2026": "2026 intake",
+      "2027": "2027 or later",
+      "exploring": "Still exploring"
+    },
+    "germanLevels": {
+      "none": "None yet",
+      "a1": "A1",
+      "a2": "A2",
+      "b1": "B1",
+      "b2": "B2+"
+    }
+  },
+  "footer": {
+    "tagline": "Connecting Kenyan healthcare professionals with verified opportunities in Germany.",
+    "quickLinks": "Quick Links",
+    "contact": "Contact"
+  },
+  "portal": {
+    "title": "Student Portal",
+    "comingSoon": "Track your application progress, documents, and milestones — coming in Phase 2.",
+    "loginSoon": "Login will be available once your registration is approved."
+  }
+}

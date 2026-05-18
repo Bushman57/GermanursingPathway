@@ -1,35 +1,55 @@
 import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
+import { BrandLogo } from "@/components/BrandLogo";
+import { WhatsAppLink } from "@/components/WhatsAppButton";
+import { CONTACT_EMAIL, CONTACT_PHONE } from "@/lib/constants";
 
 export function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-primary text-primary-foreground">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg warm-gradient flex items-center justify-center">
-                <span className="font-heading text-sm font-bold text-warm-foreground">GNP</span>
-              </div>
-              <span className="font-heading text-lg font-bold">
-                German<span className="text-warm">Pathway</span>
-              </span>
-            </div>
-            <p className="text-primary-foreground/70 text-sm leading-relaxed">
-              Connecting Kenyan healthcare professionals with career opportunities in Germany.
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="md:col-span-2">
+            <BrandLogo showText={false} imageClassName="h-10 brightness-0 invert" />
+            <p className="mt-4 text-primary-foreground/70 text-sm leading-relaxed max-w-sm">
+              {t("footer.tagline")}
             </p>
-          </div>
-          <div>
-            <h4 className="font-heading font-semibold mb-4">Quick Links</h4>
-            <div className="space-y-2">
-              <Link to="/how-it-works" className="block text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors">How It Works</Link>
-              <Link to="/about" className="block text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors">About Us</Link>
-              <Link to="/eligibility" className="block text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors">Check Eligibility</Link>
+            <div className="mt-4">
+              <WhatsAppLink
+                label={t("nav.whatsapp")}
+                variant="outline"
+                size="sm"
+                className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
+              />
             </div>
           </div>
           <div>
-            <h4 className="font-heading font-semibold mb-4">Contact</h4>
+            <h4 className="font-heading font-semibold mb-4">{t("footer.quickLinks")}</h4>
+            <div className="space-y-2">
+              <Link to="/how-it-works" className="block text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors">
+                {t("nav.howItWorks")}
+              </Link>
+              <Link to="/scholarships" className="block text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors">
+                {t("nav.scholarships")}
+              </Link>
+              <Link to="/partners" className="block text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors">
+                {t("nav.partners")}
+              </Link>
+              <Link to="/register" className="block text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors">
+                {t("nav.register")}
+              </Link>
+              <Link to="/eligibility" className="block text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors">
+                {t("nav.eligibility")}
+              </Link>
+            </div>
+          </div>
+          <div>
+            <h4 className="font-heading font-semibold mb-4">{t("footer.contact")}</h4>
             <div className="space-y-2 text-sm text-primary-foreground/70">
-              <p>info@germannursingpathway.com</p>
+              <p>{CONTACT_EMAIL}</p>
+              <p>{CONTACT_PHONE}</p>
               <p>Nairobi, Kenya</p>
             </div>
           </div>

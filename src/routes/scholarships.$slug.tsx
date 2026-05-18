@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { ChatWidget } from "@/components/ChatWidget";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { getScholarship } from "@/lib/scholarships";
@@ -47,6 +48,7 @@ export const Route = createFileRoute("/scholarships/$slug")({
 
 function ScholarshipDetail() {
   const s = Route.useLoaderData();
+  const { slug } = Route.useParams();
 
   const facts = [
     { icon: Globe, label: "Host Country", value: s.hostCountry },
@@ -141,6 +143,22 @@ function ScholarshipDetail() {
       </section>
 
       <Footer />
+
+      <ChatWidget
+        mode="scholarship"
+        scholarshipSlug={slug}
+        title="Ask about this scholarship"
+        subtitle={`${s.provider} · AI assistant`}
+        greeting={`Ask me anything about ${s.title} — eligibility, documents, benefits, or how to apply.`}
+        enableUploads
+        accent="primary"
+        suggestions={[
+          "Am I eligible?",
+          "What documents do I need?",
+          "What are the benefits?",
+          "How do I apply?",
+        ]}
+      />
     </div>
   );
 }

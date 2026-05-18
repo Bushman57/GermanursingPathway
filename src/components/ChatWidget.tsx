@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { MessageCircle, X, Plus, Send, Paperclip, Trash2, FileText, Bot, User } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { MessageCircle, X, Plus, Send, Paperclip, Trash2, FileText, Bot, User, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
+import { fetchChatReply, type ChatMode } from "@/lib/chat/fetchChatReply";
 
 type Attachment = { name: string; size: number; type: string };
 type Message = {
@@ -14,52 +17,75 @@ type Message = {
 type Thread = { id: string; title: string; messages: Message[]; createdAt: number };
 
 export type ChatWidgetProps = {
+  mode: ChatMode;
   title?: string;
   subtitle?: string;
   greeting?: string;
   placeholder?: string;
-  /** Allow uploading files in this widget. */
   enableUploads?: boolean;
-  /** Suggested first-message prompts */
   suggestions?: string[];
-  /** Mock reply generator. Defaults to a generic helpful canned answer. */
-  generateReply?: (userText: string, attachments?: Attachment[]) => string;
-  /** Position offset, used when stacking widgets. */
+  scholarshipSlug?: string;
   side?: "right" | "left";
-  /** Accent color token: 'warm' or 'primary' */
   accent?: "warm" | "primary";
-  /** Storage / localStorage key — when omitted, no persistence (per spec) */
   acceptFileTypes?: string;
+  disclaimer?: string;
 };
 
 const uid = () => Math.random().toString(36).slice(2, 10);
 
-const defaultReply = (text: string, atts?: Attachment[]) => {
-  if (atts?.length) {
-    return `Thanks — I've received ${atts.length} file${atts.length > 1 ? "s" : ""} (${atts
-      .map((a) => a.name)
-      .join(", ")}). A human advisor will review your documents and follow up shortly. In the meantime, ask me anything about eligibility, deadlines, or required paperwork.`;
-  }
-  const t = text.toLowerCase();
-  if (t.includes("eligib")) return "Most German programs require a recognized degree, B1/B2 German for healthcare roles (A1/A2 to start), and relevant experience. Try our Eligibility Check for a personalized score.";
-  if (t.includes("deadline") || t.includes("when")) return "Scholarship deadlines vary by program — DAAD intakes are usually August–November, while Erasmus+ runs in spring. Check each scholarship's detail page for exact dates.";
-  if (t.includes("cost") || t.includes("fee") || t.includes("price")) return "Public German universities are tuition-free. Our placement program is approximately €2,300 total, broken down on the home page.";
-  if (t.includes("language") || t.includes("german")) return "You'll need at least A1/A2 to start the journey and B1/B2 before relocation. We partner with Goethe-certified tutors in Nairobi and online.";
-  return "Great question! A human advisor will follow up with details. In the meantime, browse our Scholarships, How It Works, or Eligibility pages for more info.";
-};
+const LINK_RE = /(\/scholarships\/[a-z0-9-]+|\/eligibility|\/register|\/scholarships)/gi;
+
+function renderMessageContent(content: string) {
+  const parts = content.split(LINK_RE);
+  return parts.map((part, i) => {
+    if (part.match(/^\/scholarships\/[a-z0-9-]+$/i)) {
+      const slug = part.replace("/scholarships/", "");
+      return (
+        <Link key={i} to="/scholarships/$slug" params={{ slug }} className="text-warm underline font-medium">
+          {part}
+        </Link>
+      );
+    }
+    if (part === "/eligibility") {
+      return (
+        <Link key={i} to="/eligibility" className="text-warm underline font-medium">
+          eligibility check
+        </Link>
+      );
+    }
+    if (part === "/register") {
+      return (
+        <Link key={i} to="/register" className="text-warm underline font-medium">
+          register your interest
+        </Link>
+      );
+    }
+    if (part === "/scholarships") {
+      return (
+        <Link key={i} to="/scholarships" className="text-warm underline font-medium">
+          Scholarships
+        </Link>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
 
 export function ChatWidget({
+  mode,
   title = "Chat with us",
-  subtitle = "Usually replies in a few minutes",
-  greeting = "Hi! 👋 How can I help you today?",
+  subtitle = "AI assistant",
+  greeting = "Hi! How can I help you today?",
   placeholder = "Type your message...",
   enableUploads = false,
   suggestions = [],
-  generateReply = defaultReply,
+  scholarshipSlug,
   side = "right",
   accent = "warm",
   acceptFileTypes = ".pdf,.doc,.docx,.jpg,.jpeg,.png",
+  disclaimer = "AI guidance only — verify details on official program pages before applying.",
 }: ChatWidgetProps) {
+  const { i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const [showThreads, setShowThreads] = useState(false);
   const [threads, setThreads] = useState<Thread[]>(() => [
@@ -69,6 +95,7 @@ export function ChatWidget({
   const [input, setInput] = useState("");
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -82,7 +109,7 @@ export function ChatWidget({
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-  }, [active?.messages.length, isTyping]);
+  }, [active?.messages.length, isTyping, error]);
 
   const newThread = () => {
     const t: Thread = {
@@ -94,6 +121,7 @@ export function ChatWidget({
     setThreads((prev) => [t, ...prev]);
     setActiveId(t.id);
     setShowThreads(false);
+    setError(null);
   };
 
   const deleteThread = (id: string) => {
@@ -114,12 +142,24 @@ export function ChatWidget({
     });
   };
 
-  const send = (textOverride?: string) => {
+  const send = async (textOverride?: string) => {
     const text = (textOverride ?? input).trim();
     if (!text && pendingFiles.length === 0) return;
 
     const attachments: Attachment[] = pendingFiles.map((f) => ({ name: f.name, size: f.size, type: f.type }));
-    const userMsg: Message = { id: uid(), role: "user", content: text, attachments: attachments.length ? attachments : undefined, createdAt: Date.now() };
+    const displayText = text || `Shared ${attachments.length} file(s)`;
+    const userMsg: Message = {
+      id: uid(),
+      role: "user",
+      content: displayText,
+      attachments: attachments.length ? attachments : undefined,
+      createdAt: Date.now(),
+    };
+
+    const historyForApi = [...(active?.messages ?? []), userMsg]
+      .filter((m) => m.content)
+      .slice(-20)
+      .map((m) => ({ role: m.role, content: m.content }));
 
     setThreads((prev) =>
       prev.map((t) =>
@@ -135,12 +175,23 @@ export function ChatWidget({
     setInput("");
     setPendingFiles([]);
     setIsTyping(true);
+    setError(null);
 
-    setTimeout(() => {
-      const reply: Message = { id: uid(), role: "assistant", content: generateReply(text, attachments), createdAt: Date.now() };
+    try {
+      const replyText = await fetchChatReply({
+        mode,
+        messages: historyForApi,
+        scholarshipSlug,
+        attachmentNames: attachments.map((a) => a.name),
+        locale: i18n.language.startsWith("de") ? "de" : "en",
+      });
+      const reply: Message = { id: uid(), role: "assistant", content: replyText, createdAt: Date.now() };
       setThreads((prev) => prev.map((t) => (t.id === activeId ? { ...t, messages: [...t.messages, reply] } : t)));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Couldn't reach the assistant.");
+    } finally {
       setIsTyping(false);
-    }, 700 + Math.random() * 600);
+    }
   };
 
   const onFiles = (files: FileList | null) => {
@@ -222,6 +273,7 @@ export function ChatWidget({
                       onClick={() => {
                         setActiveId(t.id);
                         setShowThreads(false);
+                        setError(null);
                       }}
                       className="flex-1 min-w-0 text-left"
                     >
@@ -263,7 +315,7 @@ export function ChatWidget({
                     m.role === "user" ? "bg-primary text-primary-foreground rounded-br-sm" : "bg-muted text-foreground rounded-bl-sm",
                   )}
                 >
-                  {m.content && <p className="whitespace-pre-wrap break-words">{m.content}</p>}
+                  {m.content && <p className="whitespace-pre-wrap break-words">{renderMessageContent(m.content)}</p>}
                   {m.attachments?.map((a, i) => (
                     <div key={i} className={cn("mt-2 flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs", m.role === "user" ? "bg-primary-foreground/15" : "bg-background border border-border")}>
                       <FileText className="w-3.5 h-3.5 shrink-0" />
@@ -279,6 +331,19 @@ export function ChatWidget({
                 )}
               </div>
             ))}
+
+            {error && !isTyping && (
+              <div className="flex gap-2 items-start rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm">
+                <AlertCircle className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-destructive font-medium">Couldn&apos;t get a reply</p>
+                  <p className="text-muted-foreground text-xs mt-1">{error}</p>
+                  <button type="button" onClick={() => setError(null)} className="text-xs text-warm mt-2 hover:underline">
+                    Dismiss
+                  </button>
+                </div>
+              </div>
+            )}
 
             {isTyping && (
               <div className="flex gap-2">
@@ -299,7 +364,7 @@ export function ChatWidget({
                 {suggestions.map((s) => (
                   <button
                     key={s}
-                    onClick={() => send(s)}
+                    onClick={() => void send(s)}
                     className="text-xs px-3 py-1.5 rounded-full border border-border bg-card hover:bg-muted text-foreground transition-colors"
                   >
                     {s}
@@ -328,10 +393,11 @@ export function ChatWidget({
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              send();
+              void send();
             }}
-            className="p-3 border-t border-border flex items-end gap-2 bg-card"
+            className="border-t border-border bg-card"
           >
+            <div className="p-3 flex items-end gap-2">
             {enableUploads && (
               <>
                 <input
@@ -358,19 +424,27 @@ export function ChatWidget({
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
-                  send();
+                  void send();
                 }
               }}
               rows={1}
+              disabled={isTyping}
               placeholder={placeholder}
               className={cn(
-                "flex-1 resize-none bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 max-h-32",
+                "flex-1 resize-none bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 max-h-32 disabled:opacity-60",
                 accentRing,
               )}
             />
-            <Button type="submit" size="icon" variant={accent === "warm" ? "warm" : "default"} disabled={!input.trim() && pendingFiles.length === 0}>
+            <Button
+              type="submit"
+              size="icon"
+              variant={accent === "warm" ? "warm" : "default"}
+              disabled={isTyping || (!input.trim() && pendingFiles.length === 0)}
+            >
               <Send className="w-4 h-4" />
             </Button>
+            </div>
+            {disclaimer && <p className="px-3 pb-2 text-[10px] text-muted-foreground leading-snug">{disclaimer}</p>}
           </form>
         </div>
       )}

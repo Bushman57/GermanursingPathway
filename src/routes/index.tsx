@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
+import { WhatsAppLink } from "@/components/WhatsAppButton";
+import { TAGLINE_SECONDARY } from "@/lib/constants";
 import {
   CheckCircle, GraduationCap, Globe, Users, ArrowRight, Clock,
   BookOpen, Briefcase, Award, Home as HomeIcon, Shield, Heart,
@@ -26,6 +29,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -44,26 +49,34 @@ function Index() {
         </div>
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center animate-fade-up">
           <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-primary-foreground leading-tight text-balance">
-            Germany Care Path Program for Kenyan Healthcare Professionals
+            {t("hero.title")}
           </h1>
+          <p className="mt-4 text-lg sm:text-xl text-primary-foreground/90 font-medium">
+            {TAGLINE_SECONDARY}
+          </p>
           <p className="mt-6 text-xl sm:text-2xl font-heading font-medium text-warm">
-            Nurses | Clinical Officers | CNAs | Health Support Workers
+            {t("hero.roles")}
           </p>
           <p className="mt-6 text-lg text-primary-foreground/80 max-w-2xl mx-auto leading-relaxed">
-            A comprehensive pathway for healthcare professionals to secure employment in Germany
-            through credential recognition, language training, and direct hospital placements.
+            {t("hero.description")}
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <Button variant="warm" size="lg" className="text-base px-10 py-6" asChild>
-              <Link to="/eligibility">
-                Apply Now
+              <Link to="/register">
+                {t("hero.register")}
                 <ArrowRight className="w-4 h-4 ml-1" />
               </Link>
             </Button>
-            <Button variant="hero-outline" size="lg" className="text-base px-10 py-6" asChild>
-              <Link to="/how-it-works">Learn More</Link>
-            </Button>
+            <WhatsAppLink
+              label={t("hero.whatsapp")}
+              variant="hero-outline"
+              size="lg"
+              className="text-base px-10 py-6"
+            />
           </div>
+          <Button variant="link" className="mt-4 text-primary-foreground/80 hover:text-primary-foreground" asChild>
+            <Link to="/eligibility">{t("hero.readiness")}</Link>
+          </Button>
         </div>
       </section>
 
@@ -389,14 +402,12 @@ function Index() {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Button variant="warm" size="lg" className="px-10 py-6 text-base" asChild>
-              <Link to="/eligibility">
-                Apply Now
+              <Link to="/register">
+                {t("hero.register")}
                 <ArrowRight className="w-4 h-4 ml-1" />
               </Link>
             </Button>
-            <Button variant="outline" size="lg" className="px-10 py-6 text-base" asChild>
-              <Link to="/about">Contact Our Team</Link>
-            </Button>
+            <WhatsAppLink label={t("hero.whatsapp")} size="lg" className="px-10 py-6 text-base" />
           </div>
           <p className="mt-6 text-muted-foreground text-sm">
             📞 (+254) 718-266-072 &nbsp;·&nbsp; ✉️ info@germannursingpathway.com
@@ -407,9 +418,10 @@ function Index() {
       <Footer />
 
       <ChatWidget
+        mode="pathway"
         title="Ask a question"
-        subtitle="Quick answers about Germany pathways"
-        greeting="Hi 👋 Curious about working or studying in Germany? Ask me anything — eligibility, costs, German language, deadlines, or next steps."
+        subtitle="Germany Care Path · AI assistant"
+        greeting="Hi! Ask about eligibility, costs, German language, or timeline for the Germany Care Path program for Kenyan healthcare professionals."
         suggestions={[
           "Am I eligible?",
           "How much does it cost?",

@@ -10,15 +10,40 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ScholarshipsRouteImport } from './routes/scholarships'
+import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as PortalRouteImport } from './routes/portal'
+import { Route as PartnersRouteImport } from './routes/partners'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as EligibilityRouteImport } from './routes/eligibility'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ScholarshipsSlugRouteImport } from './routes/scholarships.$slug'
+import { Route as ResourcesSlugRouteImport } from './routes/resources.$slug'
 
 const ScholarshipsRoute = ScholarshipsRouteImport.update({
   id: '/scholarships',
   path: '/scholarships',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourcesRoute = ResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalRoute = PortalRouteImport.update({
+  id: '/portal',
+  path: '/portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnersRoute = PartnersRouteImport.update({
+  id: '/partners',
+  path: '/partners',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
@@ -46,13 +71,23 @@ const ScholarshipsSlugRoute = ScholarshipsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => ScholarshipsRoute,
 } as any)
+const ResourcesSlugRoute = ResourcesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ResourcesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/eligibility': typeof EligibilityRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/partners': typeof PartnersRoute
+  '/portal': typeof PortalRoute
+  '/register': typeof RegisterRoute
+  '/resources': typeof ResourcesRouteWithChildren
   '/scholarships': typeof ScholarshipsRouteWithChildren
+  '/resources/$slug': typeof ResourcesSlugRoute
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
 }
 export interface FileRoutesByTo {
@@ -60,7 +95,12 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/eligibility': typeof EligibilityRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/partners': typeof PartnersRoute
+  '/portal': typeof PortalRoute
+  '/register': typeof RegisterRoute
+  '/resources': typeof ResourcesRouteWithChildren
   '/scholarships': typeof ScholarshipsRouteWithChildren
+  '/resources/$slug': typeof ResourcesSlugRoute
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
 }
 export interface FileRoutesById {
@@ -69,7 +109,12 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/eligibility': typeof EligibilityRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/partners': typeof PartnersRoute
+  '/portal': typeof PortalRoute
+  '/register': typeof RegisterRoute
+  '/resources': typeof ResourcesRouteWithChildren
   '/scholarships': typeof ScholarshipsRouteWithChildren
+  '/resources/$slug': typeof ResourcesSlugRoute
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
 }
 export interface FileRouteTypes {
@@ -79,7 +124,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/eligibility'
     | '/how-it-works'
+    | '/partners'
+    | '/portal'
+    | '/register'
+    | '/resources'
     | '/scholarships'
+    | '/resources/$slug'
     | '/scholarships/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -87,7 +137,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/eligibility'
     | '/how-it-works'
+    | '/partners'
+    | '/portal'
+    | '/register'
+    | '/resources'
     | '/scholarships'
+    | '/resources/$slug'
     | '/scholarships/$slug'
   id:
     | '__root__'
@@ -95,7 +150,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/eligibility'
     | '/how-it-works'
+    | '/partners'
+    | '/portal'
+    | '/register'
+    | '/resources'
     | '/scholarships'
+    | '/resources/$slug'
     | '/scholarships/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -104,6 +164,10 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   EligibilityRoute: typeof EligibilityRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  PartnersRoute: typeof PartnersRoute
+  PortalRoute: typeof PortalRoute
+  RegisterRoute: typeof RegisterRoute
+  ResourcesRoute: typeof ResourcesRouteWithChildren
   ScholarshipsRoute: typeof ScholarshipsRouteWithChildren
 }
 
@@ -114,6 +178,34 @@ declare module '@tanstack/react-router' {
       path: '/scholarships'
       fullPath: '/scholarships'
       preLoaderRoute: typeof ScholarshipsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resources': {
+      id: '/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portal': {
+      id: '/portal'
+      path: '/portal'
+      fullPath: '/portal'
+      preLoaderRoute: typeof PortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partners': {
+      id: '/partners'
+      path: '/partners'
+      fullPath: '/partners'
+      preLoaderRoute: typeof PartnersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/how-it-works': {
@@ -151,8 +243,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScholarshipsSlugRouteImport
       parentRoute: typeof ScholarshipsRoute
     }
+    '/resources/$slug': {
+      id: '/resources/$slug'
+      path: '/$slug'
+      fullPath: '/resources/$slug'
+      preLoaderRoute: typeof ResourcesSlugRouteImport
+      parentRoute: typeof ResourcesRoute
+    }
   }
 }
+
+interface ResourcesRouteChildren {
+  ResourcesSlugRoute: typeof ResourcesSlugRoute
+}
+
+const ResourcesRouteChildren: ResourcesRouteChildren = {
+  ResourcesSlugRoute: ResourcesSlugRoute,
+}
+
+const ResourcesRouteWithChildren = ResourcesRoute._addFileChildren(
+  ResourcesRouteChildren,
+)
 
 interface ScholarshipsRouteChildren {
   ScholarshipsSlugRoute: typeof ScholarshipsSlugRoute
@@ -171,6 +282,10 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   EligibilityRoute: EligibilityRoute,
   HowItWorksRoute: HowItWorksRoute,
+  PartnersRoute: PartnersRoute,
+  PortalRoute: PortalRoute,
+  RegisterRoute: RegisterRoute,
+  ResourcesRoute: ResourcesRouteWithChildren,
   ScholarshipsRoute: ScholarshipsRouteWithChildren,
 }
 export const routeTree = rootRouteImport

@@ -5,7 +5,7 @@ import { ChatWidget } from "@/components/ChatWidget";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { scholarships } from "@/lib/scholarships";
-import { Calendar, Award, ArrowRight, Search } from "lucide-react";
+import { Calendar, Award, ArrowRight, Search, BadgeCheck } from "lucide-react";
 import { useState } from "react";
 import germanUniversities from "@/assets/german-universities.jpg";
 
@@ -30,9 +30,15 @@ export const Route = createFileRoute("/scholarships")({
 
 function ScholarshipsPage() {
   const [query, setQuery] = useState("");
-  const [level, setLevel] = useState<string>("All");
+  const [programFilter, setProgramFilter] = useState<string>("All");
 
-  const levels = ["All", "Bachelors", "Masters", "PhD", "Internship"];
+  const programFilters = [
+    { id: "All", label: "All" },
+    { id: "verified", label: "Verified" },
+    { id: "nursing_scholarship", label: "Nursing" },
+    { id: "ausbildung", label: "Ausbildung" },
+    { id: "other", label: "General" },
+  ];
 
   const filtered = scholarships.filter((s) => {
     const q = query.toLowerCase();
@@ -41,9 +47,11 @@ function ScholarshipsPage() {
       s.title.toLowerCase().includes(q) ||
       s.provider.toLowerCase().includes(q) ||
       s.shortDescription.toLowerCase().includes(q);
-    const matchesLevel =
-      level === "All" || s.degreeLevel.toLowerCase().includes(level.toLowerCase());
-    return matchesQuery && matchesLevel;
+    const matchesProgram =
+      programFilter === "All" ||
+      (programFilter === "verified" && s.verified) ||
+      s.programType === programFilter;
+    return matchesQuery && matchesProgram;
   });
 
   return (
@@ -123,17 +131,17 @@ function ScholarshipsPage() {
               />
             </div>
             <div className="flex flex-wrap gap-2">
-              {levels.map((l) => (
+              {programFilters.map((f) => (
                 <button
-                  key={l}
-                  onClick={() => setLevel(l)}
+                  key={f.id}
+                  onClick={() => setProgramFilter(f.id)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                    level === l
+                    programFilter === f.id
                       ? "bg-warm text-warm-foreground"
                       : "bg-background border border-border text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  {l}
+                  {f.label}
                 </button>
               ))}
             </div>
@@ -162,6 +170,12 @@ function ScholarshipsPage() {
 
                   {/* Metadata chip strip — funding, school, degree, category, eligibility, country */}
                   <div className="mt-3 flex flex-wrap gap-1.5">
+                    {s.verified && (
+                      <Badge className="bg-success/15 text-success border-0 text-[10px] font-medium gap-0.5">
+                        <BadgeCheck className="w-3 h-3" />
+                        Verified
+                      </Badge>
+                    )}
                     <Badge
                       className={`border-0 text-[10px] font-medium ${
                         s.funding.toLowerCase().includes("fully")
@@ -219,15 +233,16 @@ function ScholarshipsPage() {
       <Footer />
 
       <ChatWidget
+        mode="scholarship"
         title="Scholarship Assistant"
-        subtitle="Upload docs · get matched"
-        greeting="Hello! 📚 I can help match you to scholarships and review your documents. Upload your transcripts, certificates, or CV — or just ask a question."
+        subtitle="Match programs · application guidance"
+        greeting="Hello! I can help you find scholarships in Germany, compare programs, and explain documents and deadlines. Upload filenames or describe your profile to get started."
         enableUploads
         accent="primary"
         suggestions={[
           "Which scholarships fit me?",
           "What documents do I need?",
-          "Review my transcript",
+          "Fully funded masters for Kenyans",
           "DAAD vs Erasmus+?",
         ]}
         acceptFileTypes=".pdf,.doc,.docx,.jpg,.jpeg,.png"

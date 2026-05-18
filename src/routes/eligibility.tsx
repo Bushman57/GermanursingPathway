@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -9,7 +9,7 @@ export const Route = createFileRoute("/eligibility")({
   head: () => ({
     meta: [
       { title: "Check Eligibility — German Nursing Pathway" },
-      { name: "description", content: "Check your eligibility to teach in Germany in just 3 minutes." },
+      { name: "description", content: "Check your readiness for nursing pathways in Germany in just a few minutes." },
     ],
   }),
   component: Eligibility,
@@ -71,8 +71,9 @@ function Eligibility() {
     let score = 0;
     const gaps: string[] = [];
 
-    if (formData.qualification === "bachelors" || formData.qualification === "masters" || formData.qualification === "phd") score += 25;
-    else gaps.push("A Bachelor's degree or higher is required");
+    if (formData.qualification === "diploma" || formData.qualification === "bachelors" || formData.qualification === "masters") score += 25;
+    else if (formData.qualification === "highschool") { score += 10; gaps.push("A nursing diploma or degree strengthens your application"); }
+    else gaps.push("A recognised nursing qualification is required");
 
     if (formData.germanLevel === "a2" || formData.germanLevel === "b1+") score += 25;
     else if (formData.germanLevel === "a1") { score += 15; gaps.push("A2 German level is recommended"); }
@@ -81,7 +82,7 @@ function Eligibility() {
     const exp = parseInt(formData.yearsExperience || "0");
     if (exp >= 2) score += 25;
     else if (exp >= 1) { score += 15; gaps.push("2+ years of experience is preferred"); }
-    else gaps.push("Teaching experience is required");
+    else gaps.push("Clinical or healthcare experience is recommended");
 
     if (formData.hasPassport === "yes") score += 15;
     else gaps.push("A valid passport is required");
@@ -117,7 +118,7 @@ function Eligibility() {
               </h2>
 
               <p className="mt-2 text-muted-foreground">
-                {status === "eligible" && "Great news! You meet the requirements to teach in Germany."}
+                {status === "eligible" && "Great news! You meet the core requirements for a German nursing pathway."}
                 {status === "almost" && `You're ${score}% ready for Germany 🇩🇪 — just a few things to work on.`}
                 {status === "not-eligible" && "Don't give up — here's what you need to improve."}
               </p>
@@ -135,17 +136,12 @@ function Eligibility() {
               )}
 
               <div className="mt-8 space-y-3">
-                {status === "eligible" ? (
-                  <Button variant="warm" size="lg" className="w-full py-6">
-                    Continue to Job Matches
+                <Button variant="warm" size="lg" className="w-full py-6" asChild>
+                  <Link to="/register">
+                    Register Your Interest
                     <ArrowRight className="w-4 h-4 ml-1" />
-                  </Button>
-                ) : (
-                  <Button variant="warm" size="lg" className="w-full py-6">
-                    Improve My Profile
-                    <ArrowRight className="w-4 h-4 ml-1" />
-                  </Button>
-                )}
+                  </Link>
+                </Button>
                 <Button variant="outline" size="lg" className="w-full py-6" onClick={() => { setShowResults(false); setCurrentStep(0); setFormData(initialData); }}>
                   Retake Assessment
                 </Button>
@@ -202,9 +198,10 @@ function Eligibility() {
                   <label className="block text-sm font-medium text-foreground mb-1.5">What is your profession?</label>
                   <select className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30" value={formData.profession} onChange={(e) => update("profession", e.target.value)}>
                     <option value="">Select your profession</option>
-                    <option value="teacher">Teacher</option>
-                    <option value="nurse">Nurse</option>
-                    <option value="other">Other</option>
+                    <option value="nurse">Registered Nurse</option>
+                    <option value="cna">CNA / Nursing Assistant</option>
+                    <option value="clinical">Clinical Officer</option>
+                    <option value="other">Other Healthcare</option>
                   </select>
                 </div>
               </div>
@@ -227,7 +224,7 @@ function Eligibility() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-1.5">Field of Study</label>
-                  <input className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30" placeholder="e.g. Education, Mathematics" value={formData.fieldOfStudy} onChange={(e) => update("fieldOfStudy", e.target.value)} />
+                  <input className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30" placeholder="e.g. Nursing, Midwifery" value={formData.fieldOfStudy} onChange={(e) => update("fieldOfStudy", e.target.value)} />
                 </div>
               </div>
             )}
@@ -237,7 +234,7 @@ function Eligibility() {
               <div className="space-y-5">
                 <h2 className="font-heading text-xl font-semibold text-foreground">Experience</h2>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Years of Teaching Experience</label>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">Years of Healthcare Experience</label>
                   <select className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30" value={formData.yearsExperience} onChange={(e) => update("yearsExperience", e.target.value)}>
                     <option value="">Select experience</option>
                     <option value="0">Less than 1 year</option>

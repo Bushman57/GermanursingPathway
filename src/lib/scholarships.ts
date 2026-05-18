@@ -1,3 +1,5 @@
+export type ProgramType = "nursing_scholarship" | "ausbildung" | "other";
+
 export type Scholarship = {
   slug: string;
   title: string;
@@ -17,9 +19,149 @@ export type Scholarship = {
   requiredDocuments: string[];
   applicationProcess: string[];
   officialLink: string;
+  programType: ProgramType;
+  verified: boolean;
 };
 
 export const scholarships: Scholarship[] = [
+  {
+    slug: "berlin-nursing-scholarship-2026",
+    title: "Berlin Nursing Scholarship 2026",
+    provider: "Berlin Nursing Institute",
+    degreeLevel: "Nursing Scholarship",
+    funding: "Fully Funded",
+    deadline: "30 September 2026",
+    location: "Berlin, Germany",
+    shortDescription:
+      "Agency-verified scholarship for Kenyan diploma and BSc nurses — tuition, stipend, and clinical placement support in Berlin.",
+    about:
+      "This verified pathway supports qualified Kenyan nurses through language preparation, credential guidance, and a structured placement with partner hospitals in Berlin. Places are limited and matched to your German level and clinical experience.",
+    hostCountry: "Germany",
+    studyIn: "Berlin",
+    category: "Nursing / Healthcare",
+    eligibleCountries: "Kenya",
+    programType: "nursing_scholarship",
+    verified: true,
+    benefits: [
+      "Tuition support through partner school",
+      "Monthly living stipend during training",
+      "Health insurance guidance",
+      "Clinical placement coordination",
+      "Visa application support package",
+    ],
+    eligibility: [
+      "Kenyan citizen",
+      "Diploma or BSc in Nursing (or equivalent)",
+      "Minimum A2 German (B1 preferred)",
+      "Valid passport",
+      "Willingness to relocate to Germany",
+    ],
+    requiredDocuments: [
+      "Nursing diploma/degree and transcripts",
+      "CV in German format",
+      "German language certificate",
+      "Passport copy",
+      "Motivation letter",
+    ],
+    applicationProcess: [
+      "Register interest via German Nursing Pathway",
+      "Complete eligibility assessment",
+      "Submit documents for verification",
+      "School interview (German/English)",
+      "Receive offer and begin visa process",
+    ],
+    officialLink: "/register",
+  },
+  {
+    slug: "nrw-ausbildung-nursing-2026",
+    title: "NRW Nursing Ausbildung 2026",
+    provider: "NRW Health Academy",
+    degreeLevel: "Ausbildung",
+    funding: "Paid Training",
+    deadline: "15 August 2026",
+    location: "North Rhine-Westphalia, Germany",
+    shortDescription:
+      "Paid vocational nursing apprenticeship (Ausbildung) with employer sponsorship — earn while you train in NRW.",
+    about:
+      "A verified Ausbildung route for Kenyan healthcare professionals ready for a 2–3 year paid apprenticeship. Includes employer matching, language pathway, and structured integration support through our NRW partners.",
+    hostCountry: "Germany",
+    studyIn: "NRW",
+    category: "Ausbildung / Vocational",
+    eligibleCountries: "Kenya",
+    programType: "ausbildung",
+    verified: true,
+    benefits: [
+      "Paid training (approx. €850–€1,200/month)",
+      "Employer-sponsored work visa pathway",
+      "Language course matching",
+      "Housing and relocation guidance",
+    ],
+    eligibility: [
+      "Kenyan citizen aged 18–35",
+      "CNA, diploma, or degree in healthcare",
+      "A1 German minimum (A2 by intake)",
+      "Recognised school-leaving qualification",
+    ],
+    requiredDocuments: [
+      "Educational certificates",
+      "CV and motivation letter",
+      "Language certificate (if available)",
+      "Passport",
+    ],
+    applicationProcess: [
+      "Register with German Nursing Pathway",
+      "Profile and document review",
+      "Employer/school matching",
+      "Contract and visa preparation",
+      "Arrival and integration support",
+    ],
+    officialLink: "/register",
+  },
+  {
+    slug: "munich-clinical-nursing-pathway-2027",
+    title: "Munich Clinical Nursing Pathway 2027",
+    provider: "Munich Care College",
+    degreeLevel: "Nursing Placement",
+    funding: "Partial Scholarship",
+    deadline: "1 December 2026",
+    location: "Munich, Germany",
+    shortDescription:
+      "Clinical placement pathway with partial scholarship for experienced Kenyan nurses targeting Bavarian hospitals.",
+    about:
+      "Designed for nurses with 2+ years of experience seeking direct clinical roles in Munich. Includes adaptation support, B1+ language requirement, and partner hospital introductions.",
+    hostCountry: "Germany",
+    studyIn: "Munich",
+    category: "Nursing / Healthcare",
+    eligibleCountries: "Kenya",
+    programType: "nursing_scholarship",
+    verified: true,
+    benefits: [
+      "Partial tuition scholarship",
+      "Hospital placement support",
+      "Adaptation program access",
+      "Pre-departure orientation",
+    ],
+    eligibility: [
+      "2+ years clinical nursing experience",
+      "B1 German or commitment to reach B1 before intake",
+      "Diploma or degree in Nursing",
+      "Clean professional record",
+    ],
+    requiredDocuments: [
+      "Professional references",
+      "Nursing credentials",
+      "Language certificate",
+      "CV and motivation letter",
+    ],
+    applicationProcess: [
+      "Submit register-interest form",
+      "Clinical experience verification",
+      "Language assessment",
+      "Hospital matching interview",
+      "Offer and visa support",
+    ],
+    officialLink: "/register",
+  },
   {
     slug: "german-bundestag-ips-africa-2027",
     title: "German Bundestag IPS Africa Scholarship 2027",
@@ -71,6 +213,8 @@ export const scholarships: Scholarship[] = [
       "Selected scholars travel to Berlin for the 5-month program (Mar–Jul)",
     ],
     officialLink: "https://www.bundestag.de/ips",
+    programType: "other",
+    verified: false,
   },
   {
     slug: "daad-epos-masters-2026",
@@ -120,6 +264,8 @@ export const scholarships: Scholarship[] = [
       "Receive scholarship confirmation and visa support",
     ],
     officialLink: "https://www.daad.de/epos",
+    programType: "other",
+    verified: false,
   },
   {
     slug: "kaad-scholarship-2026",
@@ -168,6 +314,8 @@ export const scholarships: Scholarship[] = [
       "Receive scholarship offer and prepare for departure",
     ],
     officialLink: "https://kaad.de/en",
+    programType: "other",
+    verified: false,
   },
   {
     slug: "friedrich-ebert-stiftung-2026",
@@ -215,6 +363,8 @@ export const scholarships: Scholarship[] = [
       "Receive funding decision",
     ],
     officialLink: "https://www.fes.de/studienfoerderung",
+    programType: "other",
+    verified: false,
   },
   {
     slug: "erasmus-mundus-germany-2026",
@@ -262,6 +412,8 @@ export const scholarships: Scholarship[] = [
       "Receive scholarship offer and visa documentation",
     ],
     officialLink: "https://www.eacea.ec.europa.eu/scholarships/erasmus-mundus-catalogue_en",
+    programType: "other",
+    verified: false,
   },
   {
     slug: "heinrich-boll-2026",
@@ -310,6 +462,8 @@ export const scholarships: Scholarship[] = [
       "Receive funding decision",
     ],
     officialLink: "https://www.boell.de/en/scholarships",
+    programType: "other",
+    verified: false,
   },
 ];
 
