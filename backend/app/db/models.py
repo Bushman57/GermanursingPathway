@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Boolean, Date, DateTime, ForeignKey, String, Text, func
+from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, String, Text, func
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
@@ -86,6 +86,26 @@ class Candidate(Base):
     full_name: Mapped[str] = mapped_column(String(200), nullable=False)
     email: Mapped[str] = mapped_column(String(320), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class Payment(Base):
+    __tablename__ = "payments"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    phone_number: Mapped[str] = mapped_column(String(20), nullable=False)
+    amount_kes: Mapped[int] = mapped_column(Integer, nullable=False)
+    invoice_number: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    merchant_request_id: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    checkout_request_id: Mapped[str | None] = mapped_column(String(80), nullable=True, unique=True)
+    status: Mapped[str] = mapped_column(String(30), default="pending")
+    result_code: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    result_desc: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    mpesa_receipt_number: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    callback_payload: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
 
 
 class Application(Base):

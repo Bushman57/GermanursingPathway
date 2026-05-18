@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 
 from app.config import get_settings
 from app.db.session import init_db
-from app.routers import chat, leads
+from app.routers import chat, leads, payments
 
 app = FastAPI(title="German Nursing Pathway API", version="1.0.0")
 
@@ -32,6 +32,7 @@ app.add_middleware(
 
 app.include_router(chat.router)
 app.include_router(leads.router)
+app.include_router(payments.router)
 
 
 @app.get("/health")

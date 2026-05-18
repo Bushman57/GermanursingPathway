@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
+import { InvestmentPaymentDialog } from "@/components/InvestmentPaymentDialog";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
@@ -271,6 +272,9 @@ function Index() {
           <p className="text-center text-primary-foreground/60 text-sm mt-6">
             Flexible payment plans available in KES equivalent
           </p>
+          <div className="flex justify-center">
+            <InvestmentPaymentDialog />
+          </div>
         </div>
       </section>
 
