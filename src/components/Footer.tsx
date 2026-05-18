@@ -12,17 +12,15 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
-            <BrandLogo showText={false} imageClassName="h-10 brightness-0 invert" />
+            <BrandLogo
+              showText={false}
+              imageClassName="h-12 w-12 rounded-lg bg-white p-0.5 shadow-sm ring-1 ring-primary-foreground/10"
+            />
             <p className="mt-4 text-primary-foreground/70 text-sm leading-relaxed max-w-sm">
               {t("footer.tagline")}
             </p>
             <div className="mt-4">
-              <WhatsAppLink
-                label={t("nav.whatsapp")}
-                variant="outline"
-                size="sm"
-                className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
-              />
+              <WhatsAppLink label={t("nav.whatsapp")} variant="whatsapp" size="sm" />
             </div>
           </div>
           <div>

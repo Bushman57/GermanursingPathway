@@ -3,6 +3,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { WhatsAppLink } from "@/components/WhatsAppButton";
+import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { WHATSAPP_GROUP_URL } from "@/lib/constants";
 import {
   Heart, Target, Shield,
@@ -28,6 +29,7 @@ const freeServices: {
   title: string;
   desc: string;
   href?: string;
+  whatsappLogo?: boolean;
 }[] = [
   {
     icon: ClipboardList,
@@ -44,6 +46,7 @@ const freeServices: {
     title: "WhatsApp Community Membership",
     desc: "Access to a candidate peer network and agency updates.",
     href: WHATSAPP_GROUP_URL,
+    whatsappLogo: true,
   },
   {
     icon: BookOpen,
@@ -236,7 +239,11 @@ function About() {
                   const inner = (
                     <>
                       <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center mb-4 group-hover:bg-success/15 transition-colors">
-                        <item.icon className="w-6 h-6 text-success" />
+                        {item.whatsappLogo ? (
+                          <WhatsAppIcon className="h-7 w-7" tone="brand" />
+                        ) : (
+                          <item.icon className="w-6 h-6 text-success" />
+                        )}
                       </div>
                       <h4 className="font-heading text-lg font-semibold text-foreground">{item.title}</h4>
                       <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
@@ -319,7 +326,7 @@ function About() {
               <Button variant="warm" size="lg" asChild>
                 <Link to="/register">Register Interest</Link>
               </Button>
-              <WhatsAppLink variant="outline" size="lg" />
+              <WhatsAppLink variant="whatsapp" size="lg" />
             </div>
           </div>
         </section>
