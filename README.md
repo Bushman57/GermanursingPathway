@@ -63,7 +63,13 @@ Use your real API host (no trailing slash). Without this, `/api/*` requests hit 
 | Setting | Value |
 |---------|--------|
 | **Root Directory** | `backend` |
-| **Start command** | `uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
+| **Start command** | `gunicorn app:create_app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --workers 2` |
+
+Alternative: `gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --workers 2`
+
+Or uvicorn only: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+
+**Important:** Use `app:create_app` with **no parentheses**. The `-k uvicorn.workers.UvicornWorker` flag is required (FastAPI is ASGI, not plain WSGI). Set **Root Directory** to `backend`.
 
 Set at minimum:
 
