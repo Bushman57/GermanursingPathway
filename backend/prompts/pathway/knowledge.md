@@ -4,8 +4,7 @@
 Kenyan healthcare professionals: Nurses (KRCHN/KRN/KRM), Certified Nursing Assistants (CNAs), Clinical Officers, and Health Support Workers seeking employment in Germany.
 
 ## Eligibility — Education
-- German Language certificate, OR
-- KCSE certificate
+- German Language certificate
 - All qualifications must be from recognized institutions
 
 ## Eligibility — Experience
