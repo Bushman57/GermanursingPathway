@@ -66,5 +66,66 @@
     "title": "Student Portal",
     "comingSoon": "Track your application progress, documents, and milestones — coming in Phase 2.",
     "loginSoon": "Login will be available once your registration is approved."
+  },
+  "meta": {
+    "home": {
+      "title": "German Nursing Pathway — Scholarships & Ausbildung in Germany",
+      "description": "Verified pathway for Kenyan nurses to nursing scholarships, Ausbildung, and healthcare careers in Germany."
+    },
+    "register": {
+      "title": "Register Interest — German Nursing Pathway",
+      "description": "Register your interest for nursing scholarships and Ausbildung opportunities in Germany."
+    },
+    "eligibility": {
+      "title": "Check Your Readiness — German Nursing Pathway",
+      "description": "Quick eligibility check for Kenyan healthcare professionals planning a nursing career in Germany."
+    },
+    "howItWorks": {
+      "title": "How It Works — German Nursing Pathway",
+      "description": "Step-by-step guide from eligibility check to arrival in Germany."
+    },
+    "scholarships": {
+      "title": "Scholarships & Programs — German Nursing Pathway",
+      "description": "Browse verified nursing scholarships, Ausbildung, and related programs in Germany."
+    },
+    "partners": {
+      "title": "Partners — German Nursing Pathway",
+      "description": "Accredited schools, employers, and organisations we work with in Germany."
+    },
+    "resources": {
+      "title": "Resources — German Nursing Pathway",
+      "description": "Guides on language, visa, Ausbildung, and life in Germany for nursing candidates."
+    },
+    "about": {
+      "title": "About Us — German Nursing Pathway",
+      "description": "Our mission, services, and ethical approach to healthcare migration from Kenya to Germany."
+    },
+    "portal": {
+      "title": "Student Portal — German Nursing Pathway",
+      "description": "Candidate portal for application tracking — coming soon."
+    }
+  },
+  "partnersPage": {
+    "title": "Verified",
+    "titleAccent": "Partner Schools",
+    "subtitle": "Accredited institutions we work with for nursing scholarships, Ausbildung, and clinical placements in Germany.",
+    "verified": "Verified",
+    "learnMore": "Learn more"
+  },
+  "resourcesPage": {
+    "title": "Resources &",
+    "titleAccent": "Guides",
+    "subtitle": "Practical articles on language, visas, and life in Germany — written for Kenyan healthcare professionals.",
+    "read": "Read article",
+    "back": "All resources",
+    "body": "This guide is part of the German Nursing Pathway resource library. {{excerpt}} For personalised support with your application, register your interest and our team will follow up with clear next steps.",
+    "registerCta": "Register your interest"
+  },
+  "errors": {
+    "404": {
+      "title": "Page not found",
+      "description": "The page you're looking for doesn't exist or has been moved.",
+      "home": "Go home"
+    }
   }
 }

@@ -1,0 +1,76 @@
+{
+  "title": "Über German Nursing Pathway",
+  "intro": "German Nursing Pathway schließt die Lücke zwischen ambitionierten Pflegestudierenden und verifizierten Chancen im Ausland. Durch direkte Verbindungen zu akkreditierten Schulen, strukturiertem Sprachtraining, Visumberatung und End-to-End-Bewerbungsbegleitung unterstützen wir Sie vom Eignungscheck bis zu einer nachhaltigen Karriere im deutschen Gesundheitswesen.",
+  "vision": {
+    "sectionTitle": "Strategische Ausrichtung &",
+    "sectionAccent": "Vision",
+    "visionTitle": "Unsere Vision",
+    "visionText": "Träume in globale Gesundheitskarrieren verwandeln.",
+    "missionTitle": "Unsere Mission",
+    "missionText": "Verifizierte Studierende schnell und sicher zu vertrauenswürdigen Pflegestipendien, Sprachtraining, Visumberatung und Karrierewegen durch direkte Kontakte zu akkreditierten Pflegeschulen und Einrichtungen in Deutschland zu führen."
+  },
+  "gallery": {
+    "title": "Einblicke in",
+    "titleAccent": "Ihre Reise",
+    "alts": [
+      "Ihre Karriere in Deutschland beginnt hier",
+      "Brücke zu Chancen in Deutschland",
+      "Gesundheitsfachkräfte prüfen Unterlagen",
+      "Kenianische Pflegekraft in einem deutschen Krankenhaus"
+    ]
+  },
+  "services": {
+    "sectionTitle": "Unsere umfassenden",
+    "sectionAccent": "Leistungen",
+    "sectionSubtitle": "End-to-End-Lösungen für Ihre Pflegekarriere in Deutschland — vom Eignungscheck bis zur Integration nach Ankunft.",
+    "freeBadge": "Kostenlose Leistungen",
+    "freeTitle": "Erstkontakt & Vertrauen",
+    "freeSubtitle": "Starten Sie kostenlos — prüfen Sie Ihre Eignung, nutzen Sie Ressourcen und werden Sie Teil der Community.",
+    "joinFree": "Kostenlos beitreten →",
+    "includedFree": "Kostenlos enthalten",
+    "paidBadge": "Kostenpflichtige Pakete",
+    "paidTitle": "Bewerbung & Relocation",
+    "paidSubtitle": "Expertenbegleitung von der Bewerbung bis zur Ankunft — transparente Preise pro Kandidat.",
+    "bestValue": "Bestes Preis-Leistungs-Verhältnis — alle Kernpakete kombiniert",
+    "optional": "(optional)",
+    "registerCta": "Interesse registrieren"
+  },
+  "freeServices": [
+    { "title": "Information & Eignungsprüfung", "desc": "Erstberatung online oder vor Ort in NRW für Anfragen aus Deutschland." },
+    { "title": "Stipendien- & Chancen-Matching", "desc": "Vermittlung an verifizierte Schulplätze in Deutschland passend zu Ihrem Profil." },
+    { "title": "WhatsApp-Community", "desc": "Zugang zum Kandidatennetzwerk und zu Agentur-Updates.", "whatsapp": true },
+    { "title": "Online-Ressourcenbibliothek", "desc": "Leitfäden zu Ausbildung, Visum und Sprachanforderungen zum Download." },
+    { "title": "Webinare & Q&A", "desc": "Monatliche Online-Veranstaltungen für alle registrierten Kandidaten." }
+  ],
+  "paidServices": [
+    { "title": "Komplettpaket Bewerbungsmanagement", "desc": "Unterlagenvorbereitung, Übersetzungsprüfung und Einreichung der Schulbewerbung.", "price": "150–300 €" },
+    { "title": "Paket Deutsch-Sprachberatung", "desc": "Kursvermittlung, Lernplan und Prüfungsanmeldung.", "price": "75–150 €" },
+    { "title": "Visum-Unterstützung", "desc": "Checkliste, Terminvorbereitung und Koordination mit der Botschaft.", "price": "100–200 €" },
+    { "title": "Interviewvorbereitung", "desc": "Probeinterviews auf Deutsch und Englisch, Kulturbriefing und Rollenspiel.", "price": "75–125 €" },
+    { "title": "Orientierung vor Abreise", "desc": "1-tägige Session zu Kultur, Wohnung, Bank und Verkehr in Deutschland.", "price": "50–100 €" },
+    { "title": "Premium-Paket", "desc": "Alle obigen Leistungen zum vergünstigten Gesamtpreis.", "price": "400–600 €", "highlight": true },
+    { "title": "Integration nach Ankunft", "desc": "Optional: Check-ins in den ersten 90 Tagen, Anmeldung und Versicherung.", "price": "75–150 €", "optional": true }
+  ],
+  "apart": {
+    "title": "Was uns",
+    "titleAccent": "auszeichnet",
+    "subtitle": "Sechs Grundsätze für jeden Schritt Ihrer Reise von Kenia nach Deutschland.",
+    "items": [
+      { "title": "Transparente Abläufe", "desc": "Klare Schritt-für-Schritt-Begleitung ohne versteckte Kosten." },
+      { "title": "Anerkennungs-Support", "desc": "Expertenhilfe bei Zulassung und Zertifizierung." },
+      { "title": "Flexible Zahlungen", "desc": "Ethische Praxis mit Zahlungsplänen nach Ihrem Budget." },
+      { "title": "Starke Partnerschaften", "desc": "Direkte Kontakte zu akkreditierten Schulen und Arbeitgebern in Deutschland." },
+      { "title": "End-to-End-Begleitung", "desc": "Von der ersten Bewerbung bis zur erfolgreichen Integration." },
+      { "title": "Professionelle Beratung", "desc": "Erfahrene Berater mit Expertise in Gesundheitsmigration." }
+    ]
+  },
+  "ethics": {
+    "title": "Ethische",
+    "titleAccent": "Grundsätze",
+    "items": [
+      { "title": "Keine falschen Versprechen", "desc": "Wir garantieren keine Jobs oder Visa — wir bieten ehrliche Einschätzungen und verifizierte Wege." },
+      { "title": "Transparente Gebühren", "desc": "Alle Kosten werden vorab offengelegt, mit flexiblen Zahlungsoptionen." },
+      { "title": "Datenschutz", "desc": "Ihre Daten sind geschützt und werden nicht an Dritte verkauft." }
+    ]
+  }
+}

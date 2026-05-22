@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Trans, useTranslation } from "react-i18next";
 import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +31,7 @@ function formatAmount(amount: number, label: string) {
 }
 
 export function InvestmentPaymentDialog() {
+  const { t } = useTranslation("payment");
   const [open, setOpen] = useState(false);
   const [config, setConfig] = useState<PaymentConfig | null>(null);
   const [configError, setConfigError] = useState("");
@@ -48,7 +50,7 @@ export function InvestmentPaymentDialog() {
       setConfig(data);
     } catch (err) {
       setConfig(null);
-      setConfigError(err instanceof Error ? err.message : "Unable to load payment settings");
+      setConfigError(err instanceof Error ? err.message : t("configError"));
     }
   }, []);
 
@@ -83,7 +85,7 @@ export function InvestmentPaymentDialog() {
       if (Date.now() - started > POLL_MAX_MS) {
         window.clearInterval(interval);
         setStep("error");
-        setError("Payment timed out. If you completed M-Pesa on your phone, contact support with your number.");
+        setError(t("timeout"));
         return;
       }
       try {
@@ -95,7 +97,7 @@ export function InvestmentPaymentDialog() {
         } else if (TERMINAL.has(status.status)) {
           window.clearInterval(interval);
           setStep("error");
-          setError(status.result_desc ?? "Payment was not completed.");
+          setError(status.result_desc ?? t("failed"));
         }
       } catch {
         /* keep polling */
@@ -108,7 +110,7 @@ export function InvestmentPaymentDialog() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!phone.trim()) {
-      setError("Enter your M-Pesa phone number.");
+      setError(t("phoneRequired"));
       return;
     }
     setStep("loading");
@@ -121,7 +123,7 @@ export function InvestmentPaymentDialog() {
       setStep("waiting");
     } catch (err) {
       setStep("error");
-      setError(err instanceof Error ? err.message : "Payment could not be started");
+      setError(err instanceof Error ? err.message : t("startError"));
     }
   };
 
@@ -132,19 +134,22 @@ export function InvestmentPaymentDialog() {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="warm" size="lg" className="mt-8">
-          Pay with M-Pesa
+          {t("trigger")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Program payment</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>
             {amountLabel ? (
-              <>
-                Pay <strong>{amountLabel}</strong> (full program fee, €2,300 equivalent) via M-Pesa STK Push.
-              </>
+              <Trans
+                i18nKey="descriptionWithAmount"
+                ns="payment"
+                values={{ amount: amountLabel }}
+                components={{ strong: <strong /> }}
+              />
             ) : (
-              "Pay the full program fee via M-Pesa STK Push."
+              t("descriptionGeneric")
             )}
           </DialogDescription>
         </DialogHeader>
@@ -152,15 +157,15 @@ export function InvestmentPaymentDialog() {
         {step === "success" ? (
           <div className="text-center py-2">
             <CheckCircle className="w-12 h-12 text-success mx-auto mb-4" />
-            <p className="font-heading font-semibold text-lg">Payment received</p>
+            <p className="font-heading font-semibold text-lg">{t("successTitle")}</p>
             {amountLabel && <p className="text-sm text-muted-foreground mt-1">{amountLabel}</p>}
             {receipt && (
               <p className="text-sm mt-3 font-mono bg-muted rounded-lg px-3 py-2 inline-block">
-                Receipt: {receipt}
+                {t("receipt", { code: receipt })}
               </p>
             )}
             <Button variant="warm" className="mt-6 w-full" onClick={() => handleOpenChange(false)}>
-              Done
+              {t("done")}
             </Button>
           </div>
         ) : (
@@ -174,15 +179,15 @@ export function InvestmentPaymentDialog() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {step === "waiting" ? (
-                <WaitingBlock message={customerMessage} />
+                <WaitingBlock message={customerMessage} title={t("waitingTitle")} />
               ) : (
                 <>
                   <div>
-                    <label className="block text-sm font-medium mb-1.5">M-Pesa phone number</label>
+                    <label className="block text-sm font-medium mb-1.5">{t("phoneLabel")}</label>
                     <input
                       type="tel"
                       className={inputClass}
-                      placeholder="0712345678"
+                      placeholder={t("phonePlaceholder")}
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       disabled={step === "loading"}
@@ -204,15 +209,15 @@ export function InvestmentPaymentDialog() {
                     {step === "loading" ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        Sending prompt…
+                        {t("sending")}
                       </>
+                    ) : amountLabel ? (
+                      t("payButton", { amount: amountLabel })
                     ) : (
-                      `Pay ${amountLabel ?? "now"}`
+                      t("payNow")
                     )}
                   </Button>
-                  <p className="text-xs text-muted-foreground text-center">
-                    Safaricom M-Pesa number (07… or 254…). You will enter your PIN on your phone.
-                  </p>
+                  <p className="text-xs text-muted-foreground text-center">{t("phoneHint")}</p>
                 </>
               )}
             </form>
@@ -223,12 +228,12 @@ export function InvestmentPaymentDialog() {
   );
 }
 
-function WaitingBlock({ message }: { message: string }) {
+function WaitingBlock({ message, title }: { message: string; title: string }) {
   return (
     <div className="rounded-xl bg-muted/50 p-4 text-sm text-muted-foreground flex gap-3">
       <Loader2 className="w-5 h-5 animate-spin shrink-0 text-warm" />
       <div>
-        <p className="font-medium text-foreground">Waiting for payment</p>
+        <p className="font-medium text-foreground">{title}</p>
         <p className="mt-1">{message}</p>
       </div>
     </div>

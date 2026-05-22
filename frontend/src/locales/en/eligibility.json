@@ -1,0 +1,93 @@
+{
+  "title": "Check Eligibility",
+  "stepOf": "Step {{current}} of {{total}}",
+  "back": "Back",
+  "continue": "Continue",
+  "seeResults": "See My Results",
+  "retake": "Retake Assessment",
+  "registerCta": "Register Your Interest",
+  "steps": ["Personal Info", "Profession", "Education", "Experience", "Language", "Readiness"],
+  "personal": {
+    "title": "Personal Information",
+    "name": "Full Name",
+    "namePlaceholder": "Enter your full name",
+    "age": "Age",
+    "agePlaceholder": "e.g. 28",
+    "nationality": "Nationality"
+  },
+  "profession": {
+    "title": "Your Profession",
+    "label": "What is your profession?",
+    "select": "Select your profession",
+    "nurse": "Registered Nurse",
+    "cna": "CNA / Nursing Assistant",
+    "clinical": "Clinical Officer",
+    "other": "Other Healthcare"
+  },
+  "education": {
+    "title": "Education",
+    "qualification": "Highest Qualification",
+    "selectQualification": "Select qualification",
+    "highschool": "High School",
+    "diploma": "Diploma",
+    "bachelors": "Bachelor's Degree",
+    "masters": "Master's Degree",
+    "phd": "PhD",
+    "field": "Field of Study",
+    "fieldPlaceholder": "e.g. Nursing, Midwifery"
+  },
+  "experience": {
+    "title": "Experience",
+    "years": "Years of Healthcare Experience",
+    "selectExperience": "Select experience",
+    "exp0": "Less than 1 year",
+    "exp1": "1 year",
+    "exp2": "2 years",
+    "exp3": "3-5 years",
+    "exp5": "5+ years",
+    "jobStatus": "Current Job Status",
+    "selectStatus": "Select status",
+    "employed": "Currently Employed",
+    "unemployed": "Unemployed",
+    "student": "Student"
+  },
+  "language": {
+    "title": "German Language",
+    "label": "What is your German level?",
+    "none": "None",
+    "noneDesc": "No German yet",
+    "a1": "A1",
+    "a1Desc": "Beginner",
+    "a2": "A2",
+    "a2Desc": "Elementary",
+    "b1": "B1+",
+    "b1Desc": "Intermediate or above",
+    "certHint": "Upload your German certificate (A1 or A2 preferred) during profile completion."
+  },
+  "readiness": {
+    "title": "Legal Readiness",
+    "passport": "Do you have a valid passport?",
+    "relocate": "Are you willing to relocate to Germany?",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "results": {
+    "eligibleTitle": "You're Eligible!",
+    "almostTitle": "Almost There!",
+    "notTitle": "Not Yet Ready",
+    "eligibleDesc": "Great news! You meet the core requirements for a German nursing pathway.",
+    "almostDesc": "You're {{score}}% ready for Germany — just a few things to work on.",
+    "notDesc": "Don't give up — here's what you need to improve.",
+    "gapTitle": "Gap Analysis",
+    "gaps": {
+      "qualificationRequired": "A recognised nursing qualification is required",
+      "qualificationStrengthen": "A nursing diploma or degree strengthens your application",
+      "germanA1": "You need at least A1 German certification",
+      "germanA2": "A2 German level is recommended",
+      "experiencePreferred": "2+ years of experience is preferred",
+      "experienceRecommended": "Clinical or healthcare experience is recommended",
+      "passport": "A valid passport is required",
+      "relocate": "Willingness to relocate is essential"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "trigger": "Mit M-Pesa bezahlen",
+  "title": "Programmgebühr",
+  "descriptionWithAmount": "Zahlen Sie <strong>{{amount}}</strong> (volle Programmgebühr, Gegenwert ca. 2.300 €) per M-Pesa STK Push.",
+  "descriptionGeneric": "Zahlen Sie die volle Programmgebühr per M-Pesa STK Push.",
+  "phoneLabel": "M-Pesa-Telefonnummer",
+  "phonePlaceholder": "0712345678",
+  "phoneHint": "Safaricom M-Pesa (07… oder 254…). Sie geben Ihre PIN auf dem Handy ein.",
+  "payButton": "{{amount}} zahlen",
+  "payNow": "Jetzt zahlen",
+  "sending": "Anfrage wird gesendet…",
+  "waitingTitle": "Warten auf Zahlung",
+  "successTitle": "Zahlung eingegangen",
+  "receipt": "Beleg: {{code}}",
+  "done": "Fertig",
+  "configError": "Zahlungseinstellungen konnten nicht geladen werden",
+  "phoneRequired": "Bitte geben Sie Ihre M-Pesa-Nummer ein.",
+  "startError": "Zahlung konnte nicht gestartet werden",
+  "timeout": "Zeitüberschreitung. Wenn Sie M-Pesa abgeschlossen haben, kontaktieren Sie uns mit Ihrer Nummer.",
+  "failed": "Zahlung wurde nicht abgeschlossen."
+}

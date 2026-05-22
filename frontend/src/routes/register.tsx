@@ -6,18 +6,11 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { WhatsAppLink } from "@/components/WhatsAppButton";
 import { submitLead } from "@/lib/api/submitLead";
+import { metaFromKeys } from "@/lib/pageMeta";
 import { CheckCircle, Loader2, AlertCircle } from "lucide-react";
 
 export const Route = createFileRoute("/register")({
-  head: () => ({
-    meta: [
-      { title: "Register Interest — German Nursing Pathway" },
-      {
-        name: "description",
-        content: "Register your interest in nursing scholarships and Ausbildung pathways in Germany.",
-      },
-    ],
-  }),
+  head: () => metaFromKeys("register"),
   component: RegisterPage,
 });
 

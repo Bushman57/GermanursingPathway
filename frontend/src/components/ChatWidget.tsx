@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { fetchChatReply, type ChatMode } from "@/lib/chat/fetchChatReply";
+import { getScholarship, scholarshipText } from "@/lib/scholarships";
 
 type Attachment = { name: string; size: number; type: string };
 type Message = {
@@ -35,7 +36,10 @@ const uid = () => Math.random().toString(36).slice(2, 10);
 
 const LINK_RE = /(\/scholarships\/[a-z0-9-]+|\/eligibility|\/register|\/scholarships)/gi;
 
-function renderMessageContent(content: string) {
+function renderMessageContent(
+  content: string,
+  labels: { eligibility: string; register: string; scholarships: string },
+) {
   const parts = content.split(LINK_RE);
   return parts.map((part, i) => {
     if (part.match(/^\/scholarships\/[a-z0-9-]+$/i)) {
@@ -49,21 +53,21 @@ function renderMessageContent(content: string) {
     if (part === "/eligibility") {
       return (
         <Link key={i} to="/eligibility" className="text-warm underline font-medium">
-          eligibility check
+          {labels.eligibility}
         </Link>
       );
     }
     if (part === "/register") {
       return (
         <Link key={i} to="/register" className="text-warm underline font-medium">
-          register your interest
+          {labels.register}
         </Link>
       );
     }
     if (part === "/scholarships") {
       return (
         <Link key={i} to="/scholarships" className="text-warm underline font-medium">
-          Scholarships
+          {labels.scholarships}
         </Link>
       );
     }
@@ -73,23 +77,43 @@ function renderMessageContent(content: string) {
 
 export function ChatWidget({
   mode,
-  title = "Chat with us",
-  subtitle = "AI assistant",
-  greeting = "Hi! How can I help you today?",
-  placeholder = "Type your message...",
+  title,
+  subtitle,
+  greeting,
+  placeholder,
   enableUploads = false,
-  suggestions = [],
+  suggestions,
   scholarshipSlug,
   side = "right",
   accent = "warm",
   acceptFileTypes = ".pdf,.doc,.docx,.jpg,.jpeg,.png",
-  disclaimer = "AI guidance only — verify details on official program pages before applying.",
+  disclaimer,
 }: ChatWidgetProps) {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation("chat");
+  const program = scholarshipSlug ? getScholarship(scholarshipSlug) : undefined;
+  const chatKey = scholarshipSlug ? "scholarshipDetail" : mode === "scholarship" ? "scholarship" : "pathway";
+  const programTitle = program ? scholarshipText(program, "title", i18n.language) : "";
+  const programProvider = program ? scholarshipText(program, "provider", i18n.language) : "";
+  const resolvedTitle = title ?? t(`${chatKey}.title`);
+  const resolvedSubtitle =
+    subtitle ?? t(`${chatKey}.subtitle`, { provider: programProvider || "—" });
+  const resolvedGreeting =
+    greeting ??
+    t(`${chatKey}.greeting`, { title: programTitle || "…", provider: programProvider || "…" });
+  const resolvedPlaceholder = placeholder ?? t(`${chatKey}.placeholder`);
+  const resolvedDisclaimer = disclaimer ?? t(`${chatKey}.disclaimer`);
+  const resolvedSuggestions =
+    suggestions ?? (t(`${chatKey}.suggestions`, { returnObjects: true }) as string[]);
+  const linkLabels = {
+    eligibility: t("links.eligibility"),
+    register: t("links.register"),
+    scholarships: t("links.scholarships"),
+  };
+  const newConvoLabel = t("ui.newConversation");
   const [open, setOpen] = useState(false);
   const [showThreads, setShowThreads] = useState(false);
   const [threads, setThreads] = useState<Thread[]>(() => [
-    { id: uid(), title: "New conversation", messages: [{ id: uid(), role: "assistant", content: greeting, createdAt: Date.now() }], createdAt: Date.now() },
+    { id: uid(), title: newConvoLabel, messages: [{ id: uid(), role: "assistant", content: resolvedGreeting, createdAt: Date.now() }], createdAt: Date.now() },
   ]);
   const [activeId, setActiveId] = useState<string>(() => "");
   const [input, setInput] = useState("");
@@ -114,8 +138,8 @@ export function ChatWidget({
   const newThread = () => {
     const t: Thread = {
       id: uid(),
-      title: "New conversation",
-      messages: [{ id: uid(), role: "assistant", content: greeting, createdAt: Date.now() }],
+      title: newConvoLabel,
+      messages: [{ id: uid(), role: "assistant", content: resolvedGreeting, createdAt: Date.now() }],
       createdAt: Date.now(),
     };
     setThreads((prev) => [t, ...prev]);
@@ -130,8 +154,8 @@ export function ChatWidget({
       if (next.length === 0) {
         const fresh: Thread = {
           id: uid(),
-          title: "New conversation",
-          messages: [{ id: uid(), role: "assistant", content: greeting, createdAt: Date.now() }],
+          title: newConvoLabel,
+          messages: [{ id: uid(), role: "assistant", content: resolvedGreeting, createdAt: Date.now() }],
           createdAt: Date.now(),
         };
         setActiveId(fresh.id);
@@ -188,7 +212,7 @@ export function ChatWidget({
       const reply: Message = { id: uid(), role: "assistant", content: replyText, createdAt: Date.now() };
       setThreads((prev) => prev.map((t) => (t.id === activeId ? { ...t, messages: [...t.messages, reply] } : t)));
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Couldn't reach the assistant.");
+      setError(e instanceof Error ? e.message : t("ui.errorGeneric"));
     } finally {
       setIsTyping(false);
     }
@@ -215,10 +239,10 @@ export function ChatWidget({
             accentBg,
             sideClass,
           )}
-          aria-label={`Open ${title}`}
+          aria-label={`Open ${resolvedTitle}`}
         >
           <MessageCircle className="w-5 h-5" />
-          <span className="text-sm font-medium hidden sm:inline">{title}</span>
+          <span className="text-sm font-medium hidden sm:inline">{resolvedTitle}</span>
         </button>
       )}
 
@@ -236,8 +260,8 @@ export function ChatWidget({
               <Bot className="w-5 h-5" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-sm truncate">{title}</h3>
-              <p className="text-xs text-white/80 truncate">{subtitle}</p>
+              <h3 className="font-semibold text-sm truncate">{resolvedTitle}</h3>
+              <p className="text-xs text-white/80 truncate">{resolvedSubtitle}</p>
             </div>
             <button onClick={() => setShowThreads((v) => !v)} className="p-1.5 hover:bg-white/15 rounded-md" aria-label="Conversations">
               <MessageCircle className="w-4 h-4" />
@@ -315,7 +339,11 @@ export function ChatWidget({
                     m.role === "user" ? "bg-primary text-primary-foreground rounded-br-sm" : "bg-muted text-foreground rounded-bl-sm",
                   )}
                 >
-                  {m.content && <p className="whitespace-pre-wrap break-words">{renderMessageContent(m.content)}</p>}
+                  {m.content && (
+                    <p className="whitespace-pre-wrap break-words">
+                      {renderMessageContent(m.content, linkLabels)}
+                    </p>
+                  )}
                   {m.attachments?.map((a, i) => (
                     <div key={i} className={cn("mt-2 flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs", m.role === "user" ? "bg-primary-foreground/15" : "bg-background border border-border")}>
                       <FileText className="w-3.5 h-3.5 shrink-0" />
@@ -359,9 +387,9 @@ export function ChatWidget({
             )}
 
             {/* Suggestions */}
-            {active && active.messages.length <= 1 && suggestions.length > 0 && !isTyping && (
+            {active && active.messages.length <= 1 && resolvedSuggestions.length > 0 && !isTyping && (
               <div className="pt-2 flex flex-wrap gap-2">
-                {suggestions.map((s) => (
+                {resolvedSuggestions.map((s) => (
                   <button
                     key={s}
                     onClick={() => void send(s)}
@@ -429,7 +457,7 @@ export function ChatWidget({
               }}
               rows={1}
               disabled={isTyping}
-              placeholder={placeholder}
+              placeholder={resolvedPlaceholder}
               className={cn(
                 "flex-1 resize-none bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 max-h-32 disabled:opacity-60",
                 accentRing,
@@ -444,7 +472,9 @@ export function ChatWidget({
               <Send className="w-4 h-4" />
             </Button>
             </div>
-            {disclaimer && <p className="px-3 pb-2 text-[10px] text-muted-foreground leading-snug">{disclaimer}</p>}
+            {resolvedDisclaimer && (
+              <p className="px-3 pb-2 text-[10px] text-muted-foreground leading-snug">{resolvedDisclaimer}</p>
+            )}
           </form>
         </div>
       )}

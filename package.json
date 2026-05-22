@@ -10,7 +10,7 @@
     "db:migrate": "cd backend && alembic upgrade head",
     "db:load-scholarships": "cd backend && python scripts/load_scholarships.py",
     "db:revision": "cd backend && alembic revision --autogenerate -m",
-    "export:scholarships": "node scripts/export-scholarships.mjs",
+    "export:scholarships": "npx --yes tsx scripts/export-scholarships.ts",
     "lint": "npm run lint --prefix frontend",
     "format": "npm run format --prefix frontend"
   },

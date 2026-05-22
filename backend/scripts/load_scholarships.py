@@ -23,7 +23,17 @@ DEFAULT_JSON = BACKEND_ROOT / "data" / "scholarships.json"
 
 # JSON keys mapped to table columns (rest go into program_data)
 _COLUMN_KEYS = frozenset(
-    {"slug", "title", "programType", "shortDescription", "funding", "verified", "deadline"}
+    {
+        "slug",
+        "title",
+        "titleDe",
+        "programType",
+        "shortDescription",
+        "shortDescriptionDe",
+        "funding",
+        "verified",
+        "deadline",
+    }
 )
 
 
@@ -52,13 +62,16 @@ def entry_to_row(entry: dict) -> dict:
     title = entry.get("title") or slug
     short_description = entry.get("shortDescription") or ""
 
+    title_de = entry.get("titleDe")
+    short_description_de = entry.get("shortDescriptionDe")
+
     return {
         "slug": slug,
         "program_type": str(program_type)[:60],
         "title_en": str(title)[:300],
-        "title_de": None,
+        "title_de": (str(title_de)[:300] if title_de else None),
         "short_description_en": str(short_description),
-        "short_description_de": None,
+        "short_description_de": (str(short_description_de) if short_description_de else None),
         "funding": (str(entry["funding"])[:80] if entry.get("funding") else None),
         "deadline": parse_deadline(entry.get("deadline")),
         "verified": bool(entry.get("verified", False)),

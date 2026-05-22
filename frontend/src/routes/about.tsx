@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
+import { metaFromKeys } from "@/lib/pageMeta";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -17,111 +19,45 @@ import heroBridge from "@/assets/hero-bridge.jpg";
 import programOverview from "@/assets/program-overview.jpg";
 import eligibilityNurse from "@/assets/eligibility-nurse.jpg";
 
-const galleryImages = [
-  { src: imageHero, alt: "Your career in Germany starts here" },
-  { src: heroBridge, alt: "Bridge to opportunity in Germany" },
-  { src: programOverview, alt: "Healthcare professionals reviewing documents" },
-  { src: eligibilityNurse, alt: "Kenyan nurse working in a German hospital" },
-];
-
-const freeServices: {
-  icon: typeof ClipboardList;
-  title: string;
-  desc: string;
-  href?: string;
-  whatsappLogo?: boolean;
-}[] = [
-  {
-    icon: ClipboardList,
-    title: "Information & Eligibility Assessment",
-    desc: "Initial consultation online or in-person in NRW for Germany-based enquiries.",
-  },
-  {
-    icon: GraduationCap,
-    title: "Scholarship & Opportunity Matching",
-    desc: "Connection to verified German school openings aligned with your profile.",
-  },
-  {
-    icon: MessageCircle,
-    title: "WhatsApp Community Membership",
-    desc: "Access to a candidate peer network and agency updates.",
-    href: WHATSAPP_GROUP_URL,
-    whatsappLogo: true,
-  },
-  {
-    icon: BookOpen,
-    title: "Online Resource Library",
-    desc: "Downloadable guides on Ausbildung, visa, and language requirements.",
-  },
-  {
-    icon: Video,
-    title: "Webinars & Q&A Sessions",
-    desc: "Monthly online events open to all registered candidates.",
-  },
-];
-
-const paidServices = [
-  {
-    icon: FileStack,
-    title: "Full Application Management Package",
-    desc: "Document preparation, translation verification, and school application submission.",
-    price: "€150–€300",
-  },
-  {
-    icon: Languages,
-    title: "German Language Guidance Package",
-    desc: "Course provider matching, study plan, and exam registration support.",
-    price: "€75–€150",
-  },
-  {
-    icon: Stamp,
-    title: "Visa Application Support",
-    desc: "Document checklist, appointment preparation, and embassy liaison coordination.",
-    price: "€100–€200",
-  },
-  {
-    icon: Mic,
-    title: "Interview Preparation",
-    desc: "Mock interviews in German and English, cultural briefing, and role-play.",
-    price: "€75–€125",
-  },
-  {
-    icon: Plane,
-    title: "Pre-Departure Orientation",
-    desc: "1-day virtual or in-person session covering German healthcare culture, accommodation, banking, and transport.",
-    price: "€50–€100",
-  },
-  {
-    icon: Package,
-    title: "Premium Bundle",
-    desc: "All paid services above at a discounted combined rate.",
-    price: "€400–€600",
-    highlight: true,
-  },
-  {
-    icon: MapPin,
-    title: "Post-Arrival Integration Support",
-    desc: "Optional add-on: first 90 days check-ins, Anmeldung guidance, and insurance registration.",
-    price: "€75–€150",
-    optional: true,
-  },
-];
+const GALLERY_SRCS = [imageHero, heroBridge, programOverview, eligibilityNurse];
+const FREE_ICONS = [ClipboardList, GraduationCap, MessageCircle, BookOpen, Video] as const;
+const PAID_ICONS = [FileStack, Languages, Stamp, Mic, Plane, Package, MapPin] as const;
+const APART_ICONS = [Eye, BadgeCheck, HandCoins, Handshake, LifeBuoy, UserCheck] as const;
+const ETHICS_ICONS = [Shield, Eye, Heart] as const;
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "About — German Nursing Pathway" },
-      {
-        name: "description",
-        content:
-          "German Nursing Pathway fast-tracks verified students into trusted nursing scholarship opportunities, language training, and career pathways in Germany.",
-      },
-    ],
-  }),
+  head: () => metaFromKeys("about"),
   component: About,
 });
 
 function About() {
+  const { t } = useTranslation("about");
+  const galleryAlts = t("gallery.alts", { returnObjects: true }) as string[];
+  const galleryImages = GALLERY_SRCS.map((src, i) => ({ src, alt: galleryAlts[i] ?? "" }));
+  const freeServices = (
+    t("freeServices", { returnObjects: true }) as {
+      title: string;
+      desc: string;
+      whatsapp?: boolean;
+    }[]
+  ).map((item, i) => ({
+    ...item,
+    icon: FREE_ICONS[i] ?? ClipboardList,
+    href: item.whatsapp ? WHATSAPP_GROUP_URL : undefined,
+    whatsappLogo: item.whatsapp,
+  }));
+  const paidServices = (
+    t("paidServices", { returnObjects: true }) as {
+      title: string;
+      desc: string;
+      price: string;
+      highlight?: boolean;
+      optional?: boolean;
+    }[]
+  ).map((item, i) => ({ ...item, icon: PAID_ICONS[i] ?? FileStack }));
+  const apartItems = t("apart.items", { returnObjects: true }) as { title: string; desc: string }[];
+  const ethicsItems = t("ethics.items", { returnObjects: true }) as { title: string; desc: string }[];
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -129,18 +65,11 @@ function About() {
         {/* Hero */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h1 className="font-heading text-4xl sm:text-5xl font-bold text-foreground">
-              About German Nursing Pathway
-            </h1>
+            <h1 className="font-heading text-4xl sm:text-5xl font-bold text-foreground">{t("title")}</h1>
           </div>
 
           <div className="prose prose-lg mx-auto">
-            <p className="text-muted-foreground leading-relaxed text-center">
-              German Nursing Pathway bridges the gap between ambitious nursing students and verified
-              opportunities abroad. Through direct connections with accredited schools, structured language
-              training, visa guidance, and end-to-end application support, we help you move from eligibility
-              check to a sustainable healthcare career in Germany.
-            </p>
+            <p className="text-muted-foreground leading-relaxed text-center">{t("intro")}</p>
           </div>
         </div>
 
@@ -149,7 +78,7 @@ function About() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="font-heading text-3xl sm:text-4xl font-bold text-foreground">
-                Strategic Direction & <span className="text-warm">Vision</span>
+                {t("vision.sectionTitle")} <span className="text-warm">{t("vision.sectionAccent")}</span>
               </h2>
               <div className="w-16 h-1 bg-warm mt-4 mx-auto rounded-full" />
             </div>
@@ -158,21 +87,15 @@ function About() {
                 <div className="w-14 h-14 rounded-2xl bg-warm/10 flex items-center justify-center mb-6">
                   <Eye className="w-7 h-7 text-warm" />
                 </div>
-                <h3 className="font-heading text-2xl font-bold text-foreground">Our Vision</h3>
-                <p className="mt-4 text-lg text-foreground font-medium leading-relaxed">
-                  Transforming dreams into global healthcare careers.
-                </p>
+                <h3 className="font-heading text-2xl font-bold text-foreground">{t("vision.visionTitle")}</h3>
+                <p className="mt-4 text-lg text-foreground font-medium leading-relaxed">{t("vision.visionText")}</p>
               </div>
               <div className="bg-card rounded-2xl border border-border p-8 sm:p-10 hover:border-warm/30 hover:shadow-lg transition-all">
                 <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
                   <Target className="w-7 h-7 text-primary" />
                 </div>
-                <h3 className="font-heading text-2xl font-bold text-foreground">Our Mission</h3>
-                <p className="mt-4 text-muted-foreground leading-relaxed">
-                  Fast-tracking verified students into trusted nursing scholarship opportunities, language
-                  training, visa guidance, and career pathways through direct connections with accredited
-                  nursing schools and healthcare institutions in Germany.
-                </p>
+                <h3 className="font-heading text-2xl font-bold text-foreground">{t("vision.missionTitle")}</h3>
+                <p className="mt-4 text-muted-foreground leading-relaxed">{t("vision.missionText")}</p>
               </div>
             </div>
           </div>
@@ -182,7 +105,7 @@ function About() {
         <section className="py-16 overflow-hidden bg-card/40">
           <div className="text-center mb-10 px-4">
             <h2 className="font-heading text-2xl sm:text-3xl font-bold text-foreground">
-              Glimpses of <span className="text-warm">Your Journey</span>
+              {t("gallery.title")} <span className="text-warm">{t("gallery.titleAccent")}</span>
             </h2>
             <div className="w-12 h-1 bg-warm mt-3 mx-auto rounded-full" />
           </div>
@@ -210,13 +133,10 @@ function About() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-14">
               <h2 className="font-heading text-3xl sm:text-4xl font-bold text-foreground">
-                Our Comprehensive <span className="text-warm">Services</span>
+                {t("services.sectionTitle")} <span className="text-warm">{t("services.sectionAccent")}</span>
               </h2>
               <div className="w-16 h-1 bg-warm mt-4 mx-auto rounded-full" />
-              <p className="mt-6 text-muted-foreground max-w-2xl mx-auto text-lg">
-                End-to-end solutions for your nursing career in Germany — from first eligibility check
-                through arrival and integration.
-              </p>
+              <p className="mt-6 text-muted-foreground max-w-2xl mx-auto text-lg">{t("services.sectionSubtitle")}</p>
             </div>
 
             {/* Free services */}
@@ -224,14 +144,10 @@ function About() {
               <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
                 <div>
                   <span className="inline-block text-xs font-semibold uppercase tracking-wider text-success bg-success/10 px-3 py-1 rounded-full mb-3">
-                    Free Services
+                    {t("services.freeBadge")}
                   </span>
-                  <h3 className="font-heading text-2xl font-bold text-foreground">
-                    Lead Generation & Trust Building
-                  </h3>
-                  <p className="mt-2 text-muted-foreground text-sm max-w-xl">
-                    Get started at no cost — assess your fit, access resources, and join our candidate community.
-                  </p>
+                  <h3 className="font-heading text-2xl font-bold text-foreground">{t("services.freeTitle")}</h3>
+                  <p className="mt-2 text-muted-foreground text-sm max-w-xl">{t("services.freeSubtitle")}</p>
                 </div>
               </div>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -248,7 +164,7 @@ function About() {
                       <h4 className="font-heading text-lg font-semibold text-foreground">{item.title}</h4>
                       <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
                       <span className="inline-block mt-4 text-xs font-medium text-success">
-                        {item.href ? "Join free →" : "Included free"}
+                        {item.href ? t("services.joinFree") : t("services.includedFree")}
                       </span>
                     </>
                   );
@@ -279,12 +195,10 @@ function About() {
               <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
                 <div>
                   <span className="inline-block text-xs font-semibold uppercase tracking-wider text-warm bg-warm/10 px-3 py-1 rounded-full mb-3">
-                    Paid Services
+                    {t("services.paidBadge")}
                   </span>
-                  <h3 className="font-heading text-2xl font-bold text-foreground">Core Application & Relocation Support</h3>
-                  <p className="mt-2 text-muted-foreground text-sm max-w-xl">
-                    Expert-led packages to take you from application to arrival — transparent pricing per candidate.
-                  </p>
+                  <h3 className="font-heading text-2xl font-bold text-foreground">{t("services.paidTitle")}</h3>
+                  <p className="mt-2 text-muted-foreground text-sm max-w-xl">{t("services.paidSubtitle")}</p>
                 </div>
               </div>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -310,12 +224,12 @@ function About() {
                     <h4 className="font-heading text-lg font-semibold text-foreground">
                       {item.title}
                       {item.optional && (
-                        <span className="ml-2 text-xs font-normal text-muted-foreground">(optional)</span>
+                        <span className="ml-2 text-xs font-normal text-muted-foreground">{t("services.optional")}</span>
                       )}
                     </h4>
                     <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
                     {item.highlight && (
-                      <p className="mt-3 text-xs text-warm font-medium">Best value — all core packages combined</p>
+                      <p className="mt-3 text-xs text-warm font-medium">{t("services.bestValue")}</p>
                     )}
                   </div>
                 ))}
@@ -324,7 +238,7 @@ function About() {
 
             <div className="text-center mt-12 flex flex-col sm:flex-row gap-4 justify-center">
               <Button variant="warm" size="lg" asChild>
-                <Link to="/register">Register Interest</Link>
+                <Link to="/register">{t("services.registerCta")}</Link>
               </Button>
               <WhatsAppLink variant="whatsapp" size="lg" />
             </div>
@@ -335,88 +249,49 @@ function About() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
           <div className="text-center mb-12">
             <h2 className="font-heading text-3xl sm:text-4xl font-bold text-foreground">
-              What Sets Us <span className="text-warm">Apart</span>
+              {t("apart.title")} <span className="text-warm">{t("apart.titleAccent")}</span>
             </h2>
             <div className="w-16 h-1 bg-warm mt-4 mx-auto rounded-full" />
-            <p className="mt-6 text-muted-foreground max-w-xl mx-auto">
-              Six commitments that shape every step of your journey from Kenya to Germany.
-            </p>
+            <p className="mt-6 text-muted-foreground max-w-xl mx-auto">{t("apart.subtitle")}</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                icon: Eye,
-                title: "Transparent Processes",
-                desc: "Clear step-by-step guidance with no hidden costs or surprises.",
-              },
-              {
-                icon: BadgeCheck,
-                title: "Credentialing Support",
-                desc: "Expert assistance with licensing and certification requirements.",
-              },
-              {
-                icon: HandCoins,
-                title: "Flexible Payments",
-                desc: "Ethical practices with payment plans tailored to your budget.",
-              },
-              {
-                icon: Handshake,
-                title: "Strong Partnerships",
-                desc: "Direct connections with accredited schools and healthcare employers in Germany.",
-              },
-              {
-                icon: LifeBuoy,
-                title: "End-to-End Support",
-                desc: "From initial application to successful integration abroad.",
-              },
-              {
-                icon: UserCheck,
-                title: "Professional Guidance",
-                desc: "Experienced consultants with healthcare migration expertise.",
-              },
-            ].map((item) => (
+            {apartItems.map((item, i) => {
+              const Icon = APART_ICONS[i] ?? Eye;
+              return (
               <div
                 key={item.title}
                 className="text-center bg-card rounded-2xl p-8 border border-border hover:border-warm/30 hover:shadow-lg transition-all group"
               >
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5 group-hover:bg-primary/15 transition-colors">
-                  <item.icon className="w-7 h-7 text-primary" />
+                  <Icon className="w-7 h-7 text-primary" />
                 </div>
                 <h3 className="font-heading text-lg font-semibold text-foreground">{item.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
-        {/* Core values strip */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-24">
+          <div className="text-center mb-10">
+            <h2 className="font-heading text-3xl font-bold text-foreground">
+              {t("ethics.title")} <span className="text-warm">{t("ethics.titleAccent")}</span>
+            </h2>
+          </div>
           <div className="grid sm:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Heart,
-                title: "Compassion",
-                desc: "Patient, empathetic support at every stage of your international career journey.",
-              },
-              {
-                icon: Shield,
-                title: "Integrity",
-                desc: "Honest assessments, verified opportunities, and ethical recruitment practices.",
-              },
-              {
-                icon: CheckCircle,
-                title: "Excellence",
-                desc: "Regulated processes that ensure compliance and satisfaction for every candidate we serve.",
-              },
-            ].map((item) => (
+            {ethicsItems.map((item, i) => {
+              const Icon = ETHICS_ICONS[i] ?? Shield;
+              return (
               <div key={item.title} className="text-center">
                 <div className="w-14 h-14 rounded-2xl bg-warm/10 flex items-center justify-center mx-auto mb-4">
-                  <item.icon className="w-7 h-7 text-warm" />
+                  <Icon className="w-7 h-7 text-warm" />
                 </div>
                 <h3 className="font-heading text-lg font-semibold text-foreground">{item.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

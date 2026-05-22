@@ -1,0 +1,48 @@
+{
+  "title": "How It Works",
+  "subtitle": "Your pathway from Kenya to a nursing career in Germany — eight clear steps from first contact to arrival.",
+  "stepLabel": "Step {{n}}",
+  "registerCta": "Register Interest",
+  "steps": [
+    {
+      "title": "Register Your Interest",
+      "desc": "Complete a short form with your nursing qualification, German level, and timeline. Join our WhatsApp community for peer support and updates.",
+      "details": ["Free initial assessment", "WhatsApp candidate network", "No obligation"]
+    },
+    {
+      "title": "Eligibility & Assessment",
+      "desc": "We review your profile against verified school and Ausbildung requirements and share an honest readiness summary.",
+      "details": ["Online or in-person (NRW)", "Gap analysis", "Clear next steps"]
+    },
+    {
+      "title": "School & Opportunity Matching",
+      "desc": "We connect you with accredited German nursing schools and healthcare institutions that fit your profile.",
+      "details": ["Verified partner schools", "Scholarship & Ausbildung options", "Transparent criteria"]
+    },
+    {
+      "title": "Application & Documents",
+      "desc": "Guided document preparation, translation verification, and school application submission with our support team.",
+      "details": ["Document checklist", "Application management", "Interview preparation"]
+    },
+    {
+      "title": "German Language Pathway",
+      "desc": "Course matching, study plans, and exam registration support from A1 toward the level your program requires.",
+      "details": ["Provider matching", "Healthcare German focus", "Exam support"]
+    },
+    {
+      "title": "Visa & Embassy Support",
+      "desc": "Checklist-driven visa preparation, appointment guidance, and coordination for your embassy interview.",
+      "details": ["Document review", "Mock interviews", "Embassy liaison"]
+    },
+    {
+      "title": "Pre-Departure Orientation",
+      "desc": "Virtual or in-person session on German healthcare culture, accommodation, banking, transport, and what to expect on arrival.",
+      "details": ["Culture briefing", "Practical settlement tips", "Insurance overview"]
+    },
+    {
+      "title": "Arrival & Integration",
+      "desc": "Optional first-90-days support: Anmeldung guidance, insurance registration, and check-ins as you start your role.",
+      "details": ["Post-arrival check-ins", "Local registration help", "Ongoing agency contact"]
+    }
+  ]
+}

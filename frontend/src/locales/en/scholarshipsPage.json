@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "title": "Scholarships in Germany 2026/2027 — Fully Funded for Kenyan Students",
+    "description": "Browse the latest fully funded scholarships in Germany for 2026/2027. DAAD, KAAD, Erasmus+, Friedrich Ebert and more — eligibility, benefits and how to apply."
+  },
+  "hero": {
+    "badge": "2026 / 2027 Intake",
+    "title": "Scholarships in",
+    "titleAccent": "Germany",
+    "titleSuffix": "for International Students",
+    "subtitle": "Fully funded scholarships covering tuition, stipends, accommodation, insurance and travel."
+  },
+  "intro": "In this section, you will find the latest scholarships in Germany, along with eligibility requirements, complete benefits, and step-by-step application guidance. Start your educational journey today and explore opportunities to study at top German universities at little to no cost.",
+  "imageAlt": "List of top universities in Germany",
+  "imageCaption": "Top German universities welcoming international students",
+  "searchPlaceholder": "Search scholarships, providers...",
+  "filters": {
+    "all": "All",
+    "verified": "Verified",
+    "nursing": "Nursing",
+    "ausbildung": "Ausbildung",
+    "general": "General"
+  },
+  "verifiedBadge": "Verified",
+  "viewDetails": "View details",
+  "noResults": "No scholarships match your search.",
+  "showingCount": "Showing {{count}} scholarships",
+  "internationalStudents": "International Students",
+  "details": "Details",
+  "offeredBy": "Offered by {{provider}}",
+  "detail": {
+    "back": "Back to scholarships",
+    "notFoundTitle": "Scholarship not found",
+    "browseAll": "Browse all scholarships",
+    "about": "About this program",
+    "benefits": "Benefits",
+    "eligibility": "Eligibility",
+    "documents": "Required documents",
+    "process": "Application process",
+    "applyCta": "Register interest",
+    "officialLink": "Official program page",
+    "officialHint": "Always submit your application through the official channel.",
+    "visitOfficial": "Visit Official Website",
+    "keyFacts": "Key Facts",
+    "checkEligibility": "Check My Eligibility",
+    "facts": {
+      "hostCountry": "Host Country",
+      "studyIn": "Study In",
+      "degreeLevel": "Degree Level",
+      "funding": "Funding",
+      "eligibleCountries": "Eligible Countries",
+      "deadline": "Deadline"
+    }
+  }
+}

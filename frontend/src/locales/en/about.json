@@ -1,0 +1,76 @@
+{
+  "title": "About German Nursing Pathway",
+  "intro": "German Nursing Pathway bridges the gap between ambitious nursing students and verified opportunities abroad. Through direct connections with accredited schools, structured language training, visa guidance, and end-to-end application support, we help you move from eligibility check to a sustainable healthcare career in Germany.",
+  "vision": {
+    "sectionTitle": "Strategic Direction &",
+    "sectionAccent": "Vision",
+    "visionTitle": "Our Vision",
+    "visionText": "Transforming dreams into global healthcare careers.",
+    "missionTitle": "Our Mission",
+    "missionText": "Fast-tracking verified students into trusted nursing scholarship opportunities, language training, visa guidance, and career pathways through direct connections with accredited nursing schools and healthcare institutions in Germany."
+  },
+  "gallery": {
+    "title": "Glimpses of",
+    "titleAccent": "Your Journey",
+    "alts": [
+      "Your career in Germany starts here",
+      "Bridge to opportunity in Germany",
+      "Healthcare professionals reviewing documents",
+      "Kenyan nurse working in a German hospital"
+    ]
+  },
+  "services": {
+    "sectionTitle": "Our Comprehensive",
+    "sectionAccent": "Services",
+    "sectionSubtitle": "End-to-end solutions for your nursing career in Germany — from first eligibility check through arrival and integration.",
+    "freeBadge": "Free Services",
+    "freeTitle": "Lead Generation & Trust Building",
+    "freeSubtitle": "Get started at no cost — assess your fit, access resources, and join our candidate community.",
+    "joinFree": "Join free →",
+    "includedFree": "Included free",
+    "paidBadge": "Paid Services",
+    "paidTitle": "Core Application & Relocation Support",
+    "paidSubtitle": "Expert-led packages to take you from application to arrival — transparent pricing per candidate.",
+    "bestValue": "Best value — all core packages combined",
+    "optional": "(optional)",
+    "registerCta": "Register Interest"
+  },
+  "freeServices": [
+    { "title": "Information & Eligibility Assessment", "desc": "Initial consultation online or in-person in NRW for Germany-based enquiries." },
+    { "title": "Scholarship & Opportunity Matching", "desc": "Connection to verified German school openings aligned with your profile." },
+    { "title": "WhatsApp Community Membership", "desc": "Access to a candidate peer network and agency updates.", "whatsapp": true },
+    { "title": "Online Resource Library", "desc": "Downloadable guides on Ausbildung, visa, and language requirements." },
+    { "title": "Webinars & Q&A Sessions", "desc": "Monthly online events open to all registered candidates." }
+  ],
+  "paidServices": [
+    { "title": "Full Application Management Package", "desc": "Document preparation, translation verification, and school application submission.", "price": "€150–€300" },
+    { "title": "German Language Guidance Package", "desc": "Course provider matching, study plan, and exam registration support.", "price": "€75–€150" },
+    { "title": "Visa Application Support", "desc": "Document checklist, appointment preparation, and embassy liaison coordination.", "price": "€100–€200" },
+    { "title": "Interview Preparation", "desc": "Mock interviews in German and English, cultural briefing, and role-play.", "price": "€75–€125" },
+    { "title": "Pre-Departure Orientation", "desc": "1-day virtual or in-person session covering German healthcare culture, accommodation, banking, and transport.", "price": "€50–€100" },
+    { "title": "Premium Bundle", "desc": "All paid services above at a discounted combined rate.", "price": "€400–€600", "highlight": true },
+    { "title": "Post-Arrival Integration Support", "desc": "Optional add-on: first 90 days check-ins, Anmeldung guidance, and insurance registration.", "price": "€75–€150", "optional": true }
+  ],
+  "apart": {
+    "title": "What Sets Us",
+    "titleAccent": "Apart",
+    "subtitle": "Six commitments that shape every step of your journey from Kenya to Germany.",
+    "items": [
+      { "title": "Transparent Processes", "desc": "Clear step-by-step guidance with no hidden costs or surprises." },
+      { "title": "Credentialing Support", "desc": "Expert assistance with licensing and certification requirements." },
+      { "title": "Flexible Payments", "desc": "Ethical practices with payment plans tailored to your budget." },
+      { "title": "Strong Partnerships", "desc": "Direct connections with accredited schools and healthcare employers in Germany." },
+      { "title": "End-to-End Support", "desc": "From initial application to successful integration abroad." },
+      { "title": "Professional Guidance", "desc": "Experienced consultants with healthcare migration expertise." }
+    ]
+  },
+  "ethics": {
+    "title": "Ethical",
+    "titleAccent": "Practices",
+    "items": [
+      { "title": "No False Promises", "desc": "We never guarantee jobs or visas — we provide honest assessments and verified pathways." },
+      { "title": "Transparent Fees", "desc": "All costs are disclosed upfront with flexible payment options." },
+      { "title": "Data Privacy", "desc": "Your personal information is protected and never sold to third parties." }
+    ]
+  }
+}

@@ -1,13 +1,29 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { getScholarship } from "@/lib/scholarships";
 import {
-  Calendar, MapPin, GraduationCap, Globe, Award, Users, ArrowRight,
-  CheckCircle, FileText, ListChecks, ExternalLink, ArrowLeft,
+  scholarshipList,
+  scholarshipText,
+} from "@/lib/scholarships";
+import { metaTags } from "@/lib/routeHead";
+import i18n from "@/i18n";
+import {
+  Calendar,
+  MapPin,
+  GraduationCap,
+  Globe,
+  Award,
+  Users,
+  ArrowRight,
+  CheckCircle,
+  FileText,
+  ListChecks,
+  ExternalLink,
+  ArrowLeft,
 } from "lucide-react";
 
 export const Route = createFileRoute("/scholarships/$slug")({
@@ -16,28 +32,21 @@ export const Route = createFileRoute("/scholarships/$slug")({
     if (!scholarship) throw notFound();
     return scholarship;
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData
-      ? [
-          { title: `${loaderData.title} — Scholarships in Germany` },
-          { name: "description", content: loaderData.shortDescription },
-          { property: "og:title", content: loaderData.title },
-          { property: "og:description", content: loaderData.shortDescription },
-        ]
-      : [],
-  }),
-  notFoundComponent: () => (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="pt-32 pb-20 text-center">
-        <h1 className="font-heading text-3xl font-bold text-foreground">Scholarship not found</h1>
-        <Button variant="warm" className="mt-6" asChild>
-          <Link to="/scholarships">Browse all scholarships</Link>
-        </Button>
-      </div>
-      <Footer />
-    </div>
-  ),
+  head: ({ loaderData }) => {
+    if (!loaderData) return { meta: [] };
+    const lang = i18n.language;
+    const title = scholarshipText(loaderData, "title", lang);
+    const description = scholarshipText(loaderData, "shortDescription", lang);
+    return {
+      meta: metaTags({
+        title: `${title} — ${i18n.t("meta.scholarships.title", { ns: "common" })}`,
+        description,
+        ogTitle: title,
+        ogDescription: description,
+      }),
+    };
+  },
+  notFoundComponent: ScholarshipNotFound,
   errorComponent: ({ error }) => (
     <div className="min-h-screen bg-background pt-32 text-center">
       <p className="text-muted-foreground">{error.message}</p>
@@ -46,77 +55,103 @@ export const Route = createFileRoute("/scholarships/$slug")({
   component: ScholarshipDetail,
 });
 
+function ScholarshipNotFound() {
+  const { t } = useTranslation("scholarshipsPage");
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <div className="pt-32 pb-20 text-center">
+        <h1 className="font-heading text-3xl font-bold text-foreground">{t("detail.notFoundTitle")}</h1>
+        <Button variant="warm" className="mt-6" asChild>
+          <Link to="/scholarships">{t("detail.browseAll")}</Link>
+        </Button>
+      </div>
+      <Footer />
+    </div>
+  );
+}
+
 function ScholarshipDetail() {
   const s = Route.useLoaderData();
   const { slug } = Route.useParams();
+  const { t, i18n } = useTranslation("scholarshipsPage");
+  const lang = i18n.language;
 
   const facts = [
-    { icon: Globe, label: "Host Country", value: s.hostCountry },
-    { icon: MapPin, label: "Study In", value: s.studyIn },
-    { icon: GraduationCap, label: "Degree Level", value: s.degreeLevel },
-    { icon: Award, label: "Funding", value: s.funding },
-    { icon: Users, label: "Eligible Countries", value: s.eligibleCountries },
-    { icon: Calendar, label: "Deadline", value: s.deadline },
+    { icon: Globe, label: t("detail.facts.hostCountry"), value: s.hostCountry },
+    { icon: MapPin, label: t("detail.facts.studyIn"), value: s.studyIn },
+    { icon: GraduationCap, label: t("detail.facts.degreeLevel"), value: scholarshipText(s, "degreeLevel", lang) },
+    { icon: Award, label: t("detail.facts.funding"), value: scholarshipText(s, "funding", lang) },
+    { icon: Users, label: t("detail.facts.eligibleCountries"), value: s.eligibleCountries },
+    { icon: Calendar, label: t("detail.facts.deadline"), value: scholarshipText(s, "deadline", lang) },
   ];
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero */}
       <section className="pt-28 pb-12 hero-gradient">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link
             to="/scholarships"
             className="inline-flex items-center gap-1 text-primary-foreground/70 hover:text-warm text-sm mb-4"
           >
-            <ArrowLeft className="w-4 h-4" /> Back to scholarships
+            <ArrowLeft className="w-4 h-4" /> {t("detail.back")}
           </Link>
-          <Badge className="bg-warm text-warm-foreground border-0">{s.funding}</Badge>
+          <Badge className="bg-warm text-warm-foreground border-0">{scholarshipText(s, "funding", lang)}</Badge>
           <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-primary-foreground mt-4 leading-tight">
-            {s.title}
+            {scholarshipText(s, "title", lang)}
           </h1>
-          <p className="text-primary-foreground/70 mt-3">Offered by {s.provider}</p>
+          <p className="text-primary-foreground/70 mt-3">
+            {t("offeredBy", { provider: scholarshipText(s, "provider", lang) })}
+          </p>
           <div className="mt-6 flex flex-wrap gap-3 text-sm text-primary-foreground/80">
-            <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-warm" /> {s.deadline}</span>
-            <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-warm" /> {s.location}</span>
-            <span className="flex items-center gap-1.5"><GraduationCap className="w-4 h-4 text-warm" /> {s.degreeLevel}</span>
+            <span className="flex items-center gap-1.5">
+              <Calendar className="w-4 h-4 text-warm" /> {scholarshipText(s, "deadline", lang)}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <MapPin className="w-4 h-4 text-warm" /> {scholarshipText(s, "location", lang)}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <GraduationCap className="w-4 h-4 text-warm" /> {scholarshipText(s, "degreeLevel", lang)}
+            </span>
           </div>
         </div>
       </section>
 
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-3 gap-10">
-          {/* Main */}
           <div className="lg:col-span-2 space-y-10">
             <div>
-              <h2 className="font-heading text-2xl font-bold text-foreground">About the Scholarship</h2>
+              <h2 className="font-heading text-2xl font-bold text-foreground">{t("detail.about")}</h2>
               <div className="w-12 h-1 bg-warm mt-3 mb-5 rounded-full" />
-              <p className="text-muted-foreground leading-relaxed">{s.about}</p>
+              <p className="text-muted-foreground leading-relaxed">{scholarshipText(s, "about", lang)}</p>
             </div>
 
-            <Section title="Scholarship Benefits" icon={Award} items={s.benefits} />
-            <Section title="Eligibility Criteria" icon={CheckCircle} items={s.eligibility} />
-            <Section title="Required Documents" icon={FileText} items={s.requiredDocuments} />
-            <Section title="How to Apply" icon={ListChecks} items={s.applicationProcess} ordered />
+            <Section title={t("detail.benefits")} icon={Award} items={scholarshipList(s, "benefits", lang)} />
+            <Section title={t("detail.eligibility")} icon={CheckCircle} items={scholarshipList(s, "eligibility", lang)} />
+            <Section title={t("detail.documents")} icon={FileText} items={scholarshipList(s, "requiredDocuments", lang)} />
+            <Section
+              title={t("detail.process")}
+              icon={ListChecks}
+              items={scholarshipList(s, "applicationProcess", lang)}
+              ordered
+            />
 
             <div className="bg-card border border-border rounded-2xl p-6">
-              <h3 className="font-heading text-lg font-semibold text-foreground">Official Application Link</h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                Always submit your application through the official channel.
-              </p>
+              <h3 className="font-heading text-lg font-semibold text-foreground">{t("detail.officialLink")}</h3>
+              <p className="text-sm text-muted-foreground mt-1">{t("detail.officialHint")}</p>
               <Button variant="warm" className="mt-4" asChild>
                 <a href={s.officialLink} target="_blank" rel="noopener noreferrer">
-                  Visit Official Website <ExternalLink className="w-4 h-4 ml-1" />
+                  {t("detail.visitOfficial")} <ExternalLink className="w-4 h-4 ml-1" />
                 </a>
               </Button>
             </div>
           </div>
 
-          {/* Sidebar */}
           <aside className="space-y-6">
             <div className="bg-card border border-border rounded-2xl p-6 sticky top-24">
-              <h3 className="font-heading text-lg font-semibold text-foreground">Key Facts</h3>
+              <h3 className="font-heading text-lg font-semibold text-foreground">{t("detail.keyFacts")}</h3>
               <div className="w-10 h-1 bg-warm mt-2 mb-5 rounded-full" />
               <ul className="space-y-4">
                 {facts.map((f) => (
@@ -134,7 +169,7 @@ function ScholarshipDetail() {
 
               <Button variant="warm" className="w-full mt-6" asChild>
                 <Link to="/eligibility">
-                  Check My Eligibility <ArrowRight className="w-4 h-4 ml-1" />
+                  {t("detail.checkEligibility")} <ArrowRight className="w-4 h-4 ml-1" />
                 </Link>
               </Button>
             </div>
@@ -144,27 +179,16 @@ function ScholarshipDetail() {
 
       <Footer />
 
-      <ChatWidget
-        mode="scholarship"
-        scholarshipSlug={slug}
-        title="Ask about this scholarship"
-        subtitle={`${s.provider} · AI assistant`}
-        greeting={`Ask me anything about ${s.title} — eligibility, documents, benefits, or how to apply.`}
-        enableUploads
-        accent="primary"
-        suggestions={[
-          "Am I eligible?",
-          "What documents do I need?",
-          "What are the benefits?",
-          "How do I apply?",
-        ]}
-      />
+      <ChatWidget mode="scholarship" scholarshipSlug={slug} enableUploads accent="primary" />
     </div>
   );
 }
 
 function Section({
-  title, icon: Icon, items, ordered,
+  title,
+  icon: Icon,
+  items,
+  ordered,
 }: {
   title: string;
   icon: React.ComponentType<{ className?: string }>;

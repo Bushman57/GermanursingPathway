@@ -1,0 +1,51 @@
+{
+  "pathway": {
+    "title": "Frage stellen",
+    "subtitle": "Germany Care Path · KI-Assistent",
+    "greeting": "Hallo! Fragen Sie zu Eignung, Kosten, Deutschkenntnissen oder Zeitplan für das Germany Care Path Programm für kenianische Gesundheitsfachkräfte.",
+    "placeholder": "Nachricht eingeben...",
+    "disclaimer": "Nur KI-Orientierung — prüfen Sie Details auf den offiziellen Programmseiten vor einer Bewerbung.",
+    "suggestions": [
+      "Bin ich geeignet?",
+      "Was kostet das Programm?",
+      "Welches Deutschniveau brauche ich?",
+      "Wie lange dauert es?"
+    ]
+  },
+  "scholarshipDetail": {
+    "title": "Fragen zu diesem Stipendium",
+    "subtitle": "{{provider}} · KI-Assistent",
+    "greeting": "Fragen Sie mich zu {{title}} — Voraussetzungen, Unterlagen, Leistungen oder Bewerbung.",
+    "suggestions": [
+      "Bin ich geeignet?",
+      "Welche Unterlagen brauche ich?",
+      "Welche Leistungen gibt es?",
+      "Wie bewerbe ich mich?"
+    ]
+  },
+  "scholarship": {
+    "title": "Stipendien-Assistent",
+    "subtitle": "Programme in Deutschland finden",
+    "greeting": "Hallo! Ich helfe Ihnen, Stipendien zu finden und Voraussetzungen zu erklären. Fragen Sie zu Finanzierung, Fristen oder einem bestimmten Programm.",
+    "placeholder": "Frage zu Stipendien...",
+    "disclaimer": "Nur KI-Orientierung — Fristen und Anforderungen immer auf offiziellen Seiten prüfen.",
+    "suggestions": [
+      "Vollfinanzierte Optionen für Pflegekräfte",
+      "DAAD-Programme für Kenia",
+      "Welche Unterlagen brauche ich?",
+      "Ausbildung vs. Stipendium"
+    ]
+  },
+  "links": {
+    "eligibility": "Eignungsprüfung",
+    "register": "Interesse registrieren",
+    "scholarships": "Stipendien"
+  },
+  "ui": {
+    "newConversation": "Neues Gespräch",
+    "attach": "Datei anhängen",
+    "send": "Senden",
+    "thinking": "Denke nach...",
+    "errorGeneric": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+  }
+}

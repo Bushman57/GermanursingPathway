@@ -4,24 +4,17 @@ import { Footer } from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
 import { partnerSchools } from "@/lib/partners";
 import { useTranslation } from "react-i18next";
+import { metaFromKeys } from "@/lib/pageMeta";
 import { Building2, MapPin, ArrowRight, BadgeCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/partners")({
-  head: () => ({
-    meta: [
-      { title: "Partner Schools — German Nursing Pathway" },
-      {
-        name: "description",
-        content: "Verified German nursing schools and healthcare training partners.",
-      },
-    ],
-  }),
+  head: () => metaFromKeys("partners"),
   component: PartnersPage,
 });
 
 function PartnersPage() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation("common");
   const isDe = i18n.language.startsWith("de");
 
   return (
@@ -30,11 +23,9 @@ function PartnersPage() {
       <section className="pt-28 pb-12 hero-gradient">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h1 className="font-heading text-3xl sm:text-5xl font-bold text-primary-foreground">
-            Verified <span className="text-warm">Partner Schools</span>
+            {t("partnersPage.title")} <span className="text-warm">{t("partnersPage.titleAccent")}</span>
           </h1>
-          <p className="mt-4 text-primary-foreground/80 max-w-2xl mx-auto">
-            Accredited institutions we work with for nursing scholarships, Ausbildung, and clinical placements in Germany.
-          </p>
+          <p className="mt-4 text-primary-foreground/80 max-w-2xl mx-auto">{t("partnersPage.subtitle")}</p>
         </div>
       </section>
 
@@ -52,7 +43,7 @@ function PartnersPage() {
                 {school.verified && (
                   <Badge className="bg-success/15 text-success border-0 gap-1">
                     <BadgeCheck className="w-3 h-3" />
-                    Verified
+                    {t("partnersPage.verified")}
                   </Badge>
                 )}
               </div>

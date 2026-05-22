@@ -1,0 +1,48 @@
+{
+  "title": "Ablauf",
+  "subtitle": "Ihr Weg von Kenia in eine Pflegekarriere in Deutschland — acht klare Schritte vom Erstkontakt bis zur Ankunft.",
+  "stepLabel": "Schritt {{n}}",
+  "registerCta": "Interesse registrieren",
+  "steps": [
+    {
+      "title": "Interesse registrieren",
+      "desc": "Kurzes Formular mit Qualifikation, Deutschniveau und Zeitplan. Werden Sie Teil unserer WhatsApp-Community für Austausch und Updates.",
+      "details": ["Kostenlose Ersteinschätzung", "WhatsApp-Kandidatennetzwerk", "Unverbindlich"]
+    },
+    {
+      "title": "Eignung & Bewertung",
+      "desc": "Wir prüfen Ihr Profil anhand verifizierter Schul- und Ausbildungsanforderungen und geben eine ehrliche Einschätzung.",
+      "details": ["Online oder vor Ort (NRW)", "Lückenanalyse", "Klare nächste Schritte"]
+    },
+    {
+      "title": "Schul- & Chancen-Matching",
+      "desc": "Vermittlung an akkreditierte Pflegeschulen und Einrichtungen in Deutschland, die zu Ihrem Profil passen.",
+      "details": ["Verifizierte Partnerschulen", "Stipendien & Ausbildung", "Transparente Kriterien"]
+    },
+    {
+      "title": "Bewerbung & Unterlagen",
+      "desc": "Begleitung bei Unterlagen, Übersetzungsprüfung und Einreichung der Schulbewerbung durch unser Team.",
+      "details": ["Dokumenten-Checkliste", "Bewerbungsmanagement", "Vorbereitung auf Interviews"]
+    },
+    {
+      "title": "Deutsch-Sprachpfad",
+      "desc": "Kursvermittlung, Lernplan und Prüfungsanmeldung von A1 bis zum für Ihr Programm erforderlichen Niveau.",
+      "details": ["Anbieter-Matching", "Fokus Pflegefachsprache", "Prüfungsbegleitung"]
+    },
+    {
+      "title": "Visum & Botschaft",
+      "desc": "Checklisten für das Visum, Terminberatung und Koordination für Ihr Botschaftsgespräch.",
+      "details": ["Unterlagenprüfung", "Probeinterviews", "Botschaftsbegleitung"]
+    },
+    {
+      "title": "Orientierung vor Abreise",
+      "desc": "Online oder vor Ort: Kultur im deutschen Gesundheitswesen, Wohnung, Bank, Verkehr und Erwartungen bei Ankunft.",
+      "details": ["Kulturbriefing", "Praktische Tipps", "Versicherungsüberblick"]
+    },
+    {
+      "title": "Ankunft & Integration",
+      "desc": "Optional erste 90 Tage: Anmeldung, Versicherung und Check-ins beim Start in Ihrer Rolle.",
+      "details": ["Check-ins nach Ankunft", "Hilfe bei Anmeldung", "Laufender Kontakt zur Agentur"]
+    }
+  ]
+}

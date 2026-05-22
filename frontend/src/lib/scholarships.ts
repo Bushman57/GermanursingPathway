@@ -1,3 +1,6 @@
+import { isGermanLocale } from "./locale";
+import { scholarshipDeBySlug, type ScholarshipDeFields } from "./scholarship-de";
+
 export type ProgramType = "nursing_scholarship" | "ausbildung" | "other";
 
 export type Scholarship = {
@@ -21,9 +24,77 @@ export type Scholarship = {
   officialLink: string;
   programType: ProgramType;
   verified: boolean;
+} & ScholarshipDeFields;
+
+export type ScholarshipTextField =
+  | "title"
+  | "provider"
+  | "degreeLevel"
+  | "funding"
+  | "deadline"
+  | "location"
+  | "shortDescription"
+  | "about"
+  | "category";
+
+export type ScholarshipListField =
+  | "benefits"
+  | "eligibility"
+  | "requiredDocuments"
+  | "applicationProcess";
+
+const TEXT_DE_MAP: Record<ScholarshipTextField, keyof ScholarshipDeFields> = {
+  title: "titleDe",
+  provider: "providerDe",
+  degreeLevel: "degreeLevelDe",
+  funding: "fundingDe",
+  deadline: "deadlineDe",
+  location: "locationDe",
+  shortDescription: "shortDescriptionDe",
+  about: "aboutDe",
+  category: "categoryDe",
 };
 
-export const scholarships: Scholarship[] = [
+const LIST_DE_MAP: Record<ScholarshipListField, keyof ScholarshipDeFields> = {
+  benefits: "benefitsDe",
+  eligibility: "eligibilityDe",
+  requiredDocuments: "requiredDocumentsDe",
+  applicationProcess: "applicationProcessDe",
+};
+
+function withGermanFields(entry: Omit<Scholarship, keyof ScholarshipDeFields>): Scholarship {
+  return { ...entry, ...scholarshipDeBySlug[entry.slug] };
+}
+
+export function scholarshipText(
+  s: Scholarship,
+  field: ScholarshipTextField,
+  lang?: string,
+): string {
+  const de = isGermanLocale(lang ?? (typeof document !== "undefined" ? document.documentElement.lang : "en"));
+  if (de) {
+    const deKey = TEXT_DE_MAP[field];
+    const value = s[deKey];
+    if (typeof value === "string" && value) return value;
+  }
+  return s[field];
+}
+
+export function scholarshipList(
+  s: Scholarship,
+  field: ScholarshipListField,
+  lang?: string,
+): string[] {
+  const de = isGermanLocale(lang ?? (typeof document !== "undefined" ? document.documentElement.lang : "en"));
+  if (de) {
+    const deKey = LIST_DE_MAP[field];
+    const value = s[deKey];
+    if (Array.isArray(value) && value.length > 0) return value;
+  }
+  return s[field];
+}
+
+const scholarshipEntries: Omit<Scholarship, keyof ScholarshipDeFields>[] = [
   {
     slug: "berlin-nursing-scholarship-2026",
     title: "Berlin Nursing Scholarship 2026",
@@ -466,6 +537,8 @@ export const scholarships: Scholarship[] = [
     verified: false,
   },
 ];
+
+export const scholarships: Scholarship[] = scholarshipEntries.map(withGermanFields);
 
 export function getScholarship(slug: string) {
   return scholarships.find((s) => s.slug === slug);
