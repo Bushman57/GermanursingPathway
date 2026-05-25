@@ -41,6 +41,9 @@ export function Navbar() {
           <div className="hidden lg:flex items-center gap-3">
             <LanguageSwitcher />
             <WhatsAppLink label={t("nav.whatsapp")} variant="outline" size="sm" className="hidden xl:inline-flex" />
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/portal">{t("nav.portal")}</Link>
+            </Button>
             <Button variant="outline" size="sm" asChild>
               <Link to="/eligibility">{t("nav.eligibility")}</Link>
             </Button>
@@ -76,6 +79,11 @@ export function Navbar() {
               </Link>
             ))}
             <WhatsAppLink label={t("nav.whatsapp")} className="w-full" />
+            <Button variant="ghost" size="sm" className="w-full" asChild>
+              <Link to="/portal" onClick={() => setMobileOpen(false)}>
+                {t("nav.portal")}
+              </Link>
+            </Button>
             <Button variant="outline" size="sm" className="w-full" asChild>
               <Link to="/eligibility" onClick={() => setMobileOpen(false)}>
                 {t("nav.eligibility")}
