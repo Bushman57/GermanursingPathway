@@ -124,26 +124,20 @@ def _effective_application_link(scholarship: Scholarship) -> str | None:
     return None
 
 
-def row_to_public(scholarship: Scholarship) -> dict[str, Any]:
-    data: dict[str, Any] = {
-        "provider": "",
-        "degreeLevel": "",
-        "funding": "",
-        "deadline": "",
-        "location": "",
-        "about": "",
-        "hostCountry": "",
-        "studyIn": "",
-        "category": "",
-        "eligibleCountries": "",
-        "benefits": [],
-        "eligibility": [],
-        "requiredDocuments": [],
-        "applicationProcess": [],
-        "officialLink": "",
-        "applicationLink": "",
-        **(scholarship.program_data or {}),
-    }
+_SUMMARY_PROGRAM_KEYS = (
+    "provider",
+    "providerDe",
+    "degreeLevel",
+    "degreeLevelDe",
+    "fundingDe",
+    "category",
+    "categoryDe",
+    "hostCountry",
+    "deadlineDe",
+)
+
+
+def _apply_column_fields(data: dict[str, Any], scholarship: Scholarship) -> None:
     data["slug"] = scholarship.slug
     data["title"] = scholarship.title_en
     if scholarship.title_de:
@@ -164,6 +158,53 @@ def row_to_public(scholarship: Scholarship) -> dict[str, Any]:
     application = _effective_application_link(scholarship)
     if application:
         data["applicationLink"] = application
+
+
+def row_to_public(scholarship: Scholarship, *, include_detail: bool = True) -> dict[str, Any]:
+    pd = scholarship.program_data or {}
+
+    if not include_detail:
+        data: dict[str, Any] = {
+            "slug": scholarship.slug,
+            "title": scholarship.title_en,
+            "programType": scholarship.program_type,
+            "shortDescription": scholarship.short_description_en,
+            "verified": scholarship.verified,
+            "provider": str(pd.get("provider") or ""),
+            "degreeLevel": str(pd.get("degreeLevel") or ""),
+            "funding": str(scholarship.funding or pd.get("funding") or ""),
+            "deadline": "",
+            "category": str(pd.get("category") or ""),
+            "hostCountry": str(pd.get("hostCountry") or ""),
+            "officialLink": "",
+            "applicationLink": "",
+        }
+        for key in _SUMMARY_PROGRAM_KEYS:
+            if key in pd and pd[key]:
+                data[key] = pd[key]
+        _apply_column_fields(data, scholarship)
+        return data
+
+    data = {
+        "provider": "",
+        "degreeLevel": "",
+        "funding": "",
+        "deadline": "",
+        "location": "",
+        "about": "",
+        "hostCountry": "",
+        "studyIn": "",
+        "category": "",
+        "eligibleCountries": "",
+        "benefits": [],
+        "eligibility": [],
+        "requiredDocuments": [],
+        "applicationProcess": [],
+        "officialLink": "",
+        "applicationLink": "",
+        **pd,
+    }
+    _apply_column_fields(data, scholarship)
     return data
 
 

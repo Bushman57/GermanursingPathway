@@ -6,7 +6,7 @@ import {
   scholarshipApplyUrl,
   scholarshipExternalUrl,
 } from "@/lib/scholarshipLinks";
-import type { Scholarship } from "@/lib/scholarships";
+import type { ScholarshipSummary } from "@/lib/scholarships";
 
 const titleLinkClass =
   "font-heading text-base font-semibold text-foreground leading-snug line-clamp-2 hover:text-warm transition-colors";
@@ -15,7 +15,7 @@ export function ScholarshipTitleLink({
   scholarship,
   title,
 }: {
-  scholarship: Scholarship;
+  scholarship: ScholarshipSummary;
   title: string;
 }) {
   const external = scholarshipExternalUrl(scholarship);
@@ -50,7 +50,7 @@ export function ScholarshipApplyButton({
   className,
   size = "sm",
 }: {
-  scholarship: Scholarship;
+  scholarship: ScholarshipSummary;
   applyLabel: string;
   className?: string;
   size?: "sm" | "default";

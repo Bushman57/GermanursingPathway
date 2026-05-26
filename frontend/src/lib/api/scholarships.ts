@@ -1,4 +1,4 @@
-import type { Scholarship } from "@/lib/scholarships";
+import type { Scholarship, ScholarshipSummary } from "@/lib/scholarships";
 import { apiRoot, parseApiError } from "@/lib/api/apiBase";
 
 function scholarshipsBase(): string {
@@ -6,10 +6,10 @@ function scholarshipsBase(): string {
   return root ? `${root}/api/scholarships` : "/api/scholarships";
 }
 
-export async function fetchScholarships(): Promise<Scholarship[]> {
+export async function fetchScholarships(): Promise<ScholarshipSummary[]> {
   const res = await fetch(scholarshipsBase());
   if (!res.ok) throw new Error(await parseApiError(res));
-  return (await res.json()) as Scholarship[];
+  return (await res.json()) as ScholarshipSummary[];
 }
 
 export async function fetchScholarshipBySlug(slug: string): Promise<Scholarship> {

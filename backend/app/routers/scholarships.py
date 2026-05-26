@@ -23,7 +23,7 @@ def require_db() -> Generator[Session, None, None]:
 @router.get("")
 def list_scholarships(db: Session = Depends(require_db)) -> list[dict]:
     rows = db.query(Scholarship).order_by(Scholarship.title_en).all()
-    return [row_to_public(r) for r in rows]
+    return [row_to_public(r, include_detail=False) for r in rows]
 
 
 @router.get("/{slug}")

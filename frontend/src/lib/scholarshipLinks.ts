@@ -1,4 +1,6 @@
-import type { Scholarship } from "@/lib/scholarships";
+import type { ScholarshipSummary } from "@/lib/scholarships";
+
+type ScholarshipWithLinks = Pick<ScholarshipSummary, "officialLink" | "applicationLink">;
 
 function normalizeScholarshipUrl(raw: string): string {
   const trimmed = raw.trim();
@@ -9,7 +11,7 @@ function normalizeScholarshipUrl(raw: string): string {
 }
 
 /** External https URL for institution / official program page, or null if internal/missing. */
-export function scholarshipExternalUrl(s: Scholarship): string | null {
+export function scholarshipExternalUrl(s: ScholarshipWithLinks): string | null {
   const raw = s.officialLink?.trim();
   if (!raw) return null;
   if (/^https?:\/\//i.test(raw)) return raw;
@@ -18,12 +20,12 @@ export function scholarshipExternalUrl(s: Scholarship): string | null {
   return null;
 }
 
-export function scholarshipHasExternalLink(s: Scholarship): boolean {
+export function scholarshipHasExternalLink(s: ScholarshipWithLinks): boolean {
   return scholarshipExternalUrl(s) !== null;
 }
 
 /** Resolve URL for Apply CTA: applicationLink → officialLink → /register */
-export function scholarshipApplyUrl(s: Scholarship): string {
+export function scholarshipApplyUrl(s: ScholarshipWithLinks): string {
   const primary = s.applicationLink?.trim();
   if (primary) return normalizeScholarshipUrl(primary);
   const fallback = s.officialLink?.trim();

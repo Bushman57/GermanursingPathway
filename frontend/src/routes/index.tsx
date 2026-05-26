@@ -20,6 +20,7 @@ import eligibilityNurse from "@/assets/eligibility-nurse.jpg";
 import whySalary from "@/assets/why/salary.jpg";
 import whyRelocation from "@/assets/why/relocation.jpg";
 import whyImmigration from "@/assets/why/immigration.jpg";
+import customerCare2 from "@/assets/Care/CustomerCare_2.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => metaFromKeys("home"),
@@ -309,11 +310,21 @@ function Index() {
 
       {/* CTA Section */}
       <section className="py-20">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-heading text-3xl sm:text-4xl font-bold text-foreground text-balance">
             {t("cta.title")}
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground max-w-lg mx-auto">
+          <div className="mt-8 mx-auto max-w-2xl rounded-2xl overflow-hidden shadow-xl ring-1 ring-border/40">
+            <img
+              src={customerCare2}
+              alt={t("images.customerCare")}
+              className="w-full h-auto object-cover aspect-[16/10]"
+              loading="lazy"
+              width={960}
+              height={600}
+            />
+          </div>
+          <p className="mt-8 text-lg text-muted-foreground max-w-lg mx-auto">
             {t("cta.subtitle")}
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
