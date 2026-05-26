@@ -17,6 +17,9 @@ import {
 import heroBridge from "@/assets/hero-bridge.jpg";
 import programOverview from "@/assets/program-overview.jpg";
 import eligibilityNurse from "@/assets/eligibility-nurse.jpg";
+import whySalary from "@/assets/why/salary.jpg";
+import whyRelocation from "@/assets/why/relocation.jpg";
+import whyImmigration from "@/assets/why/immigration.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => metaFromKeys("home"),
