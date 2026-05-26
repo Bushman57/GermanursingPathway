@@ -126,7 +126,7 @@ function HowItWorks() {
 
             <ol className="space-y-4 lg:space-y-2">
               {steps.map((step, i) => {
-                const textLeft = i % 2 === 0;
+                const imageLeft = i % 2 === 0;
                 const imageSrc = STEP_IMAGES[i];
 
                 return (
@@ -144,38 +144,36 @@ function HowItWorks() {
                           )}
                         </div>
                         <div className="flex-1 min-w-0 pb-10">
-                          <StepText title={step.title} desc={step.desc} details={step.details} />
                           {imageSrc && (
-                            <div className="mt-6">
+                            <div className="mb-4">
                               <StepImage src={imageSrc} alt={step.title} />
                             </div>
                           )}
+                          <StepText number={i + 1} title={step.title} desc={step.desc} details={step.details} />
                         </div>
                       </div>
                     </div>
 
                     {/* Desktop: alternating columns around center timeline */}
                     <div className="hidden lg:grid lg:grid-cols-[1fr_4.5rem_1fr] lg:gap-x-10 xl:gap-x-14 lg:items-center">
-                      <div className={textLeft ? "" : "lg:col-start-3 lg:row-start-1"}>
-                        {textLeft ? (
-                          <StepText title={step.title} desc={step.desc} details={step.details} />
-                        ) : imageSrc ? (
-                          <StepImage src={imageSrc} alt={step.title} />
-                        ) : null}
+                      <div className={imageLeft ? "" : "lg:col-start-3 lg:row-start-1"}>
+                        {imageLeft ? (
+                          imageSrc ? <StepImage src={imageSrc} alt={step.title} /> : null
+                        ) : (
+                          <StepText number={i + 1} title={step.title} desc={step.desc} details={step.details} />
+                        )}
                       </div>
 
                       <div className="lg:col-start-2 lg:row-start-1 flex justify-center self-center">
                         <TimelineNode number={i + 1} />
                       </div>
 
-                      <div className={textLeft ? "lg:col-start-3" : "lg:col-start-1 lg:row-start-1"}>
-                        {textLeft ? (
-                          imageSrc ? (
-                            <StepImage src={imageSrc} alt={step.title} />
-                          ) : null
-                        ) : (
-                          <StepText title={step.title} desc={step.desc} details={step.details} />
-                        )}
+                      <div className={imageLeft ? "lg:col-start-3" : "lg:col-start-1 lg:row-start-1"}>
+                        {imageLeft ? (
+                          <StepText number={i + 1} title={step.title} desc={step.desc} details={step.details} />
+                        ) : imageSrc ? (
+                          <StepImage src={imageSrc} alt={step.title} />
+                        ) : null}
                       </div>
                     </div>
                   </li>
