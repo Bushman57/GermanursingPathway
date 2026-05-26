@@ -14,6 +14,7 @@ import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as PartnersRouteImport } from './routes/partners'
+import { Route as OnboardingProcessRouteImport } from './routes/onboarding-process'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as EligibilityRouteImport } from './routes/eligibility'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -53,6 +54,11 @@ const PortalRoute = PortalRouteImport.update({
 const PartnersRoute = PartnersRouteImport.update({
   id: '/partners',
   path: '/partners',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingProcessRoute = OnboardingProcessRouteImport.update({
+  id: '/onboarding-process',
+  path: '/onboarding-process',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/eligibility': typeof EligibilityRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/onboarding-process': typeof OnboardingProcessRoute
   '/partners': typeof PartnersRoute
   '/portal': typeof PortalRoute
   '/register': typeof RegisterRoute
@@ -159,6 +166,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/eligibility': typeof EligibilityRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/onboarding-process': typeof OnboardingProcessRoute
   '/partners': typeof PartnersRoute
   '/portal': typeof PortalRoute
   '/register': typeof RegisterRoute
@@ -182,6 +190,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/eligibility': typeof EligibilityRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/onboarding-process': typeof OnboardingProcessRoute
   '/partners': typeof PartnersRoute
   '/portal': typeof PortalRoute
   '/register': typeof RegisterRoute
@@ -206,6 +215,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/eligibility'
     | '/how-it-works'
+    | '/onboarding-process'
     | '/partners'
     | '/portal'
     | '/register'
@@ -227,6 +237,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/eligibility'
     | '/how-it-works'
+    | '/onboarding-process'
     | '/partners'
     | '/portal'
     | '/register'
@@ -249,6 +260,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/eligibility'
     | '/how-it-works'
+    | '/onboarding-process'
     | '/partners'
     | '/portal'
     | '/register'
@@ -272,6 +284,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   EligibilityRoute: typeof EligibilityRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  OnboardingProcessRoute: typeof OnboardingProcessRoute
   PartnersRoute: typeof PartnersRoute
   PortalRoute: typeof PortalRoute
   RegisterRoute: typeof RegisterRoute
@@ -314,6 +327,13 @@ declare module '@tanstack/react-router' {
       path: '/partners'
       fullPath: '/partners'
       preLoaderRoute: typeof PartnersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding-process': {
+      id: '/onboarding-process'
+      path: '/onboarding-process'
+      fullPath: '/onboarding-process'
+      preLoaderRoute: typeof OnboardingProcessRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/how-it-works': {
@@ -478,6 +498,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   EligibilityRoute: EligibilityRoute,
   HowItWorksRoute: HowItWorksRoute,
+  OnboardingProcessRoute: OnboardingProcessRoute,
   PartnersRoute: PartnersRoute,
   PortalRoute: PortalRoute,
   RegisterRoute: RegisterRoute,

@@ -1,7 +1,7 @@
 {
   "nav": {
     "home": "Home",
-    "howItWorks": "How It Works",
+    "onboardingProcess": "Onboarding Process",
     "scholarships": "Scholarships",
     "partners": "Partners",
     "resources": "Resources",
@@ -80,8 +80,8 @@
       "title": "Check Your Readiness — German Nursing Pathway",
       "description": "Quick eligibility check for Kenyan healthcare professionals planning a nursing career in Germany."
     },
-    "howItWorks": {
-      "title": "How It Works — German Nursing Pathway",
+    "onboardingProcess": {
+      "title": "Onboarding Process — German Nursing Pathway",
       "description": "Step-by-step guide from eligibility check to arrival in Germany."
     },
     "scholarships": {

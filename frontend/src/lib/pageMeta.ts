@@ -7,7 +7,7 @@ export function metaHead(meta: PageMeta) {
 
 /** Route head meta from common.meta.* keys (uses current i18n language at navigation). */
 export function metaFromKeys(
-  key: "home" | "register" | "eligibility" | "howItWorks" | "scholarships" | "partners" | "resources" | "about" | "portal",
+  key: "home" | "register" | "eligibility" | "onboardingProcess" | "scholarships" | "partners" | "resources" | "about" | "portal",
 ) {
   const meta: PageMeta = {
     title: i18n.t(`meta.${key}.title`, { ns: "common" }),

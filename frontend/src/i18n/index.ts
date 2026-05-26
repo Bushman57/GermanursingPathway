@@ -8,8 +8,8 @@ import enAbout from "@/locales/en/about.json";
 import deAbout from "@/locales/de/about.json";
 import enEligibility from "@/locales/en/eligibility.json";
 import deEligibility from "@/locales/de/eligibility.json";
-import enHowItWorks from "@/locales/en/howItWorks.json";
-import deHowItWorks from "@/locales/de/howItWorks.json";
+import enOnboardingProcess from "@/locales/en/onboardingProcess.json";
+import deOnboardingProcess from "@/locales/de/onboardingProcess.json";
 import enScholarshipsPage from "@/locales/en/scholarshipsPage.json";
 import deScholarshipsPage from "@/locales/de/scholarshipsPage.json";
 import enChat from "@/locales/en/chat.json";
@@ -31,7 +31,7 @@ i18n.use(initReactI18next).init({
       home: enHome,
       about: enAbout,
       eligibility: enEligibility,
-      howItWorks: enHowItWorks,
+      onboardingProcess: enOnboardingProcess,
       scholarshipsPage: enScholarshipsPage,
       chat: enChat,
       payment: enPayment,
@@ -41,7 +41,7 @@ i18n.use(initReactI18next).init({
       home: deHome,
       about: deAbout,
       eligibility: deEligibility,
-      howItWorks: deHowItWorks,
+      onboardingProcess: deOnboardingProcess,
       scholarshipsPage: deScholarshipsPage,
       chat: deChat,
       payment: dePayment,
@@ -55,7 +55,7 @@ i18n.use(initReactI18next).init({
     "home",
     "about",
     "eligibility",
-    "howItWorks",
+    "onboardingProcess",
     "scholarshipsPage",
     "chat",
     "payment",
