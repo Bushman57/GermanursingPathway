@@ -29,6 +29,7 @@ export const Route = createFileRoute("/")({
 const OVERVIEW_ICONS = [Award, Languages, Briefcase, Plane] as const;
 const PROGRAM_COLORS = ["bg-primary", "bg-warm", "bg-success"] as const;
 const WHY_ICONS = [DollarSign, HomeIcon, Shield] as const;
+const WHY_IMAGES = [whySalary, whyRelocation, whyImmigration] as const;
 
 function Index() {
   const { t: tc } = useTranslation("common");
