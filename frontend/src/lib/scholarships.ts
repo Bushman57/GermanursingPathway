@@ -27,6 +27,39 @@ export type Scholarship = {
   verified: boolean;
 } & ScholarshipDeFields;
 
+/** Card/list fields only — returned by GET /api/scholarships */
+export type ScholarshipSummary = Pick<
+  Scholarship,
+  | "slug"
+  | "title"
+  | "provider"
+  | "degreeLevel"
+  | "funding"
+  | "deadline"
+  | "shortDescription"
+  | "category"
+  | "hostCountry"
+  | "officialLink"
+  | "programType"
+  | "verified"
+> &
+  Partial<
+    Pick<
+      ScholarshipDeFields,
+      | "titleDe"
+      | "providerDe"
+      | "degreeLevelDe"
+      | "fundingDe"
+      | "deadlineDe"
+      | "shortDescriptionDe"
+      | "categoryDe"
+    >
+  > & {
+    applicationLink?: string;
+  };
+
+export type ScholarshipTextSource = Scholarship | ScholarshipSummary;
+
 export type ScholarshipTextField =
   | "title"
   | "provider"
@@ -64,17 +97,18 @@ const LIST_DE_MAP: Record<ScholarshipListField, keyof ScholarshipDeFields> = {
 };
 
 export function scholarshipText(
-  s: Scholarship,
+  s: ScholarshipTextSource,
   field: ScholarshipTextField,
   lang?: string,
 ): string {
   const de = isGermanLocale(lang ?? (typeof document !== "undefined" ? document.documentElement.lang : "en"));
   if (de) {
     const deKey = TEXT_DE_MAP[field];
-    const value = s[deKey];
+    const value = s[deKey as keyof typeof s];
     if (typeof value === "string" && value) return value;
   }
-  return s[field];
+  const en = s[field as keyof typeof s];
+  return typeof en === "string" ? en : "";
 }
 
 export function scholarshipList(

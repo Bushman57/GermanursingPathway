@@ -31,6 +31,7 @@ export function Navbar() {
               <Link
                 key={link.to}
                 to={link.to}
+                preload={link.to === "/scholarships" ? "intent" : undefined}
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
                 {t(`nav.${link.key}`)}
@@ -72,6 +73,7 @@ export function Navbar() {
               <Link
                 key={link.to}
                 to={link.to}
+                preload={link.to === "/scholarships" ? "intent" : undefined}
                 className="block text-sm font-medium text-foreground py-2"
                 onClick={() => setMobileOpen(false)}
               >
