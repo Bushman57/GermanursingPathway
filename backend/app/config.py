@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:8080,http://127.0.0.1:8080"
     prompt_reload: bool = True
     database_url: str = ""
+    admin_api_secret: str = ""
 
     kcb_consumer_key: str = ""
     kcb_consumer_secret: str = ""

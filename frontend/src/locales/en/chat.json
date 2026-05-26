@@ -1,0 +1,51 @@
+{
+  "pathway": {
+    "title": "Ask a question",
+    "subtitle": "Germany Care Path · AI assistant",
+    "greeting": "Hi! Ask about eligibility, costs, German language, or timeline for the Germany Care Path program for Kenyan healthcare professionals.",
+    "placeholder": "Type your message...",
+    "disclaimer": "AI guidance only — verify details on official program pages before applying.",
+    "suggestions": [
+      "Am I eligible?",
+      "How much does it cost?",
+      "What German level do I need?",
+      "How long does it take?"
+    ]
+  },
+  "scholarshipDetail": {
+    "title": "Ask about this scholarship",
+    "subtitle": "{{provider}} · AI assistant",
+    "greeting": "Ask me anything about {{title}} — eligibility, documents, benefits, or how to apply.",
+    "suggestions": [
+      "Am I eligible?",
+      "What documents do I need?",
+      "What are the benefits?",
+      "How do I apply?"
+    ]
+  },
+  "scholarship": {
+    "title": "Scholarship Assistant",
+    "subtitle": "Find programs in Germany",
+    "greeting": "Hi! I can help you find scholarships and explain eligibility. Ask about funding, deadlines, or a specific program.",
+    "placeholder": "Ask about scholarships...",
+    "disclaimer": "AI guidance only — always verify deadlines and requirements on official pages.",
+    "suggestions": [
+      "Fully funded options for nurses",
+      "DAAD programs for Kenya",
+      "What documents do I need?",
+      "Ausbildung vs scholarship"
+    ]
+  },
+  "links": {
+    "eligibility": "eligibility check",
+    "register": "register your interest",
+    "scholarships": "Scholarships"
+  },
+  "ui": {
+    "newConversation": "New conversation",
+    "attach": "Attach file",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "errorGeneric": "Something went wrong. Please try again."
+  }
+}

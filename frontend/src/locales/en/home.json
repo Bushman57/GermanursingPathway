@@ -1,0 +1,87 @@
+{
+  "overview": {
+    "title": "Program",
+    "titleAccent": "Overview",
+    "intro": "The Germany Care Path Program is designed by German Nursing Pathway to support Kenyan Certified Nursing Assistants (CNAs), nurses, and health support workers in securing employment opportunities in Germany. The comprehensive package includes:",
+    "features": [
+      { "title": "Credential Recognition", "desc": "Support for diploma/degree validation" },
+      { "title": "German Language Training", "desc": "A1 to B2 level + healthcare terminology" },
+      { "title": "Job Placement", "desc": "Direct hospital/clinic employment" },
+      { "title": "Visa & Relocation", "desc": "Full immigration and settlement support" }
+    ]
+  },
+  "programTypes": {
+    "title": "Program Types",
+    "subtitle": "Choose the path that matches your qualifications and goals",
+    "applyNow": "Apply Now",
+    "cards": [
+      {
+        "title": "Ausbildung",
+        "subtitle": "Vocational Apprenticeship Program",
+        "features": [
+          "2–3.5 year paid training program",
+          "Earn €850–€1,200/month during training",
+          "Work visa sponsored by employer",
+          "Leads to permanent residency after completion"
+        ]
+      },
+      {
+        "title": "Caregiver Pathway",
+        "subtitle": "With or Without Recognition",
+        "features": [
+          "Credential recognition support",
+          "€2,300–€3,000/month starting salary",
+          "Direct placement into elder care facilities",
+          "Eligible for permanent residency after qualification and employment"
+        ]
+      }
+    ]
+  },
+  "investment": {
+    "title": "Investment Breakdown",
+    "component": "Component",
+    "cost": "Cost (EUR)",
+    "rows": [
+      ["Application & Orientation", "50"],
+      ["Administration & Management", "150"],
+      ["Credential Recognition", "200"],
+      ["Job Matching", "700"],
+      ["Visa Support", "250"],
+      ["Relocation Support", "200"]
+    ],
+    "total": "Total Program Cost",
+    "totalAmount": "€1,550",
+    "footnote": "Flexible payment plans available in KES equivalent"
+  },
+  "whyUs": {
+    "title": "Why Choose",
+    "titleAccent": "German Nursing Pathway?",
+    "items": [
+      { "title": "Competitive Salaries", "desc": "Starting salaries of €2,300–€3,000/month for nurses with recognized qualifications" },
+      { "title": "Relocation Support", "desc": "Assistance with housing, bank accounts, and integration into German life" },
+      { "title": "Legal Migration", "desc": "Full compliance with German immigration laws and employment regulations" }
+    ]
+  },
+  "eligibility": {
+    "title": "Eligibility",
+    "titleAccent": "Requirements",
+    "disclaimer": "Requirements may vary depending on the German state, employer, and recognition authority. Final eligibility is assessed individually during the application process.",
+    "cta": "Check My Eligibility"
+  },
+  "stats": [
+    { "value": "500+", "label": "Professionals Placed" },
+    { "value": "50+", "label": "Partner Hospitals" },
+    { "value": "95%", "label": "Success Rate" },
+    { "value": "12", "label": "German Cities" }
+  ],
+  "cta": {
+    "title": "Start Your German Healthcare Career Today",
+    "subtitle": "Join hundreds of Kenyan healthcare professionals who have successfully made the move. Your journey starts with a quick eligibility check.",
+    "contact": "📞 +254 116423212 · ✉️ info@germanursingpathway.com"
+  },
+  "images": {
+    "hero": "Healthcare professional walking towards Germany",
+    "overview": "Healthcare professionals reviewing medical documents",
+    "eligibility": "Kenyan nurse in a German hospital"
+  }
+}

@@ -16,10 +16,19 @@ import { Route as PortalRouteImport } from './routes/portal'
 import { Route as PartnersRouteImport } from './routes/partners'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as EligibilityRouteImport } from './routes/eligibility'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ScholarshipsSlugRouteImport } from './routes/scholarships.$slug'
 import { Route as ResourcesSlugRouteImport } from './routes/resources.$slug'
+import { Route as AdminLoginRouteImport } from './routes/admin/login'
+import { Route as AdminScholarshipsIndexRouteImport } from './routes/admin/scholarships/index'
+import { Route as AdminResourcesIndexRouteImport } from './routes/admin/resources/index'
+import { Route as AdminScholarshipsNewRouteImport } from './routes/admin/scholarships/new'
+import { Route as AdminResourcesNewRouteImport } from './routes/admin/resources/new'
+import { Route as AdminScholarshipsSlugEditRouteImport } from './routes/admin/scholarships/$slug.edit'
+import { Route as AdminResourcesSlugEditRouteImport } from './routes/admin/resources/$slug.edit'
 
 const ScholarshipsRoute = ScholarshipsRouteImport.update({
   id: '/scholarships',
@@ -56,6 +65,11 @@ const EligibilityRoute = EligibilityRouteImport.update({
   path: '/eligibility',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -65,6 +79,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const ScholarshipsSlugRoute = ScholarshipsSlugRouteImport.update({
   id: '/$slug',
@@ -76,10 +95,47 @@ const ResourcesSlugRoute = ResourcesSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => ResourcesRoute,
 } as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminScholarshipsIndexRoute = AdminScholarshipsIndexRouteImport.update({
+  id: '/scholarships/',
+  path: '/scholarships/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminResourcesIndexRoute = AdminResourcesIndexRouteImport.update({
+  id: '/resources/',
+  path: '/resources/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminScholarshipsNewRoute = AdminScholarshipsNewRouteImport.update({
+  id: '/scholarships/new',
+  path: '/scholarships/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminResourcesNewRoute = AdminResourcesNewRouteImport.update({
+  id: '/resources/new',
+  path: '/resources/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminScholarshipsSlugEditRoute =
+  AdminScholarshipsSlugEditRouteImport.update({
+    id: '/scholarships/$slug/edit',
+    path: '/scholarships/$slug/edit',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminResourcesSlugEditRoute = AdminResourcesSlugEditRouteImport.update({
+  id: '/resources/$slug/edit',
+  path: '/resources/$slug/edit',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/eligibility': typeof EligibilityRoute
   '/how-it-works': typeof HowItWorksRoute
   '/partners': typeof PartnersRoute
@@ -87,8 +143,16 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/resources': typeof ResourcesRouteWithChildren
   '/scholarships': typeof ScholarshipsRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
   '/resources/$slug': typeof ResourcesSlugRoute
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/resources/new': typeof AdminResourcesNewRoute
+  '/admin/scholarships/new': typeof AdminScholarshipsNewRoute
+  '/admin/resources/': typeof AdminResourcesIndexRoute
+  '/admin/scholarships/': typeof AdminScholarshipsIndexRoute
+  '/admin/resources/$slug/edit': typeof AdminResourcesSlugEditRoute
+  '/admin/scholarships/$slug/edit': typeof AdminScholarshipsSlugEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -100,13 +164,22 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/resources': typeof ResourcesRouteWithChildren
   '/scholarships': typeof ScholarshipsRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
   '/resources/$slug': typeof ResourcesSlugRoute
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/resources/new': typeof AdminResourcesNewRoute
+  '/admin/scholarships/new': typeof AdminScholarshipsNewRoute
+  '/admin/resources': typeof AdminResourcesIndexRoute
+  '/admin/scholarships': typeof AdminScholarshipsIndexRoute
+  '/admin/resources/$slug/edit': typeof AdminResourcesSlugEditRoute
+  '/admin/scholarships/$slug/edit': typeof AdminScholarshipsSlugEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/eligibility': typeof EligibilityRoute
   '/how-it-works': typeof HowItWorksRoute
   '/partners': typeof PartnersRoute
@@ -114,14 +187,23 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/resources': typeof ResourcesRouteWithChildren
   '/scholarships': typeof ScholarshipsRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
   '/resources/$slug': typeof ResourcesSlugRoute
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/resources/new': typeof AdminResourcesNewRoute
+  '/admin/scholarships/new': typeof AdminScholarshipsNewRoute
+  '/admin/resources/': typeof AdminResourcesIndexRoute
+  '/admin/scholarships/': typeof AdminScholarshipsIndexRoute
+  '/admin/resources/$slug/edit': typeof AdminResourcesSlugEditRoute
+  '/admin/scholarships/$slug/edit': typeof AdminScholarshipsSlugEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/admin'
     | '/eligibility'
     | '/how-it-works'
     | '/partners'
@@ -129,8 +211,16 @@ export interface FileRouteTypes {
     | '/register'
     | '/resources'
     | '/scholarships'
+    | '/admin/login'
     | '/resources/$slug'
     | '/scholarships/$slug'
+    | '/admin/'
+    | '/admin/resources/new'
+    | '/admin/scholarships/new'
+    | '/admin/resources/'
+    | '/admin/scholarships/'
+    | '/admin/resources/$slug/edit'
+    | '/admin/scholarships/$slug/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -142,12 +232,21 @@ export interface FileRouteTypes {
     | '/register'
     | '/resources'
     | '/scholarships'
+    | '/admin/login'
     | '/resources/$slug'
     | '/scholarships/$slug'
+    | '/admin'
+    | '/admin/resources/new'
+    | '/admin/scholarships/new'
+    | '/admin/resources'
+    | '/admin/scholarships'
+    | '/admin/resources/$slug/edit'
+    | '/admin/scholarships/$slug/edit'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/admin'
     | '/eligibility'
     | '/how-it-works'
     | '/partners'
@@ -155,13 +254,22 @@ export interface FileRouteTypes {
     | '/register'
     | '/resources'
     | '/scholarships'
+    | '/admin/login'
     | '/resources/$slug'
     | '/scholarships/$slug'
+    | '/admin/'
+    | '/admin/resources/new'
+    | '/admin/scholarships/new'
+    | '/admin/resources/'
+    | '/admin/scholarships/'
+    | '/admin/resources/$slug/edit'
+    | '/admin/scholarships/$slug/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRouteWithChildren
   EligibilityRoute: typeof EligibilityRoute
   HowItWorksRoute: typeof HowItWorksRoute
   PartnersRoute: typeof PartnersRoute
@@ -222,6 +330,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EligibilityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -235,6 +350,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/scholarships/$slug': {
       id: '/scholarships/$slug'
@@ -250,8 +372,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResourcesSlugRouteImport
       parentRoute: typeof ResourcesRoute
     }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/scholarships/': {
+      id: '/admin/scholarships/'
+      path: '/scholarships'
+      fullPath: '/admin/scholarships/'
+      preLoaderRoute: typeof AdminScholarshipsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/resources/': {
+      id: '/admin/resources/'
+      path: '/resources'
+      fullPath: '/admin/resources/'
+      preLoaderRoute: typeof AdminResourcesIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/scholarships/new': {
+      id: '/admin/scholarships/new'
+      path: '/scholarships/new'
+      fullPath: '/admin/scholarships/new'
+      preLoaderRoute: typeof AdminScholarshipsNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/resources/new': {
+      id: '/admin/resources/new'
+      path: '/resources/new'
+      fullPath: '/admin/resources/new'
+      preLoaderRoute: typeof AdminResourcesNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/scholarships/$slug/edit': {
+      id: '/admin/scholarships/$slug/edit'
+      path: '/scholarships/$slug/edit'
+      fullPath: '/admin/scholarships/$slug/edit'
+      preLoaderRoute: typeof AdminScholarshipsSlugEditRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/resources/$slug/edit': {
+      id: '/admin/resources/$slug/edit'
+      path: '/resources/$slug/edit'
+      fullPath: '/admin/resources/$slug/edit'
+      preLoaderRoute: typeof AdminResourcesSlugEditRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
+
+interface AdminRouteChildren {
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminResourcesNewRoute: typeof AdminResourcesNewRoute
+  AdminScholarshipsNewRoute: typeof AdminScholarshipsNewRoute
+  AdminResourcesIndexRoute: typeof AdminResourcesIndexRoute
+  AdminScholarshipsIndexRoute: typeof AdminScholarshipsIndexRoute
+  AdminResourcesSlugEditRoute: typeof AdminResourcesSlugEditRoute
+  AdminScholarshipsSlugEditRoute: typeof AdminScholarshipsSlugEditRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminLoginRoute: AdminLoginRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminResourcesNewRoute: AdminResourcesNewRoute,
+  AdminScholarshipsNewRoute: AdminScholarshipsNewRoute,
+  AdminResourcesIndexRoute: AdminResourcesIndexRoute,
+  AdminScholarshipsIndexRoute: AdminScholarshipsIndexRoute,
+  AdminResourcesSlugEditRoute: AdminResourcesSlugEditRoute,
+  AdminScholarshipsSlugEditRoute: AdminScholarshipsSlugEditRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface ResourcesRouteChildren {
   ResourcesSlugRoute: typeof ResourcesSlugRoute
@@ -280,6 +475,7 @@ const ScholarshipsRouteWithChildren = ScholarshipsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRouteWithChildren,
   EligibilityRoute: EligibilityRoute,
   HowItWorksRoute: HowItWorksRoute,
   PartnersRoute: PartnersRoute,

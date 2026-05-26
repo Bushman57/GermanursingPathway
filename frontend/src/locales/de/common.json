@@ -1,12 +1,12 @@
 {
   "nav": {
     "home": "Startseite",
-    "howItWorks": "So funktioniert's",
+    "howItWorks": "Ablauf",
     "scholarships": "Stipendien",
     "partners": "Partner",
     "resources": "Ressourcen",
     "about": "Über uns",
-    "register": "Interesse anmelden",
+    "register": "Registrieren",
     "eligibility": "Eignung prüfen",
     "whatsapp": "WhatsApp beitreten",
     "portal": "Kandidatenportal"
@@ -14,9 +14,9 @@
   "hero": {
     "title": "Kenianische Pflege trifft deutsche Chancen",
     "subtitle": "Ihr Weg in die Pflege in Deutschland beginnt hier",
-    "roles": "Pflegekräfte · Clinical Officers · CNAs · Gesundheitsassistenten",
-    "description": "Ein verifizierter Weg zu Pflegestipendien, Ausbildung, Sprachtraining und Karrieren im deutschen Gesundheitswesen.",
-    "register": "Interesse anmelden",
+    "roles": "Pflegekräfte · CNAs · Gesundheitsassistenten",
+    "description": "Vertrauenswürdige Beratung für kenianische Fachkräfte im Gesundheitswesen, die eine Ausbildung zur Pflegefachkraft, eine Berufsausbildung oder eine langfristige Karriere im Gesundheitswesen in Deutschland anstreben.",
+    "register": "Registrieren",
     "whatsapp": "WhatsApp-Community beitreten",
     "readiness": "Eignung prüfen"
   },
@@ -45,7 +45,7 @@
     "timelines": {
       "3m": "Innerhalb von 3 Monaten",
       "6m": "Innerhalb von 6 Monaten",
-      "2026": "Intake 2026",
+      "2026": "Start 2026",
       "2027": "2027 oder später",
       "exploring": "Noch in Orientierung"
     },
@@ -66,5 +66,66 @@
     "title": "Kandidatenportal",
     "comingSoon": "Bewerbungsstatus, Dokumente und Meilensteine — Phase 2.",
     "loginSoon": "Login wird verfügbar, sobald Ihre Registrierung bestätigt ist."
+  },
+  "meta": {
+    "home": {
+      "title": "German Nursing Pathway — Stipendien & Ausbildung in Deutschland",
+      "description": "Verifizierter Pflegepfad für kenianische Pflegekräfte zu Stipendien, Ausbildung und Karrieren in Deutschland."
+    },
+    "register": {
+      "title": "Interesse anmelden — German Nursing Pathway",
+      "description": "Registrieren Sie Ihr Interesse an Pflegestipendien und Ausbildungsplätzen in Deutschland."
+    },
+    "eligibility": {
+      "title": "Eignung prüfen — German Nursing Pathway",
+      "description": "Schnelle Eignungsprüfung für kenianische Gesundheitsfachkräfte mit Karriereziel Deutschland."
+    },
+    "howItWorks": {
+      "title": "Ablauf — German Nursing Pathway",
+      "description": "Schritt-für-Schritt vom Eignungscheck bis zur Ankunft in Deutschland."
+    },
+    "scholarships": {
+      "title": "Stipendien & Programme — German Nursing Pathway",
+      "description": "Verifizierte Pflegestipendien, Ausbildung und verwandte Programme in Deutschland."
+    },
+    "partners": {
+      "title": "Partner — German Nursing Pathway",
+      "description": "Akkreditierte Schulen, Arbeitgeber und Organisationen in Deutschland."
+    },
+    "resources": {
+      "title": "Ressourcen — German Nursing Pathway",
+      "description": "Leitfäden zu Sprache, Visum, Ausbildung und Leben in Deutschland."
+    },
+    "about": {
+      "title": "Über uns — German Nursing Pathway",
+      "description": "Mission, Leistungen und ethischer Ansatz zur Gesundheitsmigration Kenia–Deutschland."
+    },
+    "portal": {
+      "title": "Kandidatenportal — German Nursing Pathway",
+      "description": "Kandidatenportal zur Bewerbungsverfolgung — demnächst verfügbar."
+    }
+  },
+  "partnersPage": {
+    "title": "Verifizierte",
+    "titleAccent": "Partnerschulen",
+    "subtitle": "Akkreditierte Einrichtungen für Pflegestipendien, Ausbildung und Klinikplatzierungen in Deutschland.",
+    "verified": "Verifiziert",
+    "learnMore": "Mehr erfahren"
+  },
+  "resourcesPage": {
+    "title": "Ressourcen &",
+    "titleAccent": "Leitfäden",
+    "subtitle": "Praktische Artikel zu Sprache, Visum und Leben in Deutschland — für kenianische Gesundheitsfachkräfte.",
+    "read": "Artikel lesen",
+    "back": "Alle Ressourcen",
+    "body": "Dieser Leitfaden ist Teil der Ressourcenbibliothek von German Nursing Pathway. {{excerpt}} Für individuelle Unterstützung registrieren Sie bitte Ihr Interesse — unser Team meldet sich mit den nächsten Schritten.",
+    "registerCta": "Registrieren"
+  },
+  "errors": {
+    "404": {
+      "title": "Seite nicht gefunden",
+      "description": "Die angeforderte Seite existiert nicht oder wurde verschoben.",
+      "home": "Zur Startseite"
+    }
   }
 }

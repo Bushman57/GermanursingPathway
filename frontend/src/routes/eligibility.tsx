@@ -1,19 +1,28 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowLeft, CheckCircle, AlertCircle, User, Briefcase, GraduationCap, BookOpen, Shield } from "lucide-react";
+import { metaFromKeys } from "@/lib/pageMeta";
+import { ArrowRight, ArrowLeft, AlertCircle, User, Briefcase, GraduationCap, BookOpen, Shield } from "lucide-react";
 
 export const Route = createFileRoute("/eligibility")({
-  head: () => ({
-    meta: [
-      { title: "Check Eligibility — German Nursing Pathway" },
-      { name: "description", content: "Check your readiness for nursing pathways in Germany in just a few minutes." },
-    ],
-  }),
+  head: () => metaFromKeys("eligibility"),
   component: Eligibility,
 });
+
+const STEP_ICONS = [User, Briefcase, GraduationCap, Briefcase, BookOpen, Shield] as const;
+
+type GapKey =
+  | "qualificationRequired"
+  | "qualificationStrengthen"
+  | "germanA1"
+  | "germanA2"
+  | "experiencePreferred"
+  | "experienceRecommended"
+  | "passport"
+  | "relocate";
 
 interface FormData {
   name: string;
@@ -43,16 +52,11 @@ const initialData: FormData = {
   willingToRelocate: "",
 };
 
-const steps = [
-  { label: "Personal Info", icon: User },
-  { label: "Profession", icon: Briefcase },
-  { label: "Education", icon: GraduationCap },
-  { label: "Experience", icon: Briefcase },
-  { label: "Language", icon: BookOpen },
-  { label: "Readiness", icon: Shield },
-];
-
 function Eligibility() {
+  const { t } = useTranslation("eligibility");
+  const stepLabels = t("steps", { returnObjects: true }) as string[];
+  const steps = stepLabels.map((label, i) => ({ label, icon: STEP_ICONS[i] ?? User }));
+
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<FormData>(initialData);
   const [showResults, setShowResults] = useState(false);
@@ -69,29 +73,47 @@ function Eligibility() {
 
   const calculateScore = () => {
     let score = 0;
-    const gaps: string[] = [];
+    const gaps: GapKey[] = [];
 
-    if (formData.qualification === "diploma" || formData.qualification === "bachelors" || formData.qualification === "masters") score += 25;
-    else if (formData.qualification === "highschool") { score += 10; gaps.push("A nursing diploma or degree strengthens your application"); }
-    else gaps.push("A recognised nursing qualification is required");
+    if (
+      formData.qualification === "diploma" ||
+      formData.qualification === "bachelors" ||
+      formData.qualification === "masters"
+    ) {
+      score += 25;
+    } else if (formData.qualification === "highschool") {
+      score += 10;
+      gaps.push("qualificationStrengthen");
+    } else gaps.push("qualificationRequired");
 
     if (formData.germanLevel === "a2" || formData.germanLevel === "b1+") score += 25;
-    else if (formData.germanLevel === "a1") { score += 15; gaps.push("A2 German level is recommended"); }
-    else gaps.push("You need at least A1 German certification");
+    else if (formData.germanLevel === "a1") {
+      score += 15;
+      gaps.push("germanA2");
+    } else gaps.push("germanA1");
 
-    const exp = parseInt(formData.yearsExperience || "0");
+    const exp = parseInt(formData.yearsExperience || "0", 10);
     if (exp >= 2) score += 25;
-    else if (exp >= 1) { score += 15; gaps.push("2+ years of experience is preferred"); }
-    else gaps.push("Clinical or healthcare experience is recommended");
+    else if (exp >= 1) {
+      score += 15;
+      gaps.push("experiencePreferred");
+    } else gaps.push("experienceRecommended");
 
     if (formData.hasPassport === "yes") score += 15;
-    else gaps.push("A valid passport is required");
+    else gaps.push("passport");
 
     if (formData.willingToRelocate === "yes") score += 10;
-    else gaps.push("Willingness to relocate is essential");
+    else gaps.push("relocate");
 
     return { score, gaps };
   };
+
+  const languageLevels = [
+    { value: "none", label: t("language.none"), desc: t("language.noneDesc") },
+    { value: "a1", label: t("language.a1"), desc: t("language.a1Desc") },
+    { value: "a2", label: t("language.a2"), desc: t("language.a2Desc") },
+    { value: "b1+", label: t("language.b1"), desc: t("language.b1Desc") },
+  ];
 
   if (showResults) {
     const { score, gaps } = calculateScore();
@@ -103,33 +125,45 @@ function Eligibility() {
         <div className="pt-24 pb-20">
           <div className="max-w-lg mx-auto px-4">
             <div className="bg-card rounded-2xl border border-border p-8 text-center shadow-lg">
-              <div className={`w-24 h-24 rounded-full mx-auto mb-6 flex items-center justify-center ${
-                status === "eligible" ? "bg-success/10" : status === "almost" ? "bg-warm/10" : "bg-destructive/10"
-              }`}>
-                <span className="font-heading text-3xl font-bold" style={{ color: status === "eligible" ? "var(--success)" : status === "almost" ? "var(--warm)" : "var(--destructive)" }}>
+              <div
+                className={`w-24 h-24 rounded-full mx-auto mb-6 flex items-center justify-center ${
+                  status === "eligible" ? "bg-success/10" : status === "almost" ? "bg-warm/10" : "bg-destructive/10"
+                }`}
+              >
+                <span
+                  className="font-heading text-3xl font-bold"
+                  style={{
+                    color:
+                      status === "eligible"
+                        ? "var(--success)"
+                        : status === "almost"
+                          ? "var(--warm)"
+                          : "var(--destructive)",
+                  }}
+                >
                   {score}%
                 </span>
               </div>
 
               <h2 className="font-heading text-2xl font-bold text-foreground">
-                {status === "eligible" && "You're Eligible! 🎉"}
-                {status === "almost" && "Almost There! 💪"}
-                {status === "not-eligible" && "Not Yet Ready"}
+                {status === "eligible" && t("results.eligibleTitle")}
+                {status === "almost" && t("results.almostTitle")}
+                {status === "not-eligible" && t("results.notTitle")}
               </h2>
 
               <p className="mt-2 text-muted-foreground">
-                {status === "eligible" && "Great news! You meet the core requirements for a German nursing pathway."}
-                {status === "almost" && `You're ${score}% ready for Germany 🇩🇪 — just a few things to work on.`}
-                {status === "not-eligible" && "Don't give up — here's what you need to improve."}
+                {status === "eligible" && t("results.eligibleDesc")}
+                {status === "almost" && t("results.almostDesc", { score })}
+                {status === "not-eligible" && t("results.notDesc")}
               </p>
 
               {gaps.length > 0 && (
                 <div className="mt-6 text-left space-y-3">
-                  <h3 className="font-heading font-semibold text-foreground text-sm">Gap Analysis</h3>
+                  <h3 className="font-heading font-semibold text-foreground text-sm">{t("results.gapTitle")}</h3>
                   {gaps.map((gap) => (
                     <div key={gap} className="flex items-start gap-2 text-sm text-muted-foreground">
                       <AlertCircle className="w-4 h-4 text-warm flex-shrink-0 mt-0.5" />
-                      {gap}
+                      {t(`results.gaps.${gap}`)}
                     </div>
                   ))}
                 </div>
@@ -138,12 +172,21 @@ function Eligibility() {
               <div className="mt-8 space-y-3">
                 <Button variant="warm" size="lg" className="w-full py-6" asChild>
                   <Link to="/register">
-                    Register Your Interest
+                    {t("registerCta")}
                     <ArrowRight className="w-4 h-4 ml-1" />
                   </Link>
                 </Button>
-                <Button variant="outline" size="lg" className="w-full py-6" onClick={() => { setShowResults(false); setCurrentStep(0); setFormData(initialData); }}>
-                  Retake Assessment
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full py-6"
+                  onClick={() => {
+                    setShowResults(false);
+                    setCurrentStep(0);
+                    setFormData(initialData);
+                  }}
+                >
+                  {t("retake")}
                 </Button>
               </div>
             </div>
@@ -159,118 +202,151 @@ function Eligibility() {
       <Navbar />
       <div className="pt-24 pb-20">
         <div className="max-w-lg mx-auto px-4">
-          {/* Progress */}
+          <h1 className="font-heading text-2xl font-bold text-center text-foreground mb-8">{t("title")}</h1>
+
           <div className="mb-8">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-muted-foreground">Step {currentStep + 1} of {steps.length}</span>
+              <span className="text-sm text-muted-foreground">
+                {t("stepOf", { current: currentStep + 1, total: steps.length })}
+              </span>
               <span className="text-sm font-medium text-warm">{steps[currentStep].label}</span>
             </div>
             <div className="h-2 bg-muted rounded-full overflow-hidden">
-              <div className="h-full warm-gradient rounded-full transition-all duration-500" style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }} />
+              <div
+                className="h-full warm-gradient rounded-full transition-all duration-500"
+                style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+              />
             </div>
           </div>
 
           <div className="bg-card rounded-2xl border border-border p-6 sm:p-8 shadow-sm">
-            {/* Step 1: Personal Info */}
             {currentStep === 0 && (
               <div className="space-y-5">
-                <h2 className="font-heading text-xl font-semibold text-foreground">Personal Information</h2>
+                <h2 className="font-heading text-xl font-semibold text-foreground">{t("personal.title")}</h2>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Full Name</label>
-                  <input className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30" placeholder="Enter your full name" value={formData.name} onChange={(e) => update("name", e.target.value)} />
+                  <label className="block text-sm font-medium text-foreground mb-1.5">{t("personal.name")}</label>
+                  <input
+                    className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30"
+                    placeholder={t("personal.namePlaceholder")}
+                    value={formData.name}
+                    onChange={(e) => update("name", e.target.value)}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Age</label>
-                  <input className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30" placeholder="e.g. 28" type="number" value={formData.age} onChange={(e) => update("age", e.target.value)} />
+                  <label className="block text-sm font-medium text-foreground mb-1.5">{t("personal.age")}</label>
+                  <input
+                    className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30"
+                    placeholder={t("personal.agePlaceholder")}
+                    type="number"
+                    value={formData.age}
+                    onChange={(e) => update("age", e.target.value)}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Nationality</label>
-                  <input className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30" value={formData.nationality} onChange={(e) => update("nationality", e.target.value)} />
+                  <label className="block text-sm font-medium text-foreground mb-1.5">{t("personal.nationality")}</label>
+                  <input
+                    className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30"
+                    value={formData.nationality}
+                    onChange={(e) => update("nationality", e.target.value)}
+                  />
                 </div>
               </div>
             )}
 
-            {/* Step 2: Profession */}
             {currentStep === 1 && (
               <div className="space-y-5">
-                <h2 className="font-heading text-xl font-semibold text-foreground">Your Profession</h2>
+                <h2 className="font-heading text-xl font-semibold text-foreground">{t("profession.title")}</h2>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">What is your profession?</label>
-                  <select className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30" value={formData.profession} onChange={(e) => update("profession", e.target.value)}>
-                    <option value="">Select your profession</option>
-                    <option value="nurse">Registered Nurse</option>
-                    <option value="cna">CNA / Nursing Assistant</option>
-                    <option value="clinical">Clinical Officer</option>
-                    <option value="other">Other Healthcare</option>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">{t("profession.label")}</label>
+                  <select
+                    className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30"
+                    value={formData.profession}
+                    onChange={(e) => update("profession", e.target.value)}
+                  >
+                    <option value="">{t("profession.select")}</option>
+                    <option value="nurse">{t("profession.nurse")}</option>
+                    <option value="cna">{t("profession.cna")}</option>
+                    <option value="clinical">{t("profession.clinical")}</option>
+                    <option value="other">{t("profession.other")}</option>
                   </select>
                 </div>
               </div>
             )}
 
-            {/* Step 3: Education */}
             {currentStep === 2 && (
               <div className="space-y-5">
-                <h2 className="font-heading text-xl font-semibold text-foreground">Education</h2>
+                <h2 className="font-heading text-xl font-semibold text-foreground">{t("education.title")}</h2>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Highest Qualification</label>
-                  <select className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30" value={formData.qualification} onChange={(e) => update("qualification", e.target.value)}>
-                    <option value="">Select qualification</option>
-                    <option value="highschool">High School</option>
-                    <option value="diploma">Diploma</option>
-                    <option value="bachelors">Bachelor's Degree</option>
-                    <option value="masters">Master's Degree</option>
-                    <option value="phd">PhD</option>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">{t("education.qualification")}</label>
+                  <select
+                    className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30"
+                    value={formData.qualification}
+                    onChange={(e) => update("qualification", e.target.value)}
+                  >
+                    <option value="">{t("education.selectQualification")}</option>
+                    <option value="highschool">{t("education.highschool")}</option>
+                    <option value="diploma">{t("education.diploma")}</option>
+                    <option value="bachelors">{t("education.bachelors")}</option>
+                    <option value="masters">{t("education.masters")}</option>
+                    <option value="phd">{t("education.phd")}</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Field of Study</label>
-                  <input className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30" placeholder="e.g. Nursing, Midwifery" value={formData.fieldOfStudy} onChange={(e) => update("fieldOfStudy", e.target.value)} />
+                  <label className="block text-sm font-medium text-foreground mb-1.5">{t("education.field")}</label>
+                  <input
+                    className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30"
+                    placeholder={t("education.fieldPlaceholder")}
+                    value={formData.fieldOfStudy}
+                    onChange={(e) => update("fieldOfStudy", e.target.value)}
+                  />
                 </div>
               </div>
             )}
 
-            {/* Step 4: Experience */}
             {currentStep === 3 && (
               <div className="space-y-5">
-                <h2 className="font-heading text-xl font-semibold text-foreground">Experience</h2>
+                <h2 className="font-heading text-xl font-semibold text-foreground">{t("experience.title")}</h2>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Years of Healthcare Experience</label>
-                  <select className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30" value={formData.yearsExperience} onChange={(e) => update("yearsExperience", e.target.value)}>
-                    <option value="">Select experience</option>
-                    <option value="0">Less than 1 year</option>
-                    <option value="1">1 year</option>
-                    <option value="2">2 years</option>
-                    <option value="3">3-5 years</option>
-                    <option value="5">5+ years</option>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">{t("experience.years")}</label>
+                  <select
+                    className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30"
+                    value={formData.yearsExperience}
+                    onChange={(e) => update("yearsExperience", e.target.value)}
+                  >
+                    <option value="">{t("experience.selectExperience")}</option>
+                    <option value="0">{t("experience.exp0")}</option>
+                    <option value="1">{t("experience.exp1")}</option>
+                    <option value="2">{t("experience.exp2")}</option>
+                    <option value="3">{t("experience.exp3")}</option>
+                    <option value="5">{t("experience.exp5")}</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Current Job Status</label>
-                  <select className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30" value={formData.jobStatus} onChange={(e) => update("jobStatus", e.target.value)}>
-                    <option value="">Select status</option>
-                    <option value="employed">Currently Employed</option>
-                    <option value="unemployed">Unemployed</option>
-                    <option value="student">Student</option>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">{t("experience.jobStatus")}</label>
+                  <select
+                    className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30"
+                    value={formData.jobStatus}
+                    onChange={(e) => update("jobStatus", e.target.value)}
+                  >
+                    <option value="">{t("experience.selectStatus")}</option>
+                    <option value="employed">{t("experience.employed")}</option>
+                    <option value="unemployed">{t("experience.unemployed")}</option>
+                    <option value="student">{t("experience.student")}</option>
                   </select>
                 </div>
               </div>
             )}
 
-            {/* Step 5: Language */}
             {currentStep === 4 && (
               <div className="space-y-5">
-                <h2 className="font-heading text-xl font-semibold text-foreground">German Language 🇩🇪</h2>
+                <h2 className="font-heading text-xl font-semibold text-foreground">{t("language.title")}</h2>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">What is your German level?</label>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">{t("language.label")}</label>
                   <div className="grid grid-cols-2 gap-3">
-                    {[
-                      { value: "none", label: "None", desc: "No German yet" },
-                      { value: "a1", label: "A1", desc: "Beginner" },
-                      { value: "a2", label: "A2", desc: "Elementary" },
-                      { value: "b1+", label: "B1+", desc: "Intermediate or above" },
-                    ].map((level) => (
+                    {languageLevels.map((level) => (
                       <button
                         key={level.value}
+                        type="button"
                         className={`p-4 rounded-xl border text-left transition-all ${
                           formData.germanLevel === level.value
                             ? "border-warm bg-warm/5 ring-2 ring-warm/20"
@@ -284,32 +360,47 @@ function Eligibility() {
                     ))}
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Upload your German certificate (A1 or A2 preferred) during profile completion.
-                </p>
+                <p className="text-xs text-muted-foreground">{t("language.certHint")}</p>
               </div>
             )}
 
-            {/* Step 6: Legal Readiness */}
             {currentStep === 5 && (
               <div className="space-y-5">
-                <h2 className="font-heading text-xl font-semibold text-foreground">Legal Readiness</h2>
+                <h2 className="font-heading text-xl font-semibold text-foreground">{t("readiness.title")}</h2>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Do you have a valid passport?</label>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">{t("readiness.passport")}</label>
                   <div className="flex gap-3">
-                    {["yes", "no"].map((v) => (
-                      <button key={v} className={`flex-1 py-3 rounded-xl border text-sm font-medium transition-all ${formData.hasPassport === v ? "border-warm bg-warm/5 ring-2 ring-warm/20 text-foreground" : "border-border text-muted-foreground hover:border-warm/30"}`} onClick={() => update("hasPassport", v)}>
-                        {v === "yes" ? "Yes" : "No"}
+                    {(["yes", "no"] as const).map((v) => (
+                      <button
+                        key={v}
+                        type="button"
+                        className={`flex-1 py-3 rounded-xl border text-sm font-medium transition-all ${
+                          formData.hasPassport === v
+                            ? "border-warm bg-warm/5 ring-2 ring-warm/20 text-foreground"
+                            : "border-border text-muted-foreground hover:border-warm/30"
+                        }`}
+                        onClick={() => update("hasPassport", v)}
+                      >
+                        {v === "yes" ? t("readiness.yes") : t("readiness.no")}
                       </button>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Are you willing to relocate to Germany?</label>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">{t("readiness.relocate")}</label>
                   <div className="flex gap-3">
-                    {["yes", "no"].map((v) => (
-                      <button key={v} className={`flex-1 py-3 rounded-xl border text-sm font-medium transition-all ${formData.willingToRelocate === v ? "border-warm bg-warm/5 ring-2 ring-warm/20 text-foreground" : "border-border text-muted-foreground hover:border-warm/30"}`} onClick={() => update("willingToRelocate", v)}>
-                        {v === "yes" ? "Yes" : "No"}
+                    {(["yes", "no"] as const).map((v) => (
+                      <button
+                        key={v}
+                        type="button"
+                        className={`flex-1 py-3 rounded-xl border text-sm font-medium transition-all ${
+                          formData.willingToRelocate === v
+                            ? "border-warm bg-warm/5 ring-2 ring-warm/20 text-foreground"
+                            : "border-border text-muted-foreground hover:border-warm/30"
+                        }`}
+                        onClick={() => update("willingToRelocate", v)}
+                      >
+                        {v === "yes" ? t("readiness.yes") : t("readiness.no")}
                       </button>
                     ))}
                   </div>
@@ -317,14 +408,13 @@ function Eligibility() {
               </div>
             )}
 
-            {/* Navigation */}
             <div className="flex items-center justify-between mt-8 pt-6 border-t border-border">
               <Button variant="ghost" onClick={prev} disabled={currentStep === 0}>
                 <ArrowLeft className="w-4 h-4 mr-1" />
-                Back
+                {t("back")}
               </Button>
               <Button variant="warm" onClick={next}>
-                {currentStep === steps.length - 1 ? "See My Results" : "Continue"}
+                {currentStep === steps.length - 1 ? t("seeResults") : t("continue")}
                 <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </div>

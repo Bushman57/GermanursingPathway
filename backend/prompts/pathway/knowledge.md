@@ -26,7 +26,7 @@ Kenyan healthcare professionals: Nurses (KRCHN/KRN/KRM), Certified Nursing Assis
 - Schorlaship Matching : €700
 - Visa Support: €250
 - Relocation Support: €200
-- **Total program cost: €2,300**
+- **Total program cost: €1,550**
 - Flexible payment plans available in KES equivalent
 
 ## Benefits in Germany
@@ -37,4 +37,4 @@ Kenyan healthcare professionals: Nurses (KRCHN/KRN/KRM), Certified Nursing Assis
 ## Next steps
 - Eligibility check: /eligibility
 - Scholarships (university study funding): /scholarships — NOT covered by this pathway bot
-- Contact: (+254) 718-266-072, info@germannursingpathway.com
+- Contact: +254 116423212, info@germanursingpathway.com

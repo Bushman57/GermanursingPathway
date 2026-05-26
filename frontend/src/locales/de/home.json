@@ -1,0 +1,87 @@
+{
+  "overview": {
+    "title": "Programm",
+    "titleAccent": "Überblick",
+    "intro": "Das Germany Care Path Programm wurde von German Nursing Pathway entwickelt, um kenianische examinierte Pflegeassistenten (CNAs), Pflegekräfte und Gesundheitsfachkräfte bei der Arbeitsaufnahme in Deutschland zu unterstützen. Das Paket umfasst unter anderem:",
+    "features": [
+      { "title": "Anerkennung der Qualifikation", "desc": "Begleitung bei Diplom-/Abschlussanerkennung" },
+      { "title": "Deutsch-Sprachtraining", "desc": "Niveau A1 bis B2 inkl. Pflegefachsprache" },
+      { "title": "Jobvermittlung", "desc": "Direkte Anstellung in Klinik oder Krankenhaus" },
+      { "title": "Visum & Relocation", "desc": "Vollständige Einwanderungs- und Ankommensbegleitung" }
+    ]
+  },
+  "programTypes": {
+    "title": "Programmtypen",
+    "subtitle": "Wählen Sie den Weg, der zu Ihrer Qualifikation und Ihren Zielen passt",
+    "applyNow": "Jetzt bewerben",
+    "cards": [
+      {
+        "title": "Ausbildung",
+        "subtitle": "Berufliche Ausbildung in der Pflege",
+        "features": [
+          "2–3,5 Jahre bezahlte Ausbildung",
+          "Ca. 850–1.200 € pro Monat während der Ausbildung",
+          "Arbeitsvisum durch den Arbeitgeber",
+          "Weg zur dauerhaften Aufenthaltserlaubnis nach Abschluss"
+        ]
+      },
+      {
+        "title": "Betreuer/Betreuerin Pathway",
+        "subtitle": "Mit oder ohne vorherige Anerkennung",
+        "features": [
+          "Unterstützung bei der Anerkennung",
+          "Einstiegsgehalt ca. 2.300–3.000 €/Monat",
+          "Direkte Unterbringung in Altenpflegeeinrichtungen",
+          "Berechtigt zur Erlangung einer dauerhaften Aufenthaltsgenehmigung"
+        ]
+      }
+    ]
+  },
+  "investment": {
+    "title": "Kostenübersicht",
+    "component": "Posten",
+    "cost": "Kosten (EUR)",
+    "rows": [
+      ["Bewerbung & Orientierung", "50"],
+      ["Administration & Betreuung", "150"],
+      ["Qualifikationsanerkennung", "200"],
+      ["Job-Matching", "700"],
+      ["Visum-Unterstützung", "250"],
+      ["Relocation-Unterstützung", "200"]
+    ],
+    "total": "Gesamtkosten Programm",
+    "totalAmount": "1.550 €",
+    "footnote": "Flexible Zahlungspläne in KES-Äquivalent möglich"
+  },
+  "whyUs": {
+    "title": "Warum",
+    "titleAccent": "German Nursing Pathway?",
+    "items": [
+      { "title": "Attraktive Gehälter", "desc": "Einstiegsgehälter von ca. 2.300–3.000 €/Monat für anerkannte Pflegekräfte" },
+      { "title": "Relocation-Support", "desc": "Hilfe bei Wohnung, Bankkonto und Integration in Deutschland" },
+      { "title": "Legale Migration", "desc": "Vollständige Einhaltung deutscher Einwanderungs- und Arbeitsvorschriften" }
+    ]
+  },
+  "eligibility": {
+    "title": "Voraussetzungen",
+    "titleAccent": "Eignung",
+    "disclaimer": "Die Anforderungen können je nach Bundesland, Arbeitgeber und Anerkennungsstelle variieren. Die endgültige Eignung wird im Rahmen des Bewerbungsverfahrens individuell geprüft.",
+    "cta": "Eignung prüfen"
+  },
+  "stats": [
+    { "value": "500+", "label": "Vermittelte Fachkräfte" },
+    { "value": "50+", "label": "Partnerkliniken" },
+    { "value": "95%", "label": "Erfolgsquote" },
+    { "value": "12", "label": "Städte in Deutschland" }
+  ],
+  "cta": {
+    "title": "Starten Sie heute Ihre Pflegekarriere in Deutschland",
+    "subtitle": "Schließen Sie sich hunderten kenianischen Gesundheitsfachkräften an, die den Schritt bereits gemacht haben. Beginnen Sie mit einer kurzen Eignungsprüfung.",
+    "contact": "📞 +254 116423212 · ✉️ info@germanursingpathway.com"
+  },
+  "images": {
+    "hero": "Gesundheitsfachkraft auf dem Weg nach Deutschland",
+    "overview": "Gesundheitsfachkräfte prüfen Unterlagen",
+    "eligibility": "Kenianische Pflegekraft in einem deutschen Krankenhaus"
+  }
+}

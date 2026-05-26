@@ -64,6 +64,8 @@ class Scholarship(Base):
     funding: Mapped[str | None] = mapped_column(String(80), nullable=True)
     deadline: Mapped[datetime | None] = mapped_column(Date, nullable=True)
     verified: Mapped[bool] = mapped_column(Boolean, default=False)
+    official_link: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    application_link: Mapped[str | None] = mapped_column(String(500), nullable=True)
     program_data: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
     partner: Mapped["PartnerSchool | None"] = relationship("PartnerSchool")
 
@@ -102,6 +104,27 @@ class Payment(Base):
     result_desc: Mapped[str | None] = mapped_column(String(500), nullable=True)
     mpesa_receipt_number: Mapped[str | None] = mapped_column(String(40), nullable=True)
     callback_payload: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+
+
+class ResourceArticle(Base):
+    __tablename__ = "resource_articles"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    slug: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    title_en: Mapped[str] = mapped_column(String(300), nullable=False)
+    title_de: Mapped[str | None] = mapped_column(String(300), nullable=True)
+    excerpt_en: Mapped[str] = mapped_column(Text, nullable=False)
+    excerpt_de: Mapped[str | None] = mapped_column(Text, nullable=True)
+    body_en: Mapped[str | None] = mapped_column(Text, nullable=True)
+    body_de: Mapped[str | None] = mapped_column(Text, nullable=True)
+    category: Mapped[str] = mapped_column(String(40), nullable=False)
+    read_minutes: Mapped[int] = mapped_column(Integer, default=5, nullable=False)
+    is_published: Mapped[bool] = mapped_column(Boolean, default=True)
+    sort_order: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()

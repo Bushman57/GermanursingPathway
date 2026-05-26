@@ -4,5 +4,5 @@ export const WHATSAPP_GROUP_URL =
 export const TAGLINE_PRIMARY = "Connecting Kenyan care with German opportunity";
 export const TAGLINE_SECONDARY = "Your journey into German nursing starts here";
 
-export const CONTACT_EMAIL = "info@germannursingpathway.com";
-export const CONTACT_PHONE = "(+254) 718-266-072";
+export const CONTACT_EMAIL = "info@germanursingpathway.com";
+export const CONTACT_PHONE = "+254 116423212";

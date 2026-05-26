@@ -1,0 +1,21 @@
+{
+  "trigger": "Pay with M-Pesa",
+  "title": "Program payment",
+  "descriptionWithAmount": "Pay <strong>{{amount}}</strong> (full program fee, €1,550 equivalent) via M-Pesa STK Push.",
+  "descriptionGeneric": "Pay the full program fee via M-Pesa STK Push.",
+  "phoneLabel": "M-Pesa phone number",
+  "phonePlaceholder": "0712345678",
+  "phoneHint": "Safaricom M-Pesa number (07… or 254…). You will enter your PIN on your phone.",
+  "payButton": "Pay {{amount}}",
+  "payNow": "Pay now",
+  "sending": "Sending prompt…",
+  "waitingTitle": "Waiting for payment",
+  "successTitle": "Payment received",
+  "receipt": "Receipt: {{code}}",
+  "done": "Done",
+  "configError": "Unable to load payment settings",
+  "phoneRequired": "Enter your M-Pesa phone number.",
+  "startError": "Payment could not be started",
+  "timeout": "Payment timed out. If you completed M-Pesa on your phone, contact support with your number.",
+  "failed": "Payment was not completed."
+}

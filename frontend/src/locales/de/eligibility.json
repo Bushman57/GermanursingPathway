@@ -1,0 +1,93 @@
+{
+  "title": "Eignung prüfen",
+  "stepOf": "Schritt {{current}} von {{total}}",
+  "back": "Zurück",
+  "continue": "Weiter",
+  "seeResults": "Ergebnis anzeigen",
+  "retake": "Erneut prüfen",
+  "registerCta": "Registrieren",
+  "steps": ["Persönliche Daten", "Beruf", "Ausbildung", "Erfahrung", "Sprache", "Bereitschaft"],
+  "personal": {
+    "title": "Persönliche Angaben",
+    "name": "Vollständiger Name",
+    "namePlaceholder": "Ihr vollständiger Name",
+    "age": "Alter",
+    "agePlaceholder": "z. B. 28",
+    "nationality": "Staatsangehörigkeit"
+  },
+  "profession": {
+    "title": "Ihr Beruf",
+    "label": "Was ist Ihr Beruf?",
+    "select": "Beruf wählen",
+    "nurse": "Examinierte Pflegekraft",
+    "cna": "CNA / Pflegeassistent",
+    "clinical": "Clinical Officer",
+    "other": "Andere Gesundheitsberufe"
+  },
+  "education": {
+    "title": "Bildung",
+    "qualification": "Höchster Abschluss",
+    "selectQualification": "Abschluss wählen",
+    "highschool": "Schulabschluss",
+    "diploma": "Diplom",
+    "bachelors": "Bachelor",
+    "masters": "Master",
+    "phd": "Promotion",
+    "field": "Studienfach",
+    "fieldPlaceholder": "z. B. Pflege, Hebamme"
+  },
+  "experience": {
+    "title": "Berufserfahrung",
+    "years": "Jahre Erfahrung im Gesundheitswesen",
+    "selectExperience": "Erfahrung wählen",
+    "exp0": "Weniger als 1 Jahr",
+    "exp1": "1 Jahr",
+    "exp2": "2 Jahre",
+    "exp3": "3–5 Jahre",
+    "exp5": "5+ Jahre",
+    "jobStatus": "Aktueller Beschäftigungsstatus",
+    "selectStatus": "Status wählen",
+    "employed": "Beschäftigt",
+    "unemployed": "Arbeitslos",
+    "student": "Studierend"
+  },
+  "language": {
+    "title": "Deutschkenntnisse",
+    "label": "Welches Deutschniveau haben Sie?",
+    "none": "Kein Deutsch",
+    "noneDesc": "Noch kein Deutsch",
+    "a1": "A1",
+    "a1Desc": "Anfänger",
+    "a2": "A2",
+    "a2Desc": "Grundstufe",
+    "b1": "B1+",
+    "b1Desc": "Mittelstufe oder höher",
+    "certHint": "Laden Sie Ihr Deutschzertifikat (A1 oder A2 bevorzugt) bei der Profilvervollständigung hoch."
+  },
+  "readiness": {
+    "title": "Rechtliche Bereitschaft",
+    "passport": "Haben Sie einen gültigen Reisepass?",
+    "relocate": "Sind Sie bereit, nach Deutschland umzuziehen?",
+    "yes": "Ja",
+    "no": "Nein"
+  },
+  "results": {
+    "eligibleTitle": "Sie sind geeignet!",
+    "almostTitle": "Fast geschafft!",
+    "notTitle": "Noch nicht bereit",
+    "eligibleDesc": "Gute Nachrichten! Sie erfüllen die Kernvoraussetzungen für einen Pflegepfad in Deutschland.",
+    "almostDesc": "Sie sind zu {{score}} % bereit für Deutschland — nur noch wenige Punkte.",
+    "notDesc": "Geben Sie nicht auf — das sollten Sie verbessern.",
+    "gapTitle": "Lückenanalyse",
+    "gaps": {
+      "qualificationRequired": "Eine anerkannte Pflegequalifikation ist erforderlich",
+      "qualificationStrengthen": "Ein Pflegediplom oder -studium stärkt Ihre Bewerbung",
+      "germanA1": "Mindestens Zertifikat Deutsch A1 erforderlich",
+      "germanA2": "Deutschniveau A2 wird empfohlen",
+      "experiencePreferred": "2+ Jahre Berufserfahrung werden bevorzugt",
+      "experienceRecommended": "Klinische oder Gesundheitserfahrung wird empfohlen",
+      "passport": "Ein gültiger Reisepass ist erforderlich",
+      "relocate": "Bereitschaft zum Umzug ist wesentlich"
+    }
+  }
+}

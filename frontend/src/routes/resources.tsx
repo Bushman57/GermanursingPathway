@@ -1,20 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { resourceArticles } from "@/lib/resources";
+import { fetchResources } from "@/lib/api/resources";
 import { useTranslation } from "react-i18next";
+import { metaFromKeys } from "@/lib/pageMeta";
 import { BookOpen, Clock, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/resources")({
-  head: () => ({
-    meta: [
-      { title: "Resources — German Nursing Pathway" },
-      {
-        name: "description",
-        content: "Guides on German language, visas, Ausbildung, and candidate stories for Kenyan nurses.",
-      },
-    ],
-  }),
+  loader: () => fetchResources(),
+  head: () => metaFromKeys("resources"),
   component: ResourcesPage,
 });
 
@@ -26,7 +20,8 @@ const categoryLabels: Record<string, { en: string; de: string }> = {
 };
 
 function ResourcesPage() {
-  const { i18n } = useTranslation();
+  const resourceArticles = Route.useLoaderData();
+  const { t, i18n } = useTranslation("common");
   const isDe = i18n.language.startsWith("de");
 
   return (
@@ -35,11 +30,9 @@ function ResourcesPage() {
       <section className="pt-28 pb-12 hero-gradient">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h1 className="font-heading text-3xl sm:text-5xl font-bold text-primary-foreground">
-            Resources & <span className="text-warm">Guides</span>
+            {t("resourcesPage.title")} <span className="text-warm">{t("resourcesPage.titleAccent")}</span>
           </h1>
-          <p className="mt-4 text-primary-foreground/80">
-            Practical articles on language, visas, and life in Germany — written for Kenyan healthcare professionals.
-          </p>
+          <p className="mt-4 text-primary-foreground/80">{t("resourcesPage.subtitle")}</p>
         </div>
       </section>
 
@@ -68,7 +61,7 @@ function ResourcesPage() {
                 {isDe ? article.excerptDe : article.excerptEn}
               </p>
               <span className="inline-flex items-center text-sm text-warm font-medium mt-4">
-                Read article
+                {t("resourcesPage.read")}
                 <ArrowRight className="w-4 h-4 ml-1" />
               </span>
             </Link>

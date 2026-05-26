@@ -1,52 +1,44 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { scholarships } from "@/lib/scholarships";
-import { Calendar, Award, ArrowRight, Search, BadgeCheck } from "lucide-react";
+import { fetchScholarships } from "@/lib/api/scholarships";
+import { scholarshipText } from "@/lib/scholarships";
+import { metaFromScholarshipsPage } from "@/lib/pageMeta";
+import { Calendar, Award, Search, BadgeCheck } from "lucide-react";
+import { ScholarshipApplyButton, ScholarshipTitleLink } from "@/components/scholarships/ScholarshipCardLinks";
 import { useState } from "react";
-import germanUniversities from "@/assets/german-universities.jpg";
+import germanUniversities from "@/assets/german-universities.png";
 
 export const Route = createFileRoute("/scholarships")({
-  head: () => ({
-    meta: [
-      { title: "Scholarships in Germany 2026/2027 — Fully Funded for Kenyan Students" },
-      {
-        name: "description",
-        content:
-          "Browse the latest fully funded scholarships in Germany for 2026/2027. DAAD, KAAD, Erasmus+, Friedrich Ebert and more — eligibility, benefits and how to apply.",
-      },
-      { property: "og:title", content: "Scholarships in Germany 2026/2027" },
-      {
-        property: "og:description",
-        content: "Latest fully funded scholarships in Germany with eligibility and step-by-step application guidance.",
-      },
-    ],
-  }),
+  loader: () => fetchScholarships(),
+  head: () => metaFromScholarshipsPage(),
   component: ScholarshipsPage,
 });
 
 function ScholarshipsPage() {
+  const scholarships = Route.useLoaderData();
+  const { t, i18n } = useTranslation("scholarshipsPage");
+  const lang = i18n.language;
   const [query, setQuery] = useState("");
   const [programFilter, setProgramFilter] = useState<string>("All");
 
   const programFilters = [
-    { id: "All", label: "All" },
-    { id: "verified", label: "Verified" },
-    { id: "nursing_scholarship", label: "Nursing" },
-    { id: "ausbildung", label: "Ausbildung" },
-    { id: "other", label: "General" },
+    { id: "All", label: t("filters.all") },
+    { id: "verified", label: t("filters.verified") },
+    { id: "nursing_scholarship", label: t("filters.nursing") },
+    { id: "ausbildung", label: t("filters.ausbildung") },
+    { id: "other", label: t("filters.general") },
   ];
 
   const filtered = scholarships.filter((s) => {
     const q = query.toLowerCase();
-    const matchesQuery =
-      !q ||
-      s.title.toLowerCase().includes(q) ||
-      s.provider.toLowerCase().includes(q) ||
-      s.shortDescription.toLowerCase().includes(q);
+    const title = scholarshipText(s, "title", lang).toLowerCase();
+    const provider = scholarshipText(s, "provider", lang).toLowerCase();
+    const short = scholarshipText(s, "shortDescription", lang).toLowerCase();
+    const matchesQuery = !q || title.includes(q) || provider.includes(q) || short.includes(q);
     const matchesProgram =
       programFilter === "All" ||
       (programFilter === "verified" && s.verified) ||
@@ -58,65 +50,37 @@ function ScholarshipsPage() {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero */}
       <section className="pt-28 pb-12 hero-gradient">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Badge className="bg-warm/20 text-warm border-warm/30 hover:bg-warm/20">2026 / 2027 Intake</Badge>
+          <Badge className="bg-warm/20 text-warm border-warm/30 hover:bg-warm/20">{t("hero.badge")}</Badge>
           <h1 className="font-heading text-3xl sm:text-5xl font-bold text-primary-foreground mt-4 leading-tight">
-            Scholarships in <span className="text-warm">Germany</span> for International Students
+            {t("hero.title")} <span className="text-warm">{t("hero.titleAccent")}</span> {t("hero.titleSuffix")}
           </h1>
-          <p className="mt-4 text-primary-foreground/80 max-w-2xl mx-auto">
-            Fully funded scholarships covering tuition, stipends, accommodation, insurance and travel.
-          </p>
+          <p className="mt-4 text-primary-foreground/80 max-w-2xl mx-auto">{t("hero.subtitle")}</p>
         </div>
       </section>
 
-      {/* Intro copy */}
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
             <div className="space-y-6 text-muted-foreground leading-relaxed order-2 lg:order-1">
-              <p>
-                Germany is home to world-class universities such as{" "}
-                <strong className="text-foreground">TU Munich</strong>,{" "}
-                <strong className="text-foreground">Heidelberg University</strong>,{" "}
-                <strong className="text-foreground">LMU Munich</strong>,{" "}
-                <strong className="text-foreground">RWTH Aachen</strong>,{" "}
-                <strong className="text-foreground">University of Freiburg</strong>, and{" "}
-                <strong className="text-foreground">Humboldt University of Berlin</strong>. Whether you're
-                applying for undergraduate, master's, or PhD programs, Germany offers generous funding
-                options through programs like{" "}
-                <strong className="text-foreground">DAAD Scholarships</strong>,{" "}
-                <strong className="text-foreground">Erasmus+</strong>,{" "}
-                <strong className="text-foreground">KAAD</strong>,{" "}
-                <strong className="text-foreground">Friedrich Ebert Foundation</strong>, and other
-                prestigious foundations.
-              </p>
-              <p>
-                In this section, you will find the latest scholarships in Germany, along with eligibility
-                requirements, complete benefits, and step-by-step application guidance. Start your
-                educational journey today and explore opportunities to study at top German universities at
-                little to no cost.
-              </p>
+              <p>{t("intro")}</p>
             </div>
             <div className="order-1 lg:order-2">
               <div className="rounded-2xl overflow-hidden shadow-xl border border-border">
                 <img
                   src={germanUniversities}
-                  alt="List of top universities in Germany"
+                  alt={t("imageAlt")}
                   className="w-full h-auto object-cover"
                   loading="lazy"
                 />
               </div>
-              <p className="mt-3 text-xs text-muted-foreground text-center">
-                Top German universities welcoming international students
-              </p>
+              <p className="mt-3 text-xs text-muted-foreground text-center">{t("imageCaption")}</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Filters */}
       <section className="pb-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row gap-4 items-stretch md:items-center">
@@ -126,7 +90,7 @@ function ScholarshipsPage() {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search scholarships, providers..."
+                placeholder={t("searchPlaceholder")}
                 className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-background border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-warm/40"
               />
             </div>
@@ -149,11 +113,10 @@ function ScholarshipsPage() {
         </div>
       </section>
 
-      {/* List */}
       <section className="pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-sm text-muted-foreground mb-6">
-            Showing <span className="text-foreground font-semibold">{filtered.length}</span> scholarships
+            {t("showingCount", { count: filtered.length })}
           </p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((s) => (
@@ -162,40 +125,39 @@ function ScholarshipsPage() {
                 className="group bg-card border border-border rounded-xl overflow-hidden hover:shadow-xl hover:border-warm/40 transition-all flex flex-col"
               >
                 <div className="p-5 flex-1 flex flex-col">
-                  <h3 className="font-heading text-base font-semibold text-foreground leading-snug line-clamp-2 group-hover:text-warm transition-colors">
-                    <Link to="/scholarships/$slug" params={{ slug: s.slug }}>
-                      {s.title}
-                    </Link>
-                  </h3>
+                  <ScholarshipTitleLink
+                    scholarship={s}
+                    title={scholarshipText(s, "title", lang)}
+                  />
 
-                  {/* Metadata chip strip — funding, school, degree, category, eligibility, country */}
                   <div className="mt-3 flex flex-wrap gap-1.5">
                     {s.verified && (
                       <Badge className="bg-success/15 text-success border-0 text-[10px] font-medium gap-0.5">
                         <BadgeCheck className="w-3 h-3" />
-                        Verified
+                        {t("verifiedBadge")}
                       </Badge>
                     )}
                     <Badge
                       className={`border-0 text-[10px] font-medium ${
-                        s.funding.toLowerCase().includes("fully")
+                        scholarshipText(s, "funding", lang).toLowerCase().includes("voll") ||
+                        scholarshipText(s, "funding", lang).toLowerCase().includes("fully")
                           ? "bg-success/15 text-success hover:bg-success/15"
                           : "bg-warm/15 text-warm hover:bg-warm/15"
                       }`}
                     >
-                      {s.funding}
+                      {scholarshipText(s, "funding", lang)}
                     </Badge>
                     <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border border-primary/20 text-[10px] font-medium">
-                      {s.provider}
+                      {scholarshipText(s, "provider", lang)}
                     </Badge>
                     <Badge className="bg-muted text-muted-foreground hover:bg-muted border border-border text-[10px] font-medium">
-                      {s.degreeLevel}
+                      {scholarshipText(s, "degreeLevel", lang)}
                     </Badge>
                     <Badge className="bg-muted text-muted-foreground hover:bg-muted border border-border text-[10px] font-medium">
-                      {s.category}
+                      {scholarshipText(s, "category", lang)}
                     </Badge>
                     <Badge className="bg-muted text-muted-foreground hover:bg-muted border border-border text-[10px] font-medium">
-                      International Students
+                      {t("internationalStudents")}
                     </Badge>
                     <Badge className="bg-muted text-muted-foreground hover:bg-muted border border-border text-[10px] font-medium">
                       {s.hostCountry}
@@ -203,19 +165,15 @@ function ScholarshipsPage() {
                   </div>
 
                   <p className="text-sm text-muted-foreground line-clamp-3 mt-4">
-                    {s.shortDescription}
+                    {scholarshipText(s, "shortDescription", lang)}
                   </p>
 
                   <div className="mt-auto pt-4 border-t border-border flex items-center justify-between gap-3">
                     <span className="text-xs text-muted-foreground flex items-center gap-1.5 min-w-0">
                       <Calendar className="w-3.5 h-3.5 text-warm shrink-0" />
-                      <span className="truncate">{s.deadline}</span>
+                      <span className="truncate">{scholarshipText(s, "deadline", lang)}</span>
                     </span>
-                    <Button variant="warm" size="sm" asChild>
-                      <Link to="/scholarships/$slug" params={{ slug: s.slug }}>
-                        Details <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                      </Link>
-                    </Button>
+                    <ScholarshipApplyButton scholarship={s} applyLabel={t("apply")} />
                   </div>
                 </div>
               </article>
@@ -224,29 +182,13 @@ function ScholarshipsPage() {
           {filtered.length === 0 && (
             <div className="text-center py-16 text-muted-foreground">
               <Award className="w-10 h-10 mx-auto mb-3 opacity-40" />
-              No scholarships match your filters.
+              {t("noResults")}
             </div>
           )}
         </div>
       </section>
 
-      <Footer />
-
-      <ChatWidget
-        mode="scholarship"
-        title="Scholarship Assistant"
-        subtitle="Match programs · application guidance"
-        greeting="Hello! I can help you find scholarships in Germany, compare programs, and explain documents and deadlines. Upload filenames or describe your profile to get started."
-        enableUploads
-        accent="primary"
-        suggestions={[
-          "Which scholarships fit me?",
-          "What documents do I need?",
-          "Fully funded masters for Kenyans",
-          "DAAD vs Erasmus+?",
-        ]}
-        acceptFileTypes=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-      />
+      <ChatWidget mode="scholarship" enableUploads accent="primary" />
     </div>
   );
 }
