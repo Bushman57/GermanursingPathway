@@ -10,12 +10,11 @@ import step1 from "@/assets/steps/step1.jpg";
 import step2 from "@/assets/steps/step2.jpg";
 import step3 from "@/assets/steps/step3.jpg";
 import step4 from "@/assets/steps/step4.jpg";
-import step5 from "@/assets/steps/step5.jpg";
 import step6 from "@/assets/steps/step6.jpg";
 import step7 from "@/assets/steps/step7.jpg";
 import step8 from "@/assets/steps/step8.jpg";
 
-const STEP_IMAGES = [step1, step2, step3, step4, step5, step6, step7, step8];
+const STEP_IMAGES = [step1, step2, step3, step4, step6, step7, step8];
 
 export const Route = createFileRoute("/how-it-works")({
   head: () => metaFromKeys("howItWorks"),
@@ -35,20 +34,27 @@ function StepText({
   title,
   desc,
   details,
+  number,
 }: {
   title: string;
   desc: string;
   details: string[];
+  number: number;
 }) {
   return (
-    <div className="py-2 lg:py-6">
-      <h2 className="font-heading text-2xl sm:text-3xl font-bold text-primary leading-snug">
+    <div className="group/text py-2 lg:py-6">
+      <span className="inline-block font-heading text-xs uppercase tracking-[0.2em] text-warm font-semibold mb-2">
+        Step {String(number).padStart(2, "0")}
+      </span>
+      <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-primary leading-tight tracking-tight">
         {title}
       </h2>
-      <p className="mt-3 text-muted-foreground leading-relaxed">{desc}</p>
+      <p className="mt-3 text-muted-foreground leading-relaxed font-body text-[15px] sm:text-base">
+        {desc}
+      </p>
       <ul className="mt-5 space-y-3">
         {details.map((d) => (
-          <li key={d} className="flex items-start gap-3 text-foreground/90">
+          <li key={d} className="flex items-start gap-3 text-foreground/90 font-body">
             <DiamondBullet />
             <span className="leading-relaxed">{d}</span>
           </li>
@@ -60,13 +66,17 @@ function StepText({
 
 function StepImage({ src, alt }: { src: string; alt: string }) {
   return (
-    <div className="py-2 lg:py-6">
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        className="w-full rounded-2xl object-cover aspect-[4/3] shadow-lg ring-1 ring-border/40"
-      />
+    <div className="group/img py-2 lg:py-6">
+      <div className="relative overflow-hidden rounded-2xl shadow-lg ring-1 ring-border/40 transition-all duration-500 hover:shadow-2xl hover:ring-warm/40 hover:-translate-y-1">
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          className="w-full object-cover aspect-[4/3] transition-all duration-700 ease-out group-hover/img:scale-110 grayscale-[20%] group-hover/img:grayscale-0"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-primary/30 via-transparent to-transparent opacity-60 group-hover/img:opacity-0 transition-opacity duration-500" />
+        <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10" />
+      </div>
     </div>
   );
 }
