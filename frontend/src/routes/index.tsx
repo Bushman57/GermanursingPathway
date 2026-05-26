@@ -149,11 +149,15 @@ function Index() {
             {programCards.map((program, i) => (
               <div
                 key={program.title}
-                className="group bg-background rounded-2xl border border-border overflow-hidden hover:shadow-xl hover:border-warm/30 transition-all"
+                className="group relative bg-background rounded-2xl border border-border overflow-hidden hover:shadow-2xl hover:-translate-y-2 hover:border-warm/50 transition-all duration-500"
               >
-                <div className={`${PROGRAM_COLORS[i] ?? "bg-primary"} px-6 py-5`}>
-                  <h3 className="font-heading text-xl font-bold text-primary-foreground">{program.title}</h3>
-                  <p className="text-primary-foreground/80 text-sm mt-1">{program.subtitle}</p>
+                <div className={`absolute inset-x-0 top-0 h-1 ${PROGRAM_COLORS[i] ?? "bg-primary"} scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`} />
+                <div className={`${PROGRAM_COLORS[i] ?? "bg-primary"} px-6 py-6 relative overflow-hidden`}>
+                  <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-primary-foreground/10 group-hover:scale-150 transition-transform duration-700" />
+                  <div className="relative">
+                    <h3 className="font-heading text-2xl font-bold text-primary-foreground">{program.title}</h3>
+                    <p className="text-primary-foreground/80 text-sm mt-1">{program.subtitle}</p>
+                  </div>
                 </div>
                 <div className="p-6">
                   <ul className="space-y-3">
@@ -164,8 +168,11 @@ function Index() {
                       </li>
                     ))}
                   </ul>
-                  <Button variant="warm" className="w-full mt-6" asChild>
-                    <Link to="/eligibility">{t("programTypes.applyNow")}</Link>
+                  <Button variant="warm" className="w-full mt-6 group-hover:shadow-lg transition-shadow" asChild>
+                    <Link to="/eligibility">
+                      {t("programTypes.applyNow")}
+                      <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                    </Link>
                   </Button>
                 </div>
               </div>
