@@ -228,17 +228,30 @@ function Index() {
               {t("whyUs.title")} <span className="text-warm">{t("whyUs.titleAccent")}</span>
             </h2>
           </div>
-          <div className="grid sm:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-3 gap-6">
             {whyItems.map((item, i) => {
               const Icon = WHY_ICONS[i] ?? Shield;
+              const bgImage = WHY_IMAGES[i];
               return (
-              <div key={item.title} className="text-center group">
-                <div className="w-16 h-16 rounded-2xl bg-warm/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-warm/20 transition-colors">
-                  <Icon className="w-8 h-8 text-warm" />
+                <div
+                  key={item.title}
+                  className="group relative h-80 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+                >
+                  <img
+                    src={bgImage}
+                    alt={item.title}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/70 to-primary/30 group-hover:from-primary/95 group-hover:via-primary/80 group-hover:to-primary/50 transition-all duration-500" />
+                  <div className="relative h-full flex flex-col justify-end p-6 text-primary-foreground">
+                    <div className="w-14 h-14 rounded-2xl bg-warm/90 backdrop-blur flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                      <Icon className="w-7 h-7 text-primary-foreground" />
+                    </div>
+                    <h3 className="font-heading text-xl font-bold">{item.title}</h3>
+                    <p className="mt-2 text-sm text-primary-foreground/90 leading-relaxed">{item.desc}</p>
+                  </div>
                 </div>
-                <h3 className="font-heading text-xl font-semibold text-foreground">{item.title}</h3>
-                <p className="mt-3 text-muted-foreground leading-relaxed">{item.desc}</p>
-              </div>
               );
             })}
           </div>
