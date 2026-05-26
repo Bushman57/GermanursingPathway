@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { resourceArticles } from "@/lib/resources";
+import { fetchResources } from "@/lib/api/resources";
 import { useTranslation } from "react-i18next";
 import { metaFromKeys } from "@/lib/pageMeta";
 import { BookOpen, Clock, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/resources")({
+  loader: () => fetchResources(),
   head: () => metaFromKeys("resources"),
   component: ResourcesPage,
 });
@@ -19,6 +20,7 @@ const categoryLabels: Record<string, { en: string; de: string }> = {
 };
 
 function ResourcesPage() {
+  const resourceArticles = Route.useLoaderData();
   const { t, i18n } = useTranslation("common");
   const isDe = i18n.language.startsWith("de");
 

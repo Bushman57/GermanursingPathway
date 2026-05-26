@@ -27,7 +27,8 @@
   "showingCount": "Showing {{count}} scholarships",
   "internationalStudents": "International Students",
   "details": "Details",
-  "offeredBy": "Offered by {{provider}}",
+  "apply": "Apply",
+  "offeredBy": "Offered by",
   "detail": {
     "back": "Back to scholarships",
     "notFoundTitle": "Scholarship not found",
@@ -37,7 +38,7 @@
     "eligibility": "Eligibility",
     "documents": "Required documents",
     "process": "Application process",
-    "applyCta": "Register interest",
+    "applyCta": "Register",
     "officialLink": "Official program page",
     "officialHint": "Always submit your application through the official channel.",
     "visitOfficial": "Visit Official Website",

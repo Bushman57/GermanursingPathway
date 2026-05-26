@@ -15,70 +15,10 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from datetime import date, datetime
 from pathlib import Path
 
 BACKEND_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_JSON = BACKEND_ROOT / "data" / "scholarships.json"
-
-# JSON keys mapped to table columns (rest go into program_data)
-_COLUMN_KEYS = frozenset(
-    {
-        "slug",
-        "title",
-        "titleDe",
-        "programType",
-        "shortDescription",
-        "shortDescriptionDe",
-        "funding",
-        "verified",
-        "deadline",
-    }
-)
-
-
-def parse_deadline(value: str | None) -> date | None:
-    if not value or not isinstance(value, str):
-        return None
-    text = value.strip()
-    for fmt in ("%d %B %Y", "%d %b %Y", "%Y-%m-%d"):
-        try:
-            return datetime.strptime(text, fmt).date()
-        except ValueError:
-            continue
-    return None
-
-
-def program_data_from_entry(entry: dict) -> dict:
-    return {k: v for k, v in entry.items() if k not in _COLUMN_KEYS}
-
-
-def entry_to_row(entry: dict) -> dict:
-    slug = entry.get("slug")
-    if not slug:
-        raise ValueError("Scholarship entry missing slug")
-
-    program_type = entry.get("programType") or "other"
-    title = entry.get("title") or slug
-    short_description = entry.get("shortDescription") or ""
-
-    title_de = entry.get("titleDe")
-    short_description_de = entry.get("shortDescriptionDe")
-
-    return {
-        "slug": slug,
-        "program_type": str(program_type)[:60],
-        "title_en": str(title)[:300],
-        "title_de": (str(title_de)[:300] if title_de else None),
-        "short_description_en": str(short_description),
-        "short_description_de": (str(short_description_de) if short_description_de else None),
-        "funding": (str(entry["funding"])[:80] if entry.get("funding") else None),
-        "deadline": parse_deadline(entry.get("deadline")),
-        "verified": bool(entry.get("verified", False)),
-        "partner_school_id": None,
-        "program_data": program_data_from_entry(entry),
-    }
-
 
 def load_scholarships(
     json_path: Path,
@@ -93,6 +33,7 @@ def load_scholarships(
     from app.config import get_settings
     from app.db.models import Scholarship
     from app.db.session import _get_engine
+    from app.services.scholarship_mapper import entry_to_row
 
     settings = get_settings()
     if not settings.database_url:
@@ -143,6 +84,8 @@ def load_scholarships(
                 existing.funding = row["funding"]
                 existing.deadline = row["deadline"]
                 existing.verified = row["verified"]
+                existing.official_link = row.get("official_link")
+                existing.application_link = row.get("application_link")
                 existing.program_data = row["program_data"]
                 updated += 1
                 action = "update"

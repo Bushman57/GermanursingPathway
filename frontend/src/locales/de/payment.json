@@ -1,7 +1,7 @@
 {
   "trigger": "Mit M-Pesa bezahlen",
   "title": "Programmgebühr",
-  "descriptionWithAmount": "Zahlen Sie <strong>{{amount}}</strong> (volle Programmgebühr, Gegenwert ca. 2.300 €) per M-Pesa STK Push.",
+  "descriptionWithAmount": "Zahlen Sie <strong>{{amount}}</strong> (volle Programmgebühr, Gegenwert ca. 1.550 €) per M-Pesa STK Push.",
   "descriptionGeneric": "Zahlen Sie die volle Programmgebühr per M-Pesa STK Push.",
   "phoneLabel": "M-Pesa-Telefonnummer",
   "phonePlaceholder": "0712345678",

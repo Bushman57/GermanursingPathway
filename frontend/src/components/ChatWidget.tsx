@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { fetchChatReply, type ChatMode } from "@/lib/chat/fetchChatReply";
-import { getScholarship, scholarshipText } from "@/lib/scholarships";
+import { fetchScholarshipBySlug } from "@/lib/api/scholarships";
+import { scholarshipText, type Scholarship } from "@/lib/scholarships";
 
 type Attachment = { name: string; size: number; type: string };
 type Message = {
@@ -90,7 +91,17 @@ export function ChatWidget({
   disclaimer,
 }: ChatWidgetProps) {
   const { t, i18n } = useTranslation("chat");
-  const program = scholarshipSlug ? getScholarship(scholarshipSlug) : undefined;
+  const [program, setProgram] = useState<Scholarship | undefined>();
+
+  useEffect(() => {
+    if (!scholarshipSlug) {
+      setProgram(undefined);
+      return;
+    }
+    fetchScholarshipBySlug(scholarshipSlug)
+      .then(setProgram)
+      .catch(() => setProgram(undefined));
+  }, [scholarshipSlug]);
   const chatKey = scholarshipSlug ? "scholarshipDetail" : mode === "scholarship" ? "scholarship" : "pathway";
   const programTitle = program ? scholarshipText(program, "title", i18n.language) : "";
   const programProvider = program ? scholarshipText(program, "provider", i18n.language) : "";

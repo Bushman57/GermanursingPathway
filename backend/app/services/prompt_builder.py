@@ -37,9 +37,35 @@ def _scholarship_summary(entry: dict) -> dict:
     }
 
 
+def _load_scholarships_from_db() -> list[dict] | None:
+    settings = get_settings()
+    if not settings.database_url:
+        return None
+    try:
+        from app.db.models import Scholarship
+        from app.db.session import _get_engine
+        from app.services.scholarship_mapper import row_to_public
+
+        _get_engine()
+        from app.db.session import _SessionLocal
+
+        if _SessionLocal is None:
+            return None
+        session = _SessionLocal()
+        try:
+            rows = session.query(Scholarship).order_by(Scholarship.title_en).all()
+            return [row_to_public(r) for r in rows]
+        finally:
+            session.close()
+    except Exception:
+        return None
+
+
 def build_scholarship_context(scholarship_slug: str | None = None) -> str:
-    path = DATA_DIR / "scholarships.json"
-    scholarships: list[dict] = json.loads(path.read_text(encoding="utf-8"))
+    scholarships = _load_scholarships_from_db()
+    if scholarships is None:
+        path = DATA_DIR / "scholarships.json"
+        scholarships = json.loads(path.read_text(encoding="utf-8"))
     focus = next((s for s in scholarships if s["slug"] == scholarship_slug), None) if scholarship_slug else None
     payload = {
         "focusScholarship": _scholarship_summary(focus) if focus else None,

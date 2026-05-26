@@ -43,7 +43,7 @@
       "School interview (German/English)",
       "Receive offer and begin visa process"
     ],
-    "officialLink": "/register",
+    "applicationLink": "/register",
     "titleDe": "Berlin Pflegestipendium 2026",
     "providerDe": "Berlin Nursing Institute",
     "degreeLevelDe": "Pflegestipendium",
@@ -123,7 +123,7 @@
       "Contract and visa preparation",
       "Arrival and integration support"
     ],
-    "officialLink": "/register",
+    "applicationLink": "/register",
     "titleDe": "NRW Pflege-Ausbildung 2026",
     "providerDe": "NRW Health Academy",
     "degreeLevelDe": "Ausbildung",
@@ -200,7 +200,7 @@
       "Hospital matching interview",
       "Offer and visa support"
     ],
-    "officialLink": "/register",
+    "applicationLink": "/register",
     "titleDe": "München Klinischer Pflegepfad 2027",
     "providerDe": "Munich Care College",
     "degreeLevelDe": "Pflegeplatzierung",
@@ -285,6 +285,7 @@
       "Selected scholars travel to Berlin for the 5-month program (Mar–Jul)"
     ],
     "officialLink": "https://www.bundestag.de/ips",
+    "applicationLink": "https://www.bundestag.de/ips",
     "programType": "other",
     "verified": false,
     "titleDe": "Deutscher Bundestag IPS Afrika-Stipendium 2027",

@@ -1,7 +1,7 @@
 {
   "trigger": "Pay with M-Pesa",
   "title": "Program payment",
-  "descriptionWithAmount": "Pay <strong>{{amount}}</strong> (full program fee, €2,300 equivalent) via M-Pesa STK Push.",
+  "descriptionWithAmount": "Pay <strong>{{amount}}</strong> (full program fee, €1,550 equivalent) via M-Pesa STK Push.",
   "descriptionGeneric": "Pay the full program fee via M-Pesa STK Push.",
   "phoneLabel": "M-Pesa phone number",
   "phonePlaceholder": "0712345678",

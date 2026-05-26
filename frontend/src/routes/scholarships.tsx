@@ -1,21 +1,25 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/Navbar";
 import { ChatWidget } from "@/components/ChatWidget";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { scholarships, scholarshipText } from "@/lib/scholarships";
+import { fetchScholarships } from "@/lib/api/scholarships";
+import { scholarshipText } from "@/lib/scholarships";
 import { metaFromScholarshipsPage } from "@/lib/pageMeta";
-import { Calendar, Award, ArrowRight, Search, BadgeCheck } from "lucide-react";
+import { Calendar, Award, Search, BadgeCheck } from "lucide-react";
+import { ScholarshipApplyButton, ScholarshipTitleLink } from "@/components/scholarships/ScholarshipCardLinks";
 import { useState } from "react";
 import germanUniversities from "@/assets/german-universities.png";
 
 export const Route = createFileRoute("/scholarships")({
+  loader: () => fetchScholarships(),
   head: () => metaFromScholarshipsPage(),
   component: ScholarshipsPage,
 });
 
 function ScholarshipsPage() {
+  const scholarships = Route.useLoaderData();
   const { t, i18n } = useTranslation("scholarshipsPage");
   const lang = i18n.language;
   const [query, setQuery] = useState("");
@@ -121,11 +125,10 @@ function ScholarshipsPage() {
                 className="group bg-card border border-border rounded-xl overflow-hidden hover:shadow-xl hover:border-warm/40 transition-all flex flex-col"
               >
                 <div className="p-5 flex-1 flex flex-col">
-                  <h3 className="font-heading text-base font-semibold text-foreground leading-snug line-clamp-2 group-hover:text-warm transition-colors">
-                    <Link to="/scholarships/$slug" params={{ slug: s.slug }}>
-                      {scholarshipText(s, "title", lang)}
-                    </Link>
-                  </h3>
+                  <ScholarshipTitleLink
+                    scholarship={s}
+                    title={scholarshipText(s, "title", lang)}
+                  />
 
                   <div className="mt-3 flex flex-wrap gap-1.5">
                     {s.verified && (
@@ -170,11 +173,7 @@ function ScholarshipsPage() {
                       <Calendar className="w-3.5 h-3.5 text-warm shrink-0" />
                       <span className="truncate">{scholarshipText(s, "deadline", lang)}</span>
                     </span>
-                    <Button variant="warm" size="sm" asChild>
-                      <Link to="/scholarships/$slug" params={{ slug: s.slug }}>
-                        {t("details")} <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                      </Link>
-                    </Button>
+                    <ScholarshipApplyButton scholarship={s} applyLabel={t("apply")} />
                   </div>
                 </div>
               </article>

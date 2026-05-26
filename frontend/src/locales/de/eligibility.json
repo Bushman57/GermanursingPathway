@@ -5,7 +5,7 @@
   "continue": "Weiter",
   "seeResults": "Ergebnis anzeigen",
   "retake": "Erneut prüfen",
-  "registerCta": "Interesse registrieren",
+  "registerCta": "Registrieren",
   "steps": ["Persönliche Daten", "Beruf", "Ausbildung", "Erfahrung", "Sprache", "Bereitschaft"],
   "personal": {
     "title": "Persönliche Angaben",

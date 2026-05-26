@@ -26,35 +26,15 @@
         ]
       },
       {
-        "title": "Direkteinstieg",
-        "subtitle": "Fachkräfteweg",
-        "features": [
-          "Für qualifizierte Fachkräfte mit Berufserfahrung",
-          "Anerkanntes Diplom oder Studienabschluss erforderlich",
-          "Deutsch B1–B2",
-          "Arbeitgeber-Matching inklusive"
-        ]
-      },
-      {
-        "title": "Pflegepfad",
+        "title": "Betreuer/Betreuerin Pathway",
         "subtitle": "Mit oder ohne vorherige Anerkennung",
         "features": [
           "Unterstützung bei der Anerkennung",
-          "Bezahlte Anpassungsprogramme möglich",
           "Einstiegsgehalt ca. 2.300–3.000 €/Monat",
-          "Direkte Klinik- und Krankenhausvermittlung"
+          "Direkte Unterbringung in Altenpflegeeinrichtungen",
+          "Berechtigt zur Erlangung einer dauerhaften Aufenthaltsgenehmigung"
         ]
       }
-    ]
-  },
-  "timeline": {
-    "title": "Programm",
-    "titleAccent": "Zeitplan",
-    "phases": [
-      { "phase": "Phase 1", "title": "Vorbereitung", "duration": "1–2 Monate", "desc": "Bewerbung, Bewertung der Qualifikation und Einschreibung in den Sprachkurs" },
-      { "phase": "Phase 2", "title": "Sprache", "duration": "4–6 Monate", "desc": "Intensives Deutschtraining (A1–B2) mit Pflegefachsprache" },
-      { "phase": "Phase 3", "title": "Vermittlung", "duration": "2–3 Monate", "desc": "Arbeitgeber-Matching, Vertragsabschluss und Visum" },
-      { "phase": "Phase 4", "title": "Ankunft", "duration": "1 Monat", "desc": "Briefing vor Abreise und Unterstützung bei der Integration in Deutschland" }
     ]
   },
   "investment": {
@@ -65,13 +45,12 @@
       ["Bewerbung & Orientierung", "50"],
       ["Administration & Betreuung", "150"],
       ["Qualifikationsanerkennung", "200"],
-      ["Sprachtraining (A1–B2)", "750"],
       ["Job-Matching", "700"],
       ["Visum-Unterstützung", "250"],
       ["Relocation-Unterstützung", "200"]
     ],
     "total": "Gesamtkosten Programm",
-    "totalAmount": "2.300 €",
+    "totalAmount": "1.550 €",
     "footnote": "Flexible Zahlungspläne in KES-Äquivalent möglich"
   },
   "whyUs": {
@@ -86,19 +65,7 @@
   "eligibility": {
     "title": "Voraussetzungen",
     "titleAccent": "Eignung",
-    "educationTitle": "Bildungsabschlüsse",
-    "educationItems": [
-      "Zertifikat als Certified Nursing Assistant (CNA)",
-      "Diplom oder Studium in Pflege (KRCHN/KRN/KRM)",
-      "Diplom oder Studium in Clinical Medicine",
-      "Alle Abschlüsse von anerkannten Institutionen"
-    ],
-    "experienceTitle": "Berufserfahrung",
-    "experienceItems": [
-      "Mindestens 1 Jahr klinische Erfahrung für CNAs",
-      "Mindestens 2 Jahre für Pflegekräfte / Clinical Officers",
-      "Aktuelle Berufszulassung"
-    ],
+    "disclaimer": "Die Anforderungen können je nach Bundesland, Arbeitgeber und Anerkennungsstelle variieren. Die endgültige Eignung wird im Rahmen des Bewerbungsverfahrens individuell geprüft.",
     "cta": "Eignung prüfen"
   },
   "stats": [
@@ -110,7 +77,7 @@
   "cta": {
     "title": "Starten Sie heute Ihre Pflegekarriere in Deutschland",
     "subtitle": "Schließen Sie sich hunderten kenianischen Gesundheitsfachkräften an, die den Schritt bereits gemacht haben. Beginnen Sie mit einer kurzen Eignungsprüfung.",
-    "contact": "📞 (+254) 718-266-072 · ✉️ info@germannursingpathway.com"
+    "contact": "📞 +254 116423212 · ✉️ info@germanursingpathway.com"
   },
   "images": {
     "hero": "Gesundheitsfachkraft auf dem Weg nach Deutschland",

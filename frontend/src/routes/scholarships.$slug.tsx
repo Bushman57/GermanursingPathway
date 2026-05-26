@@ -5,10 +5,10 @@ import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  scholarshipList,
-  scholarshipText,
-} from "@/lib/scholarships";
+import { fetchScholarshipBySlug } from "@/lib/api/scholarships";
+import { scholarshipList, scholarshipText } from "@/lib/scholarships";
+import { ScholarshipApplyButton } from "@/components/scholarships/ScholarshipCardLinks";
+import { scholarshipExternalUrl, scholarshipHasExternalLink } from "@/lib/scholarshipLinks";
 import { metaTags } from "@/lib/routeHead";
 import i18n from "@/i18n";
 import {
@@ -27,10 +27,12 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/scholarships/$slug")({
-  loader: ({ params }) => {
-    const scholarship = getScholarship(params.slug);
-    if (!scholarship) throw notFound();
-    return scholarship;
+  loader: async ({ params }) => {
+    try {
+      return await fetchScholarshipBySlug(params.slug);
+    } catch {
+      throw notFound();
+    }
   },
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [] };
@@ -77,6 +79,7 @@ function ScholarshipDetail() {
   const { t, i18n } = useTranslation("scholarshipsPage");
   const lang = i18n.language;
 
+  const externalUrl = scholarshipExternalUrl(s);
   const facts = [
     { icon: Globe, label: t("detail.facts.hostCountry"), value: s.hostCountry },
     { icon: MapPin, label: t("detail.facts.studyIn"), value: s.studyIn },
@@ -103,7 +106,19 @@ function ScholarshipDetail() {
             {scholarshipText(s, "title", lang)}
           </h1>
           <p className="text-primary-foreground/70 mt-3">
-            {t("offeredBy", { provider: scholarshipText(s, "provider", lang) })}
+            {t("offeredBy")}{" "}
+            {externalUrl ? (
+              <a
+                href={externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-warm underline underline-offset-2 hover:text-primary-foreground"
+              >
+                {scholarshipText(s, "provider", lang)}
+              </a>
+            ) : (
+              scholarshipText(s, "provider", lang)
+            )}
           </p>
           <div className="mt-6 flex flex-wrap gap-3 text-sm text-primary-foreground/80">
             <span className="flex items-center gap-1.5">
@@ -138,15 +153,17 @@ function ScholarshipDetail() {
               ordered
             />
 
-            <div className="bg-card border border-border rounded-2xl p-6">
-              <h3 className="font-heading text-lg font-semibold text-foreground">{t("detail.officialLink")}</h3>
-              <p className="text-sm text-muted-foreground mt-1">{t("detail.officialHint")}</p>
-              <Button variant="warm" className="mt-4" asChild>
-                <a href={s.officialLink} target="_blank" rel="noopener noreferrer">
-                  {t("detail.visitOfficial")} <ExternalLink className="w-4 h-4 ml-1" />
-                </a>
-              </Button>
-            </div>
+            {scholarshipHasExternalLink(s) && externalUrl && (
+              <div className="bg-card border border-border rounded-2xl p-6">
+                <h3 className="font-heading text-lg font-semibold text-foreground">{t("detail.officialLink")}</h3>
+                <p className="text-sm text-muted-foreground mt-1">{t("detail.officialHint")}</p>
+                <Button variant="warm" className="mt-4" asChild>
+                  <a href={externalUrl} target="_blank" rel="noopener noreferrer">
+                    {t("detail.visitOfficial")} <ExternalLink className="w-4 h-4 ml-1" />
+                  </a>
+                </Button>
+              </div>
+            )}
           </div>
 
           <aside className="space-y-6">
@@ -167,7 +184,14 @@ function ScholarshipDetail() {
                 ))}
               </ul>
 
-              <Button variant="warm" className="w-full mt-6" asChild>
+              <ScholarshipApplyButton
+                scholarship={s}
+                applyLabel={t("apply")}
+                className="w-full"
+                size="default"
+              />
+
+              <Button variant="outline" className="w-full mt-3" asChild>
                 <Link to="/eligibility">
                   {t("detail.checkEligibility")} <ArrowRight className="w-4 h-4 ml-1" />
                 </Link>

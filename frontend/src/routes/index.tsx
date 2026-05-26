@@ -10,9 +10,9 @@ import { WhatsAppLink } from "@/components/WhatsAppButton";
 import { TAGLINE_SECONDARY } from "@/lib/constants";
 import { metaFromKeys } from "@/lib/pageMeta";
 import {
-  CheckCircle, GraduationCap, Globe, Users, ArrowRight, Clock,
-  BookOpen, Briefcase, Award, Home as HomeIcon, Shield, Heart,
-  DollarSign, FileText, Plane, Languages
+  CheckCircle, ArrowRight,
+  Briefcase, Award, Home as HomeIcon, Shield,
+  DollarSign, Plane, Languages
 } from "lucide-react";
 import heroBridge from "@/assets/hero-bridge.jpg";
 import programOverview from "@/assets/program-overview.jpg";
@@ -25,7 +25,6 @@ export const Route = createFileRoute("/")({
 
 const OVERVIEW_ICONS = [Award, Languages, Briefcase, Plane] as const;
 const PROGRAM_COLORS = ["bg-primary", "bg-warm", "bg-success"] as const;
-const TIMELINE_ICONS = [FileText, BookOpen, Briefcase, Plane] as const;
 const WHY_ICONS = [DollarSign, HomeIcon, Shield] as const;
 
 function Index() {
@@ -36,12 +35,6 @@ function Index() {
     title: string;
     subtitle: string;
     features: string[];
-  }[];
-  const timelinePhases = t("timeline.phases", { returnObjects: true }) as {
-    phase: string;
-    title: string;
-    duration: string;
-    desc: string;
   }[];
   const investmentRows = t("investment.rows", { returnObjects: true }) as [string, string][];
   const whyItems = t("whyUs.items", { returnObjects: true }) as { title: string; desc: string }[];
@@ -148,7 +141,7 @@ function Index() {
               {t("programTypes.subtitle")}
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {programCards.map((program, i) => (
               <div
                 key={program.title}
@@ -173,33 +166,6 @@ function Index() {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Program Timeline */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-foreground">
-              {t("timeline.title")} <span className="text-warm">{t("timeline.titleAccent")}</span>
-            </h2>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {timelinePhases.map((item, i) => {
-              const Icon = TIMELINE_ICONS[i] ?? FileText;
-              return (
-              <div key={item.phase} className="relative bg-card rounded-xl p-6 border border-border hover:border-warm/30 hover:shadow-lg transition-all group">
-                <div className="w-12 h-12 rounded-xl bg-warm/10 flex items-center justify-center mb-4 group-hover:bg-warm/20 transition-colors">
-                  <Icon className="w-6 h-6 text-warm" />
-                </div>
-                <span className="text-xs font-heading font-bold text-warm uppercase tracking-wider">{item.phase}</span>
-                <h3 className="font-heading text-lg font-semibold text-foreground mt-1">{item.title}</h3>
-                <p className="text-xs text-warm font-medium mt-1">{item.duration}</p>
-                <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{item.desc}</p>
-              </div>
-              );
-            })}
           </div>
         </div>
       </section>
@@ -278,36 +244,9 @@ function Index() {
               </h2>
               <div className="w-16 h-1 bg-warm mt-4 mb-8 rounded-full" />
 
-              <div className="space-y-6">
-                <div>
-                  <h4 className="font-heading font-semibold text-foreground flex items-center gap-2">
-                    <GraduationCap className="w-5 h-5 text-warm" />
-                    {t("eligibility.educationTitle")}
-                  </h4>
-                  <ul className="mt-3 space-y-2 ml-7">
-                    {(t("eligibility.educationItems", { returnObjects: true }) as string[]).map((r) => (
-                      <li key={r} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <CheckCircle className="w-4 h-4 text-success shrink-0 mt-0.5" />
-                        {r}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-heading font-semibold text-foreground flex items-center gap-2">
-                    <Briefcase className="w-5 h-5 text-warm" />
-                    {t("eligibility.experienceTitle")}
-                  </h4>
-                  <ul className="mt-3 space-y-2 ml-7">
-                    {(t("eligibility.experienceItems", { returnObjects: true }) as string[]).map((r) => (
-                      <li key={r} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <CheckCircle className="w-4 h-4 text-success shrink-0 mt-0.5" />
-                        {r}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
+              <p className="text-muted-foreground leading-relaxed text-lg">
+                {t("eligibility.disclaimer")}
+              </p>
 
               <Button variant="warm" size="lg" className="mt-8 px-8 py-6 text-base" asChild>
                 <Link to="/eligibility">

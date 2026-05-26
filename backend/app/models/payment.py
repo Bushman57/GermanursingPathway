@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 class PaymentConfigResponse(BaseModel):
     amount_kes: int
     currency_label: str
-    program_cost_eur: int = 2300
+    program_cost_eur: int = 1550
 
 
 class StkPaymentCreate(BaseModel):

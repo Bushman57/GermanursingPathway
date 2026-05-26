@@ -6,17 +6,17 @@
     "partners": "Partners",
     "resources": "Resources",
     "about": "About",
-    "register": "Register Interest",
+    "register": "Register",
     "eligibility": "Check Readiness",
     "whatsapp": "Join WhatsApp",
     "portal": "Student Portal"
   },
   "hero": {
-    "title": "Connecting Kenyan care with German opportunity",
+    "title": "Connecting Kenyan Healthcare with German opportunity",
     "subtitle": "Your journey into German nursing starts here",
-    "roles": "Nurses · Clinical Officers · CNAs · Health Support Workers",
-    "description": "A verified pathway to nursing scholarships, Ausbildung, language training, and healthcare careers in Germany.",
-    "register": "Register Interest",
+    "roles": "Nurses · CNAs · Health Support Workers",
+    "description": "Trusted guidance for Kenyan healthcare professionals pursuing nursing education, Ausbildung training, and long-term healthcare careers in Germany.",
+    "register": "Register",
     "whatsapp": "Join WhatsApp Community",
     "readiness": "Check Your Readiness"
   },
@@ -119,7 +119,7 @@
     "read": "Read article",
     "back": "All resources",
     "body": "This guide is part of the German Nursing Pathway resource library. {{excerpt}} For personalised support with your application, register your interest and our team will follow up with clear next steps.",
-    "registerCta": "Register your interest"
+    "registerCta": "Register"
   },
   "errors": {
     "404": {

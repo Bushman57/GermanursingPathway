@@ -5,7 +5,7 @@
   "continue": "Continue",
   "seeResults": "See My Results",
   "retake": "Retake Assessment",
-  "registerCta": "Register Your Interest",
+  "registerCta": "Register",
   "steps": ["Personal Info", "Profession", "Education", "Experience", "Language", "Readiness"],
   "personal": {
     "title": "Personal Information",

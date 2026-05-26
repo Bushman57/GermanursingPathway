@@ -27,7 +27,8 @@
   "showingCount": "{{count}} Stipendien angezeigt",
   "internationalStudents": "Internationale Studierende",
   "details": "Details",
-  "offeredBy": "Angeboten von {{provider}}",
+  "apply": "Bewerben",
+  "offeredBy": "Angeboten von",
   "detail": {
     "back": "Zurück zu Stipendien",
     "notFoundTitle": "Stipendium nicht gefunden",
@@ -37,7 +38,7 @@
     "eligibility": "Voraussetzungen",
     "documents": "Erforderliche Unterlagen",
     "process": "Bewerbungsablauf",
-    "applyCta": "Interesse registrieren",
+    "applyCta": "Registrieren",
     "officialLink": "Offizielle Programmseite",
     "officialHint": "Reichen Sie Ihre Bewerbung stets über den offiziellen Kanal ein.",
     "visitOfficial": "Offizielle Website besuchen",

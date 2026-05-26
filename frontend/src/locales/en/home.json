@@ -26,35 +26,15 @@
         ]
       },
       {
-        "title": "Direct Employment",
-        "subtitle": "Skilled Worker Route",
-        "features": [
-          "For qualified professionals with experience",
-          "Recognized diploma or degree required",
-          "B1–B2 German language proficiency",
-          "Employer matching service included"
-        ]
-      },
-      {
-        "title": "Nursing Pathway",
+        "title": "Caregiver Pathway",
         "subtitle": "With or Without Recognition",
         "features": [
           "Credential recognition support",
-          "Paid adaptation programs available",
           "€2,300–€3,000/month starting salary",
-          "Direct hospital/clinic placements"
+          "Direct placement into elder care facilities",
+          "Eligible for permanent residency after qualification and employment"
         ]
       }
-    ]
-  },
-  "timeline": {
-    "title": "Program",
-    "titleAccent": "Timeline",
-    "phases": [
-      { "phase": "Phase 1", "title": "Preparation", "duration": "1-2 months", "desc": "Application, credential assessment, and language course enrollment" },
-      { "phase": "Phase 2", "title": "Training", "duration": "4-6 months", "desc": "Intensive German language training (A1-B2) with healthcare terminology" },
-      { "phase": "Phase 3", "title": "Placement", "duration": "2-3 months", "desc": "Employer matching, contract finalization, and visa processing" },
-      { "phase": "Phase 4", "title": "Relocation", "duration": "1 month", "desc": "Pre-departure briefing and settlement support in Germany" }
     ]
   },
   "investment": {
@@ -65,13 +45,12 @@
       ["Application & Orientation", "50"],
       ["Administration & Management", "150"],
       ["Credential Recognition", "200"],
-      ["Language Training (A1-B2)", "750"],
       ["Job Matching", "700"],
       ["Visa Support", "250"],
       ["Relocation Support", "200"]
     ],
     "total": "Total Program Cost",
-    "totalAmount": "€2,300",
+    "totalAmount": "€1,550",
     "footnote": "Flexible payment plans available in KES equivalent"
   },
   "whyUs": {
@@ -86,19 +65,7 @@
   "eligibility": {
     "title": "Eligibility",
     "titleAccent": "Requirements",
-    "educationTitle": "Educational Qualifications",
-    "educationItems": [
-      "Certified Nursing Assistant (CNA) certificate",
-      "Diploma or degree in Nursing (KRCHN/KRN/KRM)",
-      "Clinical Medicine diploma/degree",
-      "All qualifications must be from recognized institutions"
-    ],
-    "experienceTitle": "Professional Experience",
-    "experienceItems": [
-      "Minimum 1 year clinical experience for CNAs",
-      "Minimum 2 years experience for nurses/clinical officers",
-      "Current practicing license"
-    ],
+    "disclaimer": "Requirements may vary depending on the German state, employer, and recognition authority. Final eligibility is assessed individually during the application process.",
     "cta": "Check My Eligibility"
   },
   "stats": [
@@ -110,7 +77,7 @@
   "cta": {
     "title": "Start Your German Healthcare Career Today",
     "subtitle": "Join hundreds of Kenyan healthcare professionals who have successfully made the move. Your journey starts with a quick eligibility check.",
-    "contact": "📞 (+254) 718-266-072 · ✉️ info@germannursingpathway.com"
+    "contact": "📞 +254 116423212 · ✉️ info@germanursingpathway.com"
   },
   "images": {
     "hero": "Healthcare professional walking towards Germany",

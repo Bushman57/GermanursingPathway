@@ -6,7 +6,7 @@
     "partners": "Partner",
     "resources": "Ressourcen",
     "about": "Über uns",
-    "register": "Interesse anmelden",
+    "register": "Registrieren",
     "eligibility": "Eignung prüfen",
     "whatsapp": "WhatsApp beitreten",
     "portal": "Kandidatenportal"
@@ -14,9 +14,9 @@
   "hero": {
     "title": "Kenianische Pflege trifft deutsche Chancen",
     "subtitle": "Ihr Weg in die Pflege in Deutschland beginnt hier",
-    "roles": "Pflegekräfte · Clinical Officers · CNAs · Gesundheitsassistenten",
-    "description": "Ein verifizierter Pflegepfad zu Stipendien, Ausbildung, Sprachtraining und Karrieren im deutschen Gesundheitswesen.",
-    "register": "Interesse anmelden",
+    "roles": "Pflegekräfte · CNAs · Gesundheitsassistenten",
+    "description": "Vertrauenswürdige Beratung für kenianische Fachkräfte im Gesundheitswesen, die eine Ausbildung zur Pflegefachkraft, eine Berufsausbildung oder eine langfristige Karriere im Gesundheitswesen in Deutschland anstreben.",
+    "register": "Registrieren",
     "whatsapp": "WhatsApp-Community beitreten",
     "readiness": "Eignung prüfen"
   },
@@ -119,7 +119,7 @@
     "read": "Artikel lesen",
     "back": "Alle Ressourcen",
     "body": "Dieser Leitfaden ist Teil der Ressourcenbibliothek von German Nursing Pathway. {{excerpt}} Für individuelle Unterstützung registrieren Sie bitte Ihr Interesse — unser Team meldet sich mit den nächsten Schritten.",
-    "registerCta": "Interesse registrieren"
+    "registerCta": "Registrieren"
   },
   "errors": {
     "404": {

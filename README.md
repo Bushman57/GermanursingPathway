@@ -82,19 +82,30 @@ Run migrations on deploy: `alembic upgrade head`.
 
 **Recommended DNS:** `api.germanursingpathway.com` → API host; marketing domain → Vercel.
 
-## Sync scholarship data
+## Content admin (scholarships & resources)
 
-After editing `frontend/src/lib/scholarships.ts`:
+Public pages load scholarships and resources from the API (`GET /api/scholarships`, `GET /api/resources`). Admins manage content without code changes.
+
+1. Set `ADMIN_API_SECRET` in `backend/.env` (long random string).
+2. Run migrations and seed data:
+
+   ```bash
+   npm run db:migrate
+   npm run db:load-scholarships
+   npm run db:seed-resources
+   ```
+
+3. Open **http://localhost:8080/admin/login** and enter the same secret.
+4. Use **Scholarships** / **Resources** to add, edit, or delete entries.
+
+Set `VITE_API_URL` in `frontend/.env` (or rely on the Vite dev proxy to `http://127.0.0.1:8000`).
+
+## Legacy scholarship JSON sync (optional)
+
+For one-off imports from `backend/data/scholarships.json` or chat fallback without DB:
 
 ```bash
-npm run export:scholarships
-```
-
-Writes `backend/data/scholarships.json` for the chat service.
-
-Load that file into Postgres (`scholarships` table):
-
-```bash
+npm run export:scholarships   # from frontend TS (legacy)
 npm run db:load-scholarships
 ```
 

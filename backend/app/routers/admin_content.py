@@ -1,0 +1,141 @@
+from collections.abc import Generator
+from typing import Any
+
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
+from app.config import get_settings
+from app.db.models import ResourceArticle, Scholarship
+from app.db.session import get_db
+from app.deps.auth import require_admin
+from app.models.resource import ResourcePayload
+from app.services.resource_mapper import apply_row_to_model, row_to_public as resource_to_public
+from app.services.scholarship_mapper import apply_row_to_model as apply_scholarship_row
+from app.services.scholarship_mapper import entry_to_row, row_to_public as scholarship_to_public
+from app.services.slug_utils import normalize_slug
+
+router = APIRouter(prefix="/api/admin", tags=["admin"], dependencies=[Depends(require_admin)])
+
+
+def require_db() -> Generator[Session, None, None]:
+    if not get_settings().database_url:
+        raise HTTPException(status_code=503, detail="Database is not configured")
+    yield from get_db()
+
+
+# --- Scholarships ---
+
+
+@router.get("/scholarships")
+def admin_list_scholarships(db: Session = Depends(require_db)) -> list[dict]:
+    rows = db.query(Scholarship).order_by(Scholarship.title_en).all()
+    return [scholarship_to_public(r) for r in rows]
+
+
+def _validate_scholarship_body(body: dict[str, Any]) -> dict[str, Any]:
+    try:
+        body = {**body, "slug": normalize_slug(str(body.get("slug") or body.get("title") or ""))}
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    if not body.get("title") or not body.get("shortDescription"):
+        raise HTTPException(status_code=400, detail="title and shortDescription are required")
+    return body
+
+
+@router.post("/scholarships", status_code=201)
+def admin_create_scholarship(body: dict[str, Any], db: Session = Depends(require_db)) -> dict:
+    body = _validate_scholarship_body(body)
+    if db.query(Scholarship).filter(Scholarship.slug == body["slug"]).one_or_none():
+        raise HTTPException(status_code=409, detail="Scholarship slug already exists")
+    try:
+        row = entry_to_row(body)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    record = Scholarship(**row)
+    db.add(record)
+    db.commit()
+    db.refresh(record)
+    return scholarship_to_public(record)
+
+
+@router.put("/scholarships/{slug}")
+def admin_update_scholarship(
+    slug: str,
+    body: dict[str, Any],
+    db: Session = Depends(require_db),
+) -> dict:
+    record = db.query(Scholarship).filter(Scholarship.slug == slug).one_or_none()
+    if record is None:
+        raise HTTPException(status_code=404, detail="Scholarship not found")
+    entry = _validate_scholarship_body({**body, "slug": slug})
+    try:
+        apply_scholarship_row(record, entry)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    db.commit()
+    db.refresh(record)
+    return scholarship_to_public(record)
+
+
+@router.delete("/scholarships/{slug}", status_code=204)
+def admin_delete_scholarship(slug: str, db: Session = Depends(require_db)) -> None:
+    record = db.query(Scholarship).filter(Scholarship.slug == slug).one_or_none()
+    if record is None:
+        raise HTTPException(status_code=404, detail="Scholarship not found")
+    db.delete(record)
+    db.commit()
+
+
+# --- Resources ---
+
+
+@router.get("/resources")
+def admin_list_resources(db: Session = Depends(require_db)) -> list[dict]:
+    rows = db.query(ResourceArticle).order_by(ResourceArticle.sort_order, ResourceArticle.title_en).all()
+    return [resource_to_public(r, include_body=True) for r in rows]
+
+
+@router.post("/resources", status_code=201)
+def admin_create_resource(body: ResourcePayload, db: Session = Depends(require_db)) -> dict:
+    if db.query(ResourceArticle).filter(ResourceArticle.slug == body.slug).one_or_none():
+        raise HTTPException(status_code=409, detail="Resource slug already exists")
+    try:
+        from app.services.resource_mapper import payload_to_row
+
+        row = payload_to_row(body.model_dump())
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    record = ResourceArticle(**row)
+    db.add(record)
+    db.commit()
+    db.refresh(record)
+    return resource_to_public(record, include_body=True)
+
+
+@router.put("/resources/{slug}")
+def admin_update_resource(
+    slug: str,
+    body: ResourcePayload,
+    db: Session = Depends(require_db),
+) -> dict:
+    record = db.query(ResourceArticle).filter(ResourceArticle.slug == slug).one_or_none()
+    if record is None:
+        raise HTTPException(status_code=404, detail="Resource not found")
+    payload = body.model_dump()
+    payload["slug"] = slug
+    try:
+        apply_row_to_model(record, payload)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    db.commit()
+    db.refresh(record)
+    return resource_to_public(record, include_body=True)
+
+
+@router.delete("/resources/{slug}", status_code=204)
+def admin_delete_resource(slug: str, db: Session = Depends(require_db)) -> None:
+    record = db.query(ResourceArticle).filter(ResourceArticle.slug == slug).one_or_none()
+    if record is None:
+        raise HTTPException(status_code=404, detail="Resource not found")
+    db.delete(record)
+    db.commit()
