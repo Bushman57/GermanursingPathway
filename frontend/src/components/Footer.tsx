@@ -26,8 +26,8 @@ export function Footer() {
           <div>
             <h4 className="font-heading font-semibold mb-4">{t("footer.quickLinks")}</h4>
             <div className="space-y-2">
-              <Link to="/how-it-works" className="block text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors">
-                {t("nav.howItWorks")}
+              <Link to="/onboarding-process" className="block text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors">
+                {t("nav.onboardingProcess")}
               </Link>
               <Link to="/scholarships" className="block text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors">
                 {t("nav.scholarships")}

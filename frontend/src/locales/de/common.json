@@ -1,7 +1,7 @@
 {
   "nav": {
     "home": "Startseite",
-    "howItWorks": "Ablauf",
+    "onboardingProcess": "Onboarding-Prozess",
     "scholarships": "Stipendien",
     "partners": "Partner",
     "resources": "Ressourcen",
@@ -80,8 +80,8 @@
       "title": "Eignung prüfen — German Nursing Pathway",
       "description": "Schnelle Eignungsprüfung für kenianische Gesundheitsfachkräfte mit Karriereziel Deutschland."
     },
-    "howItWorks": {
-      "title": "Ablauf — German Nursing Pathway",
+    "onboardingProcess": {
+      "title": "Onboarding-Prozess — German Nursing Pathway",
       "description": "Schritt-für-Schritt vom Eignungscheck bis zur Ankunft in Deutschland."
     },
     "scholarships": {
