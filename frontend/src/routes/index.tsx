@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { useRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { InvestmentPaymentDialog } from "@/components/InvestmentPaymentDialog";
 import { Navbar } from "@/components/Navbar";
@@ -21,6 +22,69 @@ import whySalary from "@/assets/why/salary.jpg";
 import whyRelocation from "@/assets/why/relocation.jpg";
 import whyImmigration from "@/assets/why/immigration.jpg";
 import customerCare2 from "@/assets/Care/CustomerCare_2.jpg";
+
+function easeOutQuart(t: number) {
+  return 1 - Math.pow(1 - t, 4);
+}
+
+function AnimatedStat({ value, label }: { value: string; label: string }) {
+  const numericMatch = value.match(/^([\d,]+)(.*)$/);
+  const target = numericMatch ? parseInt(numericMatch[1].replace(/,/g, ""), 10) : 0;
+  const suffix = numericMatch ? numericMatch[2] : "";
+  const [display, setDisplay] = useState("0" + suffix);
+  const [hasStarted, setHasStarted] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasStarted) {
+          setHasStarted(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasStarted]);
+
+  useEffect(() => {
+    if (!hasStarted) return;
+    let raf: number;
+    const duration = 2000;
+    const startTime = performance.now();
+
+    const tick = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeOutQuart(progress);
+      setDisplay(`${Math.round(eased * target).toLocaleString()}${suffix}`);
+      if (progress < 1) {
+        raf = requestAnimationFrame(tick);
+      }
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [hasStarted, target, suffix]);
+
+  return (
+    <div ref={ref} className="relative group">
+      <div className="absolute inset-0 bg-warm/0 rounded-2xl group-hover:bg-warm/10 transition-colors duration-500" />
+      <div className="relative px-4 py-6">
+        <div className="font-heading text-4xl sm:text-5xl font-bold text-primary-foreground tabular-nums tracking-tight">
+          {display}
+        </div>
+        <div className="mt-2 text-sm font-medium text-primary-foreground/70 uppercase tracking-wider">
+          {label}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/")({
   head: () => metaFromKeys("home"),
