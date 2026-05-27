@@ -361,12 +361,9 @@ function Index() {
       {/* Stats */}
       <section className="py-16 hero-gradient">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
             {stats.map((stat) => (
-              <div key={stat.label}>
-                <div className="font-heading text-3xl sm:text-4xl font-bold text-primary-foreground">{stat.value}</div>
-                <div className="mt-1 text-sm text-primary-foreground/70">{stat.label}</div>
-              </div>
+              <AnimatedStat key={stat.label} value={stat.value} label={stat.label} />
             ))}
           </div>
         </div>
