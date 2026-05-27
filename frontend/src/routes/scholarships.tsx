@@ -43,21 +43,30 @@ function ScholarshipsShell({ listing }: { listing: ReactNode }) {
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-            <div className="space-y-6 text-muted-foreground leading-relaxed order-2 lg:order-1">
-              <p>{t("intro")}</p>
+            <div className="order-2 lg:order-1">
+              <div className="relative">
+                <div className="absolute -left-3 top-0 bottom-0 w-1 bg-gradient-to-b from-warm via-primary to-warm/30 rounded-full" />
+                <p className="pl-6 text-lg sm:text-xl text-foreground/90 leading-[1.8] font-body font-medium text-balance">
+                  <span className="font-heading text-5xl font-bold text-warm float-left mr-2 mt-1 leading-none">"</span>
+                  {t("intro")}
+                  <span className="font-heading text-warm text-xl sm:text-2xl block mt-5 font-semibold tracking-wide">
+                    Start your educational journey today.
+                  </span>
+                </p>
+              </div>
             </div>
             <div className="order-1 lg:order-2">
-              <div className="rounded-2xl overflow-hidden shadow-xl border border-border">
+              <div className="rounded-2xl overflow-hidden shadow-xl border border-border group">
                 <img
                   src={universitiesImage}
                   alt={t("imageAlt")}
-                  className="w-full h-auto object-cover"
+                  className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700"
                   loading="lazy"
                   width={1200}
                   height={750}
                 />
               </div>
-              <p className="mt-3 text-xs text-muted-foreground text-center">{t("imageCaption")}</p>
+              <p className="mt-3 text-xs text-muted-foreground text-center tracking-wide uppercase">{t("imageCaption")}</p>
             </div>
           </div>
         </div>
