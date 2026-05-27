@@ -19,8 +19,18 @@
     "verified": "Verifiziert",
     "nursing": "Pflege",
     "ausbildung": "Ausbildung",
-    "general": "Allgemein"
+    "caregiver": "Pflegehilfe",
+    "internship": "Praktikum",
+    "vocational": "Berufsausbildung",
+    "general": "Allgemein",
+    "applicationStatus": "Bewerbungsstatus",
+    "germanLevel": "Deutschniveau",
+    "tag": "Schlagwort",
+    "allStatuses": "Alle Status",
+    "allLevels": "Alle Niveaus",
+    "allTags": "Alle Schlagwörter"
   },
+  "applicationStatusBadge": "Status",
   "verifiedBadge": "Verifiziert",
   "viewDetails": "Details ansehen",
   "noResults": "Keine Stipendien entsprechen Ihrer Suche.",
@@ -50,7 +60,11 @@
       "degreeLevel": "Abschlussniveau",
       "funding": "Finanzierung",
       "eligibleCountries": "Berechtigte Länder",
-      "deadline": "Frist"
+      "deadline": "Frist",
+      "visa": "Visum-Sponsoring",
+      "accommodation": "Unterkunft",
+      "intake": "Startmonat",
+      "duration": "Programmdauer"
     }
   }
 }

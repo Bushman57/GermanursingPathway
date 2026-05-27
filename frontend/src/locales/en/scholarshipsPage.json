@@ -19,8 +19,18 @@
     "verified": "Verified",
     "nursing": "Nursing",
     "ausbildung": "Ausbildung",
-    "general": "General"
+    "caregiver": "Caregiver",
+    "internship": "Internship",
+    "vocational": "Vocational",
+    "general": "General",
+    "applicationStatus": "Application status",
+    "germanLevel": "German level",
+    "tag": "Tag",
+    "allStatuses": "All statuses",
+    "allLevels": "All levels",
+    "allTags": "All tags"
   },
+  "applicationStatusBadge": "Status",
   "verifiedBadge": "Verified",
   "viewDetails": "View details",
   "noResults": "No scholarships match your search.",
@@ -50,7 +60,11 @@
       "degreeLevel": "Degree Level",
       "funding": "Funding",
       "eligibleCountries": "Eligible Countries",
-      "deadline": "Deadline"
+      "deadline": "Deadline",
+      "visa": "Visa sponsorship",
+      "accommodation": "Accommodation",
+      "intake": "Intake month",
+      "duration": "Program duration"
     }
   }
 }

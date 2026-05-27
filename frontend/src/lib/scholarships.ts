@@ -1,7 +1,31 @@
 import { isGermanLocale } from "./locale";
 import type { ScholarshipDeFields } from "./scholarship-de";
 
-export type ProgramType = "nursing_scholarship" | "ausbildung" | "other";
+export type ProgramType =
+  | "nursing_scholarship"
+  | "ausbildung"
+  | "caregiver_pathway"
+  | "internship"
+  | "vocational_training"
+  | "other";
+
+export type ScholarshipQuestionnaire = {
+  verificationStatus?: string;
+  dataVerificationStatus?: string;
+  applicationStatus?: string;
+  germanLevelRequired?: string;
+  visaSponsorship?: string;
+  accommodationSupport?: string;
+  intakeMonth?: string;
+  programDuration?: string;
+  recognitionSupport?: string;
+  interviewRequired?: string;
+  applicationMethod?: string;
+  providerType?: string;
+  languagesOfInstruction?: string[];
+  targetApplicants?: string[];
+  tags?: string[];
+};
 
 export type Scholarship = {
   slug: string;
@@ -25,7 +49,8 @@ export type Scholarship = {
   applicationLink?: string;
   programType: ProgramType;
   verified: boolean;
-} & ScholarshipDeFields;
+} & ScholarshipDeFields &
+  ScholarshipQuestionnaire;
 
 /** Card/list fields only — returned by GET /api/scholarships */
 export type ScholarshipSummary = Pick<
@@ -42,6 +67,10 @@ export type ScholarshipSummary = Pick<
   | "officialLink"
   | "programType"
   | "verified"
+  | "applicationStatus"
+  | "germanLevelRequired"
+  | "tags"
+  | "verificationStatus"
 > &
   Partial<
     Pick<

@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.config import get_settings
@@ -10,8 +10,10 @@ from app.db.session import get_db
 from app.deps.auth import require_admin
 from app.models.resource import ResourcePayload
 from app.services.resource_mapper import apply_row_to_model, row_to_public as resource_to_public
+from app.schemas.scholarship_fields import validate_scholarship_questionnaire
 from app.services.scholarship_mapper import apply_row_to_model as apply_scholarship_row
 from app.services.scholarship_mapper import entry_to_row, row_to_public as scholarship_to_public
+from app.services.scholarship_query import scholarship_list_query
 from app.services.slug_utils import normalize_slug
 
 router = APIRouter(prefix="/api/admin", tags=["admin"], dependencies=[Depends(require_admin)])
@@ -27,8 +29,18 @@ def require_db() -> Generator[Session, None, None]:
 
 
 @router.get("/scholarships")
-def admin_list_scholarships(db: Session = Depends(require_db)) -> list[dict]:
-    rows = db.query(Scholarship).order_by(Scholarship.title_en).all()
+def admin_list_scholarships(
+    db: Session = Depends(require_db),
+    application_status: str | None = Query(None, alias="application_status"),
+    program_type: str | None = Query(None, alias="program_type"),
+    data_verification_status: str | None = Query(None, alias="data_verification_status"),
+) -> list[dict]:
+    rows = scholarship_list_query(
+        db,
+        application_status=application_status,
+        program_type=program_type,
+        data_verification_status=data_verification_status,
+    ).all()
     return [scholarship_to_public(r) for r in rows]
 
 
@@ -39,6 +51,10 @@ def _validate_scholarship_body(body: dict[str, Any]) -> dict[str, Any]:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     if not body.get("title") or not body.get("shortDescription"):
         raise HTTPException(status_code=400, detail="title and shortDescription are required")
+    try:
+        body = validate_scholarship_questionnaire(body)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     return body
 
 
