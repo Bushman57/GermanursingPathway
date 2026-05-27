@@ -1,12 +1,13 @@
 from collections.abc import Generator
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.config import get_settings
 from app.db.models import Scholarship
 from app.db.session import get_db
 from app.services.scholarship_mapper import row_to_public
+from app.services.scholarship_query import scholarship_list_query
 
 router = APIRouter(prefix="/api/scholarships", tags=["scholarships"])
 
@@ -21,8 +22,19 @@ def require_db() -> Generator[Session, None, None]:
 
 
 @router.get("")
-def list_scholarships(db: Session = Depends(require_db)) -> list[dict]:
-    rows = db.query(Scholarship).order_by(Scholarship.title_en).all()
+def list_scholarships(
+    db: Session = Depends(require_db),
+    application_status: str | None = Query(None, alias="application_status"),
+    program_type: str | None = Query(None, alias="program_type"),
+    german_level_required: str | None = Query(None, alias="german_level_required"),
+) -> list[dict]:
+    q = scholarship_list_query(
+        db,
+        application_status=application_status,
+        program_type=program_type,
+        german_level_required=german_level_required,
+    )
+    rows = q.all()
     return [row_to_public(r, include_detail=False) for r in rows]
 
 

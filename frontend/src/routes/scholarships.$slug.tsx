@@ -6,6 +6,7 @@ import { ChatWidget } from "@/components/ChatWidget";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { fetchScholarshipBySlug } from "@/lib/api/scholarships";
+import { fundingDisplayLabel, optionLabel } from "@/lib/scholarshipFieldOptions";
 import { scholarshipList, scholarshipText } from "@/lib/scholarships";
 import { ScholarshipApplyButton } from "@/components/scholarships/ScholarshipCardLinks";
 import { scholarshipExternalUrl, scholarshipHasExternalLink } from "@/lib/scholarshipLinks";
@@ -80,13 +81,43 @@ function ScholarshipDetail() {
   const lang = i18n.language;
 
   const externalUrl = scholarshipExternalUrl(s);
+  const fundingLabel =
+    fundingDisplayLabel(s.funding) || scholarshipText(s, "funding", lang);
   const facts = [
     { icon: Globe, label: t("detail.facts.hostCountry"), value: s.hostCountry },
     { icon: MapPin, label: t("detail.facts.studyIn"), value: s.studyIn },
-    { icon: GraduationCap, label: t("detail.facts.degreeLevel"), value: scholarshipText(s, "degreeLevel", lang) },
-    { icon: Award, label: t("detail.facts.funding"), value: scholarshipText(s, "funding", lang) },
+    {
+      icon: GraduationCap,
+      label: t("detail.facts.degreeLevel"),
+      value: optionLabel(s.degreeLevel) || scholarshipText(s, "degreeLevel", lang),
+    },
+    { icon: Award, label: t("detail.facts.funding"), value: fundingLabel },
     { icon: Users, label: t("detail.facts.eligibleCountries"), value: s.eligibleCountries },
     { icon: Calendar, label: t("detail.facts.deadline"), value: scholarshipText(s, "deadline", lang) },
+    ...(s.visaSponsorship
+      ? [{ icon: Globe, label: t("detail.facts.visa"), value: optionLabel(s.visaSponsorship) }]
+      : []),
+    ...(s.accommodationSupport
+      ? [
+          {
+            icon: MapPin,
+            label: t("detail.facts.accommodation"),
+            value: optionLabel(s.accommodationSupport),
+          },
+        ]
+      : []),
+    ...(s.intakeMonth
+      ? [{ icon: Calendar, label: t("detail.facts.intake"), value: optionLabel(s.intakeMonth) }]
+      : []),
+    ...(s.programDuration
+      ? [
+          {
+            icon: GraduationCap,
+            label: t("detail.facts.duration"),
+            value: optionLabel(s.programDuration),
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -101,7 +132,7 @@ function ScholarshipDetail() {
           >
             <ArrowLeft className="w-4 h-4" /> {t("detail.back")}
           </Link>
-          <Badge className="bg-warm text-warm-foreground border-0">{scholarshipText(s, "funding", lang)}</Badge>
+          <Badge className="bg-warm text-warm-foreground border-0">{fundingLabel}</Badge>
           <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-primary-foreground mt-4 leading-tight">
             {scholarshipText(s, "title", lang)}
           </h1>
@@ -143,9 +174,17 @@ function ScholarshipDetail() {
               <p className="text-muted-foreground leading-relaxed">{scholarshipText(s, "about", lang)}</p>
             </div>
 
-            <Section title={t("detail.benefits")} icon={Award} items={scholarshipList(s, "benefits", lang)} />
+            <Section
+              title={t("detail.benefits")}
+              icon={Award}
+              items={scholarshipList(s, "benefits", lang).map((item) => optionLabel(item) || item)}
+            />
             <Section title={t("detail.eligibility")} icon={CheckCircle} items={scholarshipList(s, "eligibility", lang)} />
-            <Section title={t("detail.documents")} icon={FileText} items={scholarshipList(s, "requiredDocuments", lang)} />
+            <Section
+              title={t("detail.documents")}
+              icon={FileText}
+              items={scholarshipList(s, "requiredDocuments", lang).map((item) => optionLabel(item) || item)}
+            />
             <Section
               title={t("detail.process")}
               icon={ListChecks}

@@ -3,13 +3,20 @@ import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/Navbar";
 import { ChatWidget } from "@/components/ChatWidget";
 import { Badge } from "@/components/ui/badge";
-import { fetchScholarships } from "@/lib/api/scholarships";
+import { fetchScholarships, type PublicScholarshipFilters } from "@/lib/api/scholarships";
+import {
+  APPLICATION_STATUS_OPTIONS,
+  fundingDisplayLabel,
+  GERMAN_LEVEL_OPTIONS,
+  optionLabel,
+  SCHOLARSHIP_TAGS_OPTIONS,
+} from "@/lib/scholarshipFieldOptions";
 import { scholarshipText, type ScholarshipSummary } from "@/lib/scholarships";
 import { metaFromScholarshipsPage } from "@/lib/pageMeta";
 import { Calendar, Award, Search, BadgeCheck } from "lucide-react";
 import { ScholarshipApplyButton, ScholarshipTitleLink } from "@/components/scholarships/ScholarshipCardLinks";
 import { ScholarshipsGridSkeleton } from "@/components/scholarships/ScholarshipsGridSkeleton";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 const SCHOLARSHIPS_STALE_MS = 1000 * 60 * 5;
 const universitiesImage = `${import.meta.env.BASE_URL}images/german-universities.jpg`;
@@ -115,11 +122,23 @@ function ScholarshipFilters({
   onQueryChange,
   programFilter,
   onProgramFilterChange,
+  applicationStatus,
+  onApplicationStatusChange,
+  germanLevel,
+  onGermanLevelChange,
+  tagFilter,
+  onTagFilterChange,
 }: {
   query: string;
   onQueryChange: (value: string) => void;
   programFilter: string;
   onProgramFilterChange: (value: string) => void;
+  applicationStatus: string;
+  onApplicationStatusChange: (value: string) => void;
+  germanLevel: string;
+  onGermanLevelChange: (value: string) => void;
+  tagFilter: string;
+  onTagFilterChange: (value: string) => void;
 }) {
   const { t } = useTranslation("scholarshipsPage");
   const programFilters = [
@@ -127,13 +146,19 @@ function ScholarshipFilters({
     { id: "verified", label: t("filters.verified") },
     { id: "nursing_scholarship", label: t("filters.nursing") },
     { id: "ausbildung", label: t("filters.ausbildung") },
+    { id: "caregiver_pathway", label: t("filters.caregiver") },
+    { id: "internship", label: t("filters.internship") },
+    { id: "vocational_training", label: t("filters.vocational") },
     { id: "other", label: t("filters.general") },
   ];
 
+  const selectClass =
+    "px-2 py-1.5 rounded-lg border border-border bg-background text-xs sm:text-sm";
+
   return (
     <section className="pb-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row gap-4 items-stretch md:items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+        <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 flex flex-col gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
@@ -160,6 +185,49 @@ function ScholarshipFilters({
               </button>
             ))}
           </div>
+          <div className="flex flex-wrap gap-3">
+            <label className="text-xs">
+              <span className="text-muted-foreground block mb-1">{t("filters.applicationStatus")}</span>
+              <select
+                className={selectClass}
+                value={applicationStatus}
+                onChange={(e) => onApplicationStatusChange(e.target.value)}
+              >
+                <option value="">{t("filters.allStatuses")}</option>
+                {APPLICATION_STATUS_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-xs">
+              <span className="text-muted-foreground block mb-1">{t("filters.germanLevel")}</span>
+              <select
+                className={selectClass}
+                value={germanLevel}
+                onChange={(e) => onGermanLevelChange(e.target.value)}
+              >
+                <option value="">{t("filters.allLevels")}</option>
+                {GERMAN_LEVEL_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-xs">
+              <span className="text-muted-foreground block mb-1">{t("filters.tag")}</span>
+              <select className={selectClass} value={tagFilter} onChange={(e) => onTagFilterChange(e.target.value)}>
+                <option value="">{t("filters.allTags")}</option>
+                {SCHOLARSHIP_TAGS_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
         </div>
       </div>
     </section>
@@ -181,15 +249,25 @@ function ScholarshipCard({ s, lang }: { s: ScholarshipSummary; lang: string }) {
               {t("verifiedBadge")}
             </Badge>
           )}
+          {s.applicationStatus && (
+            <Badge className="bg-primary/10 text-primary border border-primary/20 text-[10px] font-medium">
+              {optionLabel(s.applicationStatus)}
+            </Badge>
+          )}
+          {(s.tags ?? []).slice(0, 2).map((tag) => (
+            <Badge key={tag} className="bg-muted text-muted-foreground border border-border text-[10px] font-medium">
+              {optionLabel(tag)}
+            </Badge>
+          ))}
           <Badge
             className={`border-0 text-[10px] font-medium ${
-              scholarshipText(s, "funding", lang).toLowerCase().includes("voll") ||
+              s.funding === "fully_funded" ||
               scholarshipText(s, "funding", lang).toLowerCase().includes("fully")
                 ? "bg-success/15 text-success hover:bg-success/15"
                 : "bg-warm/15 text-warm hover:bg-warm/15"
             }`}
           >
-            {scholarshipText(s, "funding", lang)}
+            {fundingDisplayLabel(s.funding) || scholarshipText(s, "funding", lang)}
           </Badge>
           <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border border-primary/20 text-[10px] font-medium">
             {scholarshipText(s, "provider", lang)}
@@ -225,11 +303,40 @@ function ScholarshipCard({ s, lang }: { s: ScholarshipSummary; lang: string }) {
 }
 
 function ScholarshipsPage() {
-  const scholarships = Route.useLoaderData();
+  const initial = Route.useLoaderData();
   const { t, i18n } = useTranslation("scholarshipsPage");
   const lang = i18n.language;
+  const [scholarships, setScholarships] = useState<ScholarshipSummary[]>(initial);
   const [query, setQuery] = useState("");
   const [programFilter, setProgramFilter] = useState<string>("All");
+  const [applicationStatus, setApplicationStatus] = useState("");
+  const [germanLevel, setGermanLevel] = useState("");
+  const [tagFilter, setTagFilter] = useState("");
+
+  useEffect(() => {
+    const server: PublicScholarshipFilters = {};
+    if (applicationStatus) server.application_status = applicationStatus;
+    if (germanLevel) server.german_level_required = germanLevel;
+    if (programFilter !== "All" && programFilter !== "verified") {
+      server.program_type = programFilter;
+    }
+    const hasServer = Object.keys(server).length > 0;
+    if (!hasServer) {
+      setScholarships(initial);
+      return;
+    }
+    let cancelled = false;
+    fetchScholarships(server)
+      .then((data) => {
+        if (!cancelled) setScholarships(data);
+      })
+      .catch(() => {
+        if (!cancelled) setScholarships([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [applicationStatus, germanLevel, programFilter, initial]);
 
   const filtered = scholarships.filter((s) => {
     const q = query.toLowerCase();
@@ -237,11 +344,10 @@ function ScholarshipsPage() {
     const provider = scholarshipText(s, "provider", lang).toLowerCase();
     const short = scholarshipText(s, "shortDescription", lang).toLowerCase();
     const matchesQuery = !q || title.includes(q) || provider.includes(q) || short.includes(q);
-    const matchesProgram =
-      programFilter === "All" ||
-      (programFilter === "verified" && s.verified) ||
-      s.programType === programFilter;
-    return matchesQuery && matchesProgram;
+    const matchesVerified = programFilter !== "verified" || s.verified;
+    const matchesTag =
+      !tagFilter || (Array.isArray(s.tags) && s.tags.includes(tagFilter));
+    return matchesQuery && matchesVerified && matchesTag;
   });
 
   return (
@@ -253,6 +359,12 @@ function ScholarshipsPage() {
             onQueryChange={setQuery}
             programFilter={programFilter}
             onProgramFilterChange={setProgramFilter}
+            applicationStatus={applicationStatus}
+            onApplicationStatusChange={setApplicationStatus}
+            germanLevel={germanLevel}
+            onGermanLevelChange={setGermanLevel}
+            tagFilter={tagFilter}
+            onTagFilterChange={setTagFilter}
           />
           <section className="pb-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

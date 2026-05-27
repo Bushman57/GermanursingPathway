@@ -3,14 +3,22 @@ import { Input } from "@/components/ui/input";
 export function FormField({
   label,
   children,
+  required,
+  error,
 }: {
   label: string;
   children: React.ReactNode;
+  required?: boolean;
+  error?: string;
 }) {
   return (
     <label className="block">
-      <span className="text-sm font-medium text-foreground">{label}</span>
+      <span className="text-sm font-medium text-foreground">
+        {label}
+        {required ? <span className="ml-1 text-destructive">*</span> : null}
+      </span>
       <div className="mt-1.5">{children}</div>
+      {error ? <p className="mt-1 text-xs text-destructive">{error}</p> : null}
     </label>
   );
 }

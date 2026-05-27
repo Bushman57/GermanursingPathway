@@ -21,8 +21,21 @@ async function adminFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   return (await res.json()) as T;
 }
 
-export async function adminListScholarships(): Promise<Scholarship[]> {
-  return adminFetch("/api/admin/scholarships");
+export type ScholarshipListFilters = {
+  application_status?: string;
+  program_type?: string;
+  data_verification_status?: string;
+};
+
+export async function adminListScholarships(filters?: ScholarshipListFilters): Promise<Scholarship[]> {
+  const params = new URLSearchParams();
+  if (filters?.application_status) params.set("application_status", filters.application_status);
+  if (filters?.program_type) params.set("program_type", filters.program_type);
+  if (filters?.data_verification_status) {
+    params.set("data_verification_status", filters.data_verification_status);
+  }
+  const qs = params.toString();
+  return adminFetch(`/api/admin/scholarships${qs ? `?${qs}` : ""}`);
 }
 
 export async function adminCreateScholarship(body: Record<string, unknown>): Promise<Scholarship> {
