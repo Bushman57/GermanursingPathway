@@ -49,7 +49,15 @@ export async function initializePayment(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, phone }),
   });
-  if (!res.ok) throw new Error(await parseApiError(res));
+  if (!res.ok) {
+    if (res.status === 405) {
+      throw new Error(
+        "Payment initialize is not available on this API build (outdated deploy). " +
+          "Redeploy the latest backend on Render with Paystack routes.",
+      );
+    }
+    throw new Error(await parseApiError(res));
+  }
   return parseJsonResponse<InitializePaymentResult>(res);
 }
 

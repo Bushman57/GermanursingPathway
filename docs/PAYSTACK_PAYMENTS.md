@@ -61,6 +61,15 @@ If the user completes checkout via Paystack redirect, the API sends them to `{PU
 | GET | `/api/payments/status/{id}` | Poll status by payment UUID |
 | GET | `/api/payments/initialize` | Returns 405 — use POST with `email` and `phone` |
 
+## Stale Render deploy (symptoms)
+
+If production OpenAPI at `https://<host>/openapi.json` lists `/api/payments/stk` but **not** `/api/payments/initialize` or `/api/auth/otp/request`, Render is running an old commit. Symptoms:
+
+- OTP: `POST /api/auth/otp/request` → **404** `Not Found` (not “email not registered”)
+- Pay: `POST /api/payments/initialize` → **405** Method Not Allowed
+
+Fix: push latest `main`, trigger **Manual Deploy** on Render (root dir `backend`, build runs `alembic upgrade head`), then rebuild the frontend.
+
 ## Production deploy (Render + Vercel)
 
 **Render (API)** — set at minimum:
