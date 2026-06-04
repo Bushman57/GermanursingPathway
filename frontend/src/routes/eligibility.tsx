@@ -1,6 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { saveEligibilityPrefill } from "@/lib/eligibilityPrefill";
+import { submitEligibilityCheck } from "@/lib/api/eligibility";
+import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
+import { eligibilityWhatsAppMessage, whatsappUrlWithMessage } from "@/lib/whatsappContext";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -60,6 +65,13 @@ function Eligibility() {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<FormData>(initialData);
   const [showResults, setShowResults] = useState(false);
+  const [resultSnapshot, setResultSnapshot] = useState<{
+    score: number;
+    gaps: GapKey[];
+    status: string;
+    germanFilter: string;
+  } | null>(null);
+  const submittedRef = useRef(false);
 
   const update = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -67,7 +79,24 @@ function Eligibility() {
 
   const next = () => {
     if (currentStep < steps.length - 1) setCurrentStep((s) => s + 1);
-    else setShowResults(true);
+    else {
+      const { score, gaps } = calculateScore();
+      const status = score >= 80 ? "eligible" : score >= 50 ? "almost" : "not-eligible";
+      const prefill = saveEligibilityPrefill({
+        name: formData.name,
+        qualification: formData.qualification,
+        germanLevel: formData.germanLevel,
+        score,
+        status,
+      });
+      setResultSnapshot({
+        score,
+        gaps,
+        status,
+        germanFilter: prefill.german_level_filter ?? "",
+      });
+      setShowResults(true);
+    }
   };
   const prev = () => setCurrentStep((s) => Math.max(0, s - 1));
 
@@ -115,9 +144,27 @@ function Eligibility() {
     { value: "b1+", label: t("language.b1"), desc: t("language.b1Desc") },
   ];
 
-  if (showResults) {
-    const { score, gaps } = calculateScore();
-    const status = score >= 80 ? "eligible" : score >= 50 ? "almost" : "not-eligible";
+  useEffect(() => {
+    if (!showResults || !resultSnapshot || submittedRef.current) return;
+    submittedRef.current = true;
+    trackEvent("eligibility_complete", {
+      score: resultSnapshot.score,
+      status: resultSnapshot.status,
+    });
+    void submitEligibilityCheck({
+      payload: formData as unknown as Record<string, unknown>,
+      score: resultSnapshot.score,
+      status: resultSnapshot.status,
+      locale: "en",
+    })
+      .then(() => {
+        toast.success(t("savedToast"));
+      })
+      .catch(() => undefined);
+  }, [showResults, resultSnapshot, formData, t]);
+
+  if (showResults && resultSnapshot) {
+    const { score, gaps, status, germanFilter } = resultSnapshot;
 
     return (
       <div className="min-h-screen bg-background">
@@ -171,10 +218,37 @@ function Eligibility() {
 
               <div className="mt-8 space-y-3">
                 <Button variant="warm" size="lg" className="w-full py-6" asChild>
-                  <Link to="/register">
+                  <Link to="/register" search={{}} state={{ fromEligibility: true }}>
                     {t("registerCta")}
                     <ArrowRight className="w-4 h-4 ml-1" />
                   </Link>
+                </Button>
+                {germanFilter && (
+                  <Button variant="outline" size="lg" className="w-full py-6" asChild>
+                    <Link
+                      to="/scholarships"
+                      search={{
+                        german: germanFilter,
+                        program: "All",
+                        q: "",
+                        status: "",
+                        tag: "",
+                        intake: "",
+                      }}
+                    >
+                      {t("results.browseScholarships", { defaultValue: "Browse matching scholarships" })}
+                    </Link>
+                  </Button>
+                )}
+                <Button variant="outline" size="lg" className="w-full" asChild>
+                  <a
+                    href={whatsappUrlWithMessage(eligibilityWhatsAppMessage(score, status))}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackEvent("whatsapp_context_click", { context: "eligibility" })}
+                  >
+                    {t("results.whatsapp", { defaultValue: "Discuss on WhatsApp" })}
+                  </a>
                 </Button>
                 <Button
                   variant="outline"
@@ -182,6 +256,8 @@ function Eligibility() {
                   className="w-full py-6"
                   onClick={() => {
                     setShowResults(false);
+                    setResultSnapshot(null);
+                    submittedRef.current = false;
                     setCurrentStep(0);
                     setFormData(initialData);
                   }}

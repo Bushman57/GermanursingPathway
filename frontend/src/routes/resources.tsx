@@ -1,13 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { fetchResources } from "@/lib/api/resources";
+import { useResourcesQuery } from "@/lib/queries/resources";
 import { useTranslation } from "react-i18next";
 import { metaFromKeys } from "@/lib/pageMeta";
-import { BookOpen, Clock, ArrowRight } from "lucide-react";
+import { BookOpen, Clock, ArrowRight, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/resources")({
-  loader: () => fetchResources(),
   head: () => metaFromKeys("resources"),
   component: ResourcesPage,
 });
@@ -20,7 +19,7 @@ const categoryLabels: Record<string, { en: string; de: string }> = {
 };
 
 function ResourcesPage() {
-  const resourceArticles = Route.useLoaderData();
+  const { data: resourceArticles = [], isLoading } = useResourcesQuery();
   const { t, i18n } = useTranslation("common");
   const isDe = i18n.language.startsWith("de");
 
@@ -38,6 +37,11 @@ function ResourcesPage() {
 
       <section className="py-16">
         <div className="max-w-3xl mx-auto px-4 space-y-6">
+          {isLoading && (
+            <p className="text-center text-muted-foreground flex items-center justify-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin" /> …
+            </p>
+          )}
           {resourceArticles.map((article) => (
             <Link
               key={article.slug}

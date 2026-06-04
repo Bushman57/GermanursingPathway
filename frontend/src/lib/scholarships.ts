@@ -27,6 +27,15 @@ export type ScholarshipQuestionnaire = {
   tags?: string[];
 };
 
+export type PartnerSchoolRef = {
+  slug: string;
+  nameEn: string;
+  nameDe?: string | null;
+  logoUrl?: string | null;
+  city?: string | null;
+  websiteUrl?: string | null;
+};
+
 export type Scholarship = {
   slug: string;
   title: string;
@@ -49,6 +58,7 @@ export type Scholarship = {
   applicationLink?: string;
   programType: ProgramType;
   verified: boolean;
+  partnerSchool?: PartnerSchoolRef;
 } & ScholarshipDeFields &
   ScholarshipQuestionnaire;
 
@@ -71,6 +81,10 @@ export type ScholarshipSummary = Pick<
   | "germanLevelRequired"
   | "tags"
   | "verificationStatus"
+  | "intakeMonth"
+  | "programDuration"
+  | "visaSponsorship"
+  | "accommodationSupport"
 > &
   Partial<
     Pick<

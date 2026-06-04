@@ -1,3 +1,5 @@
+import { parseApiError, parseJsonResponse } from "@/lib/api/apiBase";
+
 export type LeadPayload = {
   full_name: string;
   email: string;
@@ -23,10 +25,8 @@ export async function submitLead(payload: LeadPayload): Promise<{ id: string; st
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-  const data = (await res.json()) as { id?: string; status?: string; error?: string; detail?: string };
-  if (!res.ok) {
-    throw new Error(data.error ?? data.detail ?? `Registration failed (${res.status})`);
-  }
+  if (!res.ok) throw new Error(await parseApiError(res));
+  const data = await parseJsonResponse<{ id?: string; status?: string }>(res);
   if (!data.id) throw new Error("Invalid response from server");
   return { id: data.id, status: data.status ?? "new" };
 }

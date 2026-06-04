@@ -1,24 +1,23 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/BrandLogo";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { WhatsAppLink } from "@/components/WhatsAppButton";
-import { Menu, X } from "lucide-react";
-
-const navLinks = [
-  { to: "/" as const, key: "home" },
-  { to: "/onboarding-process" as const, key: "onboardingProcess" },
-  { to: "/scholarships" as const, key: "scholarships" },
-  { to: "/partners" as const, key: "partners" },
-  { to: "/resources" as const, key: "resources" },
-  { to: "/about" as const, key: "about" },
-] as const;
+import { openCommandMenu } from "@/components/layout/GlobalShell";
+import { MobileNavMenu } from "@/components/nav/MobileNavMenu";
+import { exploreNavLinks } from "@/lib/navConfig";
+import { isNavActive } from "@/lib/navUtils";
+import { prefetchScholarships } from "@/lib/queries/scholarships";
+import { cn } from "@/lib/utils";
+import { Menu, Search } from "lucide-react";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { t } = useTranslation();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
@@ -27,19 +26,41 @@ export function Navbar() {
           <BrandLogo imageClassName="h-10 sm:h-11" />
 
           <div className="hidden lg:flex items-center gap-5">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                preload={link.to === "/scholarships" ? "intent" : undefined}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {t(`nav.${link.key}`)}
-              </Link>
-            ))}
+            {exploreNavLinks.map((link) => {
+              const active = isNavActive(pathname, link.to);
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  preload={link.to === "/scholarships" ? "intent" : undefined}
+                  onMouseEnter={
+                    link.to === "/scholarships" ? () => prefetchScholarships() : undefined
+                  }
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "text-sm font-medium transition-colors px-2 py-1 rounded-md hover:bg-muted/60",
+                    active
+                      ? "text-foreground font-semibold border-b-2 border-warm rounded-none hover:bg-transparent"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {t(`nav.${link.key}`)}
+                </Link>
+              );
+            })}
           </div>
 
           <div className="hidden lg:flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-1.5 text-muted-foreground"
+              onClick={openCommandMenu}
+            >
+              <Search className="w-4 h-4" />
+              <span className="text-xs hidden xl:inline">{t("search.shortcut", { ns: "common" })}</span>
+            </Button>
+            <ThemeToggle />
             <LanguageSwitcher />
             <WhatsAppLink label={t("nav.whatsapp")} variant="outline" size="sm" className="hidden xl:inline-flex" />
             <Button variant="ghost" size="sm" asChild>
@@ -54,51 +75,24 @@ export function Navbar() {
           </div>
 
           <div className="flex lg:hidden items-center gap-2">
-            <LanguageSwitcher />
+            <Button variant="ghost" size="icon" onClick={openCommandMenu} aria-label={t("search.open", { ns: "common" })}>
+              <Search className="w-5 h-5" />
+            </Button>
             <button
+              type="button"
               className="p-2 text-foreground"
-              onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="Toggle menu"
+              onClick={() => setMobileOpen(true)}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-nav"
+              aria-label={t("nav.menu")}
             >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              <Menu className="w-5 h-5" />
             </button>
           </div>
         </div>
       </div>
 
-      {mobileOpen && (
-        <div className="lg:hidden border-t border-border bg-background/95 backdrop-blur-lg">
-          <div className="px-4 py-4 space-y-3">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                preload={link.to === "/scholarships" ? "intent" : undefined}
-                className="block text-sm font-medium text-foreground py-2"
-                onClick={() => setMobileOpen(false)}
-              >
-                {t(`nav.${link.key}`)}
-              </Link>
-            ))}
-            <WhatsAppLink label={t("nav.whatsapp")} className="w-full" />
-            <Button variant="ghost" size="sm" className="w-full" asChild>
-              <Link to="/portal" onClick={() => setMobileOpen(false)}>
-                {t("nav.portal")}
-              </Link>
-            </Button>
-            <Button variant="outline" size="sm" className="w-full" asChild>
-              <Link to="/eligibility" onClick={() => setMobileOpen(false)}>
-                {t("nav.eligibility")}
-              </Link>
-            </Button>
-            <Button variant="warm" size="sm" className="w-full" asChild>
-              <Link to="/register" onClick={() => setMobileOpen(false)}>
-                {t("nav.register")}
-              </Link>
-            </Button>
-          </div>
-        </div>
-      )}
+      <MobileNavMenu open={mobileOpen} onOpenChange={setMobileOpen} />
     </nav>
   );
 }

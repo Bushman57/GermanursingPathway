@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useRef, useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import { InvestmentPaymentDialog } from "@/components/InvestmentPaymentDialog";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
+import { HomeSocialProof } from "@/components/home/HomeSocialProof";
 import { WhatsAppLink } from "@/components/WhatsAppButton";
 import { TAGLINE_SECONDARY } from "@/lib/constants";
 import { metaFromKeys } from "@/lib/pageMeta";
@@ -86,7 +87,13 @@ function AnimatedStat({ value, label }: { value: string; label: string }) {
   );
 }
 
+function parseHomeSearch(raw: Record<string, unknown>) {
+  const payment = typeof raw.payment === "string" ? raw.payment.trim() : "";
+  return { payment: payment || undefined };
+}
+
 export const Route = createFileRoute("/")({
+  validateSearch: parseHomeSearch,
   head: () => metaFromKeys("home"),
   component: Index,
 });
@@ -97,8 +104,14 @@ const WHY_ICONS = [DollarSign, HomeIcon, Shield] as const;
 const WHY_IMAGES = [whySalary, whyRelocation, whyImmigration] as const;
 
 function Index() {
+  const { payment: returnReference } = Route.useSearch();
+  const navigate = useNavigate({ from: "/" });
   const { t: tc } = useTranslation("common");
   const { t } = useTranslation("home");
+
+  const clearPaymentReturn = () => {
+    navigate({ search: { payment: undefined }, replace: true });
+  };
   const overviewFeatures = t("overview.features", { returnObjects: true }) as { title: string; desc: string }[];
   const programCards = t("programTypes.cards", { returnObjects: true }) as {
     title: string;
@@ -280,7 +293,10 @@ function Index() {
             {t("investment.footnote")}
           </p>
           <div className="flex justify-center">
-            <InvestmentPaymentDialog />
+            <InvestmentPaymentDialog
+              returnReference={returnReference}
+              onReturnHandled={clearPaymentReturn}
+            />
           </div>
         </div>
       </section>
@@ -400,6 +416,8 @@ function Index() {
           <p className="mt-6 text-muted-foreground text-sm">{t("cta.contact")}</p>
         </div>
       </section>
+
+      <HomeSocialProof />
 
       <Footer />
 

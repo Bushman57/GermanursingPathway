@@ -15,6 +15,7 @@ def scholarship_list_query(
     program_type: str | None = None,
     data_verification_status: str | None = None,
     german_level_required: str | None = None,
+    intake_month: str | None = None,
 ) -> Query:
     q = db.query(Scholarship)
     if application_status:
@@ -25,4 +26,6 @@ def scholarship_list_query(
         q = q.filter(Scholarship.data_verification_status == data_verification_status)
     if german_level_required:
         q = q.filter(Scholarship.german_level_required == german_level_required)
+    if intake_month:
+        q = q.filter(Scholarship.intake_month == intake_month)
     return q.order_by(Scholarship.title_en)

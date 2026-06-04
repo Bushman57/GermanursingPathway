@@ -51,10 +51,10 @@ Other root scripts: `npm run build`, `npm run db:migrate`, `npm run export:schol
 **Environment variable (required for chat, leads, payments):**
 
 ```env
-VITE_API_URL=https://api.germanursingpathway.com
+VITE_API_URL=https://germanursingpathway.onrender.com
 ```
 
-Use your real API host (no trailing slash). Without this, `/api/*` requests hit the static site and fail (405 / HTML instead of JSON).
+Use your real API host (**HTTPS**, no trailing slash, do not append `/api`). Without this, `/api/*` requests hit the static site and fail. Using `http://` can redirect POST to GET and break Pay now (`uuid_parsing` on `initialize`). See `docs/PAYSTACK_PAYMENTS.md` for payment env and deploy checklist.
 
 **Custom domain:** point `germanursingpathway.com` (and `www` if used) to Vercel.
 
@@ -76,7 +76,14 @@ DATABASE_URL=postgresql://...
 CORS_ORIGINS=https://germanursingpathway.com,https://www.germanursingpathway.com,http://localhost:8080
 ```
 
-For M-Pesa STK Push, see `backend/.env.example` (KCB keys, `KCB_CALLBACK_BASE_URL` = this API’s public HTTPS base, `PAYMENT_AMOUNT_KES`).
+For homepage program payments (Paystack — card + M-Pesa), see `backend/.env.example`:
+
+- `PAYSTACK_SECRET_KEY`, `PAYSTACK_PUBLIC_KEY`
+- `PAYSTACK_CALLBACK_BASE_URL` = this API’s public HTTPS base (e.g. ngrok in dev)
+- Webhook in Paystack dashboard: `{PAYSTACK_CALLBACK_BASE_URL}/api/payments/paystack/webhook`
+- `PAYMENT_AMOUNT_KES` (KES equivalent of the €1,550 program fee)
+
+Test card: `4084084084084081` (Paystack test mode). Restart the API after changing `.env`.
 
 Run migrations on deploy: `alembic upgrade head`.
 

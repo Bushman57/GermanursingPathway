@@ -89,5 +89,6 @@
       "passport": "Ein gültiger Reisepass ist erforderlich",
       "relocate": "Bereitschaft zum Umzug ist wesentlich"
     }
-  }
+  },
+  "savedToast": "Ihre Eignungsergebnisse wurden gespeichert."
 }

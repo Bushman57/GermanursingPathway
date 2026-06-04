@@ -286,6 +286,16 @@ def row_to_public(scholarship: Scholarship, *, include_detail: bool = True) -> d
     _apply_column_fields(data, scholarship)
     if scholarship.degree_level:
         data["degreeLevel"] = scholarship.degree_level
+    partner = getattr(scholarship, "partner", None)
+    if partner is not None:
+        data["partnerSchool"] = {
+            "slug": partner.slug,
+            "nameEn": partner.name_en,
+            "nameDe": partner.name_de,
+            "logoUrl": partner.logo_url,
+            "city": partner.city,
+            "websiteUrl": partner.website_url,
+        }
     return data
 
 

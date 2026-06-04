@@ -89,5 +89,6 @@
       "passport": "A valid passport is required",
       "relocate": "Willingness to relocate is essential"
     }
-  }
+  },
+  "savedToast": "Your eligibility results were saved."
 }

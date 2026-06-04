@@ -1,8 +1,17 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { fetchMe } from "@/lib/api/auth";
 import { useTranslation } from "react-i18next";
+import { useAuthMeQuery } from "@/lib/queries/auth";
+import { useScholarshipsQuery } from "@/lib/queries/scholarships";
+import { pushRecentPage } from "@/lib/recentPages";
+import { useSavedScholarships } from "@/hooks/useSavedScholarships";
+import { SimilarScholarships } from "@/components/scholarships/SimilarScholarships";
+import { RelatedResources } from "@/components/scholarships/RelatedResources";
+import { ScholarshipSaveButton } from "@/components/scholarships/ScholarshipSaveButton";
+import { toast } from "sonner";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { ChatWidget } from "@/components/ChatWidget";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { fetchScholarshipBySlug } from "@/lib/api/scholarships";
@@ -25,13 +34,24 @@ import {
   ListChecks,
   ExternalLink,
   ArrowLeft,
+  Share2,
+  Building2,
 } from "lucide-react";
 
 export const Route = createFileRoute("/scholarships/$slug")({
+  beforeLoad: async () => {
+    const me = await fetchMe();
+    if (!me) {
+      throw redirect({ to: "/scholarships" });
+    }
+  },
   loader: async ({ params }) => {
     try {
       return await fetchScholarshipBySlug(params.slug);
-    } catch {
+    } catch (err) {
+      if (err instanceof Error && err.message.toLowerCase().includes("401")) {
+        throw redirect({ to: "/scholarships" });
+      }
       throw notFound();
     }
   },
@@ -79,6 +99,32 @@ function ScholarshipDetail() {
   const { slug } = Route.useParams();
   const { t, i18n } = useTranslation("scholarshipsPage");
   const lang = i18n.language;
+  const { data: me } = useAuthMeQuery();
+  const { data: allScholarships = [] } = useScholarshipsQuery();
+  const { isSaved, toggle } = useSavedScholarships(me?.email);
+
+  useEffect(() => {
+    pushRecentPage({
+      path: `/scholarships/${slug}`,
+      label: scholarshipText(s, "title", lang),
+      slug,
+    });
+  }, [slug, s, lang]);
+
+  const shareProgram = async () => {
+    const url = `${window.location.origin}/scholarships?utm_source=share`;
+    const title = scholarshipText(s, "title", lang);
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, url, text: scholarshipText(s, "shortDescription", lang) });
+      } else {
+        await navigator.clipboard.writeText(url);
+        toast.success(t("detail.linkCopied"));
+      }
+    } catch {
+      /* cancelled */
+    }
+  };
 
   const externalUrl = scholarshipExternalUrl(s);
   const fundingLabel =
@@ -121,7 +167,7 @@ function ScholarshipDetail() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background scholarship-print">
       <Navbar />
 
       <section className="pt-28 pb-12 hero-gradient">
@@ -133,9 +179,30 @@ function ScholarshipDetail() {
             <ArrowLeft className="w-4 h-4" /> {t("detail.back")}
           </Link>
           <Badge className="bg-warm text-warm-foreground border-0">{fundingLabel}</Badge>
-          <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-primary-foreground mt-4 leading-tight">
-            {scholarshipText(s, "title", lang)}
-          </h1>
+          <div className="flex flex-wrap items-start justify-between gap-3 mt-4">
+            <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-primary-foreground leading-tight flex-1">
+              {scholarshipText(s, "title", lang)}
+            </h1>
+            <div className="flex gap-2 print:hidden">
+              {me && (
+                <ScholarshipSaveButton
+                  saved={isSaved(slug)}
+                  onToggle={() => toggle(slug, scholarshipText(s, "title", lang))}
+                />
+              )}
+              <Button variant="outline" size="sm" className="border-primary-foreground/30" onClick={shareProgram}>
+                <Share2 className="w-4 h-4 mr-1" />
+                {t("detail.share")}
+              </Button>
+            </div>
+          </div>
+          {partner && partnerName && (
+            <p className="flex items-center gap-2 text-sm text-primary-foreground/80 mt-3 print:hidden">
+              <Building2 className="w-4 h-4 text-warm" />
+              {t("detail.partnerSchool")}: {partnerName}
+              {partner.city && ` · ${partner.city}`}
+            </p>
+          )}
           <p className="text-primary-foreground/70 mt-3">
             {t("offeredBy")}{" "}
             {externalUrl ? (
@@ -205,8 +272,9 @@ function ScholarshipDetail() {
             )}
           </div>
 
-          <aside className="space-y-6">
-            <div className="bg-card border border-border rounded-2xl p-6 sticky top-24">
+          <aside className="space-y-6 print:hidden">
+            <RelatedResources topic={s.programType === "nursing_scholarship" ? "visa" : "language"} />
+            <div className="bg-card border border-border rounded-2xl p-6 sticky top-24 hidden lg:block">
               <h3 className="font-heading text-lg font-semibold text-foreground">{t("detail.keyFacts")}</h3>
               <div className="w-10 h-1 bg-warm mt-2 mb-5 rounded-full" />
               <ul className="space-y-4">
@@ -240,9 +308,20 @@ function ScholarshipDetail() {
         </div>
       </section>
 
+      <SimilarScholarships current={s} all={allScholarships} lang={lang} />
+
       <Footer />
 
-      <ChatWidget mode="scholarship" scholarshipSlug={slug} enableUploads accent="primary" />
+      <div className="fixed bottom-0 left-0 right-0 z-30 lg:hidden border-t border-border bg-card/95 backdrop-blur-md p-4 print:hidden">
+        <div className="flex gap-3 max-w-lg mx-auto">
+          <ScholarshipApplyButton scholarship={s} applyLabel={t("apply")} className="flex-1" size="default" />
+          <Button variant="outline" onClick={shareProgram} aria-label={t("detail.share")}>
+            <Share2 className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      <div className="h-20 lg:hidden print:hidden" />
     </div>
   );
 }
