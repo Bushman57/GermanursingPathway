@@ -1,0 +1,130 @@
+{
+  "title": "Studierendenportal",
+  "subtitle": "Melden Sie sich mit einem Einmalcode an, den wir an Ihre registrierte E-Mail senden.",
+  "signOut": "Abmelden",
+  "signedOut": "Sie wurden abgemeldet.",
+  "welcome": "Willkommen zurück, {{name}}",
+  "tabs": {
+    "overview": "Übersicht",
+    "saved": "Gespeichert",
+    "documents": "Dokumente",
+    "settings": "Einstellungen"
+  },
+  "scholarships": {
+    "title": "Stipendien",
+    "subtitle": "Programme für registrierte Interessenten. Nutzen Sie den Stipendien-Assistenten (Chat-Symbol) für persönliche Beratung.",
+    "browseAll": "Vollständige Stipendienseite öffnen",
+    "loading": "Stipendien werden geladen…",
+    "empty": "Derzeit keine Stipendien verfügbar.",
+    "viewDetails": "Details ansehen"
+  },
+  "saved": {
+    "title": "Gespeicherte Stipendien",
+    "empty": "Sie haben noch keine Programme gespeichert. Tippen Sie auf das Herz auf einer Stipendienskarte.",
+    "browse": "Stipendien durchsuchen"
+  },
+  "journey": {
+    "title": "Bewerbungsreise",
+    "percent": "{{progress}} % abgeschlossen",
+    "status": {
+      "done": "Abgeschlossen",
+      "in_progress": "In Bearbeitung",
+      "pending": "Bevorstehend"
+    },
+    "stages": {
+      "register": {
+        "title": "Registrierung erhalten",
+        "description": "Wir haben Ihre Daten und einen Ansprechpartner zugewiesen."
+      },
+      "eligibility": {
+        "title": "Eignungsprüfung",
+        "description": "Ihre Qualifikation und Ihr Deutschniveau werden geprüft."
+      },
+      "documents": {
+        "title": "Dokumentensammlung",
+        "description": "Zeugnisse, Zertifikate und Passkopie hochladen."
+      },
+      "language": {
+        "title": "Deutschkurs",
+        "description": "Einstieg in den A1–B2-Pfad mit Partnerschulen."
+      },
+      "placement": {
+        "title": "Krankenhausplatzierung",
+        "description": "Vermittlung zu einem Krankenhaus und Ausbildungsvertrag."
+      },
+      "visa": {
+        "title": "Visum & Reise",
+        "description": "Botschaftstermin, Visum und Flug nach Deutschland."
+      }
+    }
+  },
+  "documents": {
+    "title": "Dokumenten-Checkliste",
+    "subtitle": "PDF oder Bilder hochladen (max. 10 MB).",
+    "loading": "Dokumente werden geladen…",
+    "upload": "Hochladen",
+    "replace": "Ersetzen",
+    "uploaded": "Dokument hochgeladen",
+    "error": "Upload fehlgeschlagen",
+    "types": {
+      "passport": "Passkopie",
+      "diploma": "Pflege-Diplom",
+      "transcript": "Akademisches Zeugnis",
+      "german_certificate": "Deutschzertifikat",
+      "cv": "Lebenslauf",
+      "other": "Weiteres Dokument"
+    }
+  },
+  "notifications": {
+    "title": "Benachrichtigungen"
+  },
+  "profile": {
+    "title": "Ihr Profil",
+    "subtitle": "Fügen Sie ein Foto hinzu und halten Sie Ihre Kontaktdaten aktuell.",
+    "email": "E-Mail-Adresse",
+    "memberBadge": "Registrierter Kandidat",
+    "changePhoto": "Profilfoto ändern",
+    "uploadPhoto": "Foto hochladen",
+    "removePhoto": "Foto entfernen",
+    "avatarUpdated": "Profilfoto aktualisiert",
+    "avatarRemoved": "Profilfoto entfernt",
+    "avatarError": "Profilfoto konnte nicht aktualisiert werden",
+    "avatarInvalidType": "Bitte JPEG-, PNG- oder WebP-Bild wählen.",
+    "avatarTooLarge": "Das Bild darf maximal 2 MB groß sein."
+  },
+  "settings": {
+    "title": "Profil & Einstellungen",
+    "notificationsTitle": "Benachrichtigungen",
+    "notificationsSubtitle": "Wählen Sie, woran wir Sie im Portal erinnern.",
+    "fullName": "Vollständiger Name",
+    "phone": "Telefon",
+    "germanLevel": "Deutschniveau",
+    "notifyDeadlines": "Fristen für gespeicherte Stipendien",
+    "notifyDocuments": "Erinnerungen zu Dokumenten",
+    "save": "Speichern",
+    "saved": "Profil aktualisiert",
+    "error": "Profil konnte nicht gespeichert werden"
+  },
+  "otp": {
+    "emailLabel": "E-Mail",
+    "emailPlaceholder": "sie@beispiel.de",
+    "registeredEmailHint": "Verwenden Sie dieselbe E-Mail-Adresse wie bei der Registrierung. Codes werden nur an registrierte Adressen gesendet.",
+    "sendCode": "Anmeldecode senden",
+    "sending": "Wird gesendet…",
+    "codeSentTo": "Geben Sie den 6-stelligen Code ein für",
+    "codeSentToast": "Wenn diese E-Mail registriert ist, erhalten Sie in Kürze einen Code.",
+    "signedIn": "Angemeldet",
+    "verify": "Bestätigen und anmelden",
+    "verifying": "Wird geprüft…",
+    "changeEmail": "Andere E-Mail verwenden",
+    "devConsoleHint": "Lokale Entwicklung: ohne E-Mail-Versand steht der 6-stellige Code im Backend-Terminal (uvicorn).",
+    "notRegistered": "Noch nicht registriert?",
+    "registerLink": "Interesse registrieren",
+    "errors": {
+      "emailRequired": "Bitte geben Sie Ihre E-Mail ein.",
+      "codeRequired": "Bitte geben Sie den vollständigen 6-stelligen Code ein.",
+      "invalidCode": "Ungültiger oder abgelaufener Code. Erneut versuchen oder neuen Code anfordern.",
+      "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
+    }
+  }
+}

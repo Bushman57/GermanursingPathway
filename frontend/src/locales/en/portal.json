@@ -1,0 +1,130 @@
+{
+  "title": "Student Portal",
+  "subtitle": "Sign in with a one-time code sent to your registered email.",
+  "signOut": "Sign out",
+  "signedOut": "You have been signed out.",
+  "welcome": "Welcome back, {{name}}",
+  "tabs": {
+    "overview": "Overview",
+    "saved": "Saved",
+    "documents": "Documents",
+    "settings": "Settings"
+  },
+  "scholarships": {
+    "title": "Scholarships",
+    "subtitle": "Browse programs available to registered students. Use the scholarship assistant (chat button) for personalized guidance.",
+    "browseAll": "Open full scholarships page",
+    "loading": "Loading scholarships…",
+    "empty": "No scholarships available right now.",
+    "viewDetails": "View details"
+  },
+  "saved": {
+    "title": "Saved scholarships",
+    "empty": "You have not saved any programs yet. Tap the heart on a scholarship card to save it.",
+    "browse": "Browse scholarships"
+  },
+  "journey": {
+    "title": "Application journey",
+    "percent": "{{progress}}% complete",
+    "status": {
+      "done": "Complete",
+      "in_progress": "In progress",
+      "pending": "Upcoming"
+    },
+    "stages": {
+      "register": {
+        "title": "Registration received",
+        "description": "We have your details and assigned you a case officer."
+      },
+      "eligibility": {
+        "title": "Eligibility review",
+        "description": "Your qualifications and German level are being verified."
+      },
+      "documents": {
+        "title": "Document collection",
+        "description": "Upload transcripts, certificates, and passport copy."
+      },
+      "language": {
+        "title": "German language training",
+        "description": "Enroll in A1–B2 pathway with our partner schools."
+      },
+      "placement": {
+        "title": "Hospital placement",
+        "description": "Matching with German hospital and Ausbildung contract."
+      },
+      "visa": {
+        "title": "Visa & travel",
+        "description": "Embassy appointment, visa issuance, and flight to Germany."
+      }
+    }
+  },
+  "documents": {
+    "title": "Document checklist",
+    "subtitle": "Upload PDF or images (max 10MB each).",
+    "loading": "Loading documents…",
+    "upload": "Upload",
+    "replace": "Replace",
+    "uploaded": "Document uploaded",
+    "error": "Upload failed",
+    "types": {
+      "passport": "Passport copy",
+      "diploma": "Nursing diploma",
+      "transcript": "Academic transcript",
+      "german_certificate": "German certificate",
+      "cv": "CV / resume",
+      "other": "Other supporting document"
+    }
+  },
+  "notifications": {
+    "title": "Notifications"
+  },
+  "profile": {
+    "title": "Your profile",
+    "subtitle": "Add a photo and keep your contact details up to date.",
+    "email": "Email address",
+    "memberBadge": "Registered candidate",
+    "changePhoto": "Change profile photo",
+    "uploadPhoto": "Upload photo",
+    "removePhoto": "Remove photo",
+    "avatarUpdated": "Profile photo updated",
+    "avatarRemoved": "Profile photo removed",
+    "avatarError": "Could not update profile photo",
+    "avatarInvalidType": "Please choose a JPEG, PNG, or WebP image.",
+    "avatarTooLarge": "Image must be 2MB or smaller."
+  },
+  "settings": {
+    "title": "Profile & preferences",
+    "notificationsTitle": "Notifications",
+    "notificationsSubtitle": "Choose what we remind you about in the portal.",
+    "fullName": "Full name",
+    "phone": "Phone",
+    "germanLevel": "German level",
+    "notifyDeadlines": "Deadline reminders for saved scholarships",
+    "notifyDocuments": "Document request reminders",
+    "save": "Save changes",
+    "saved": "Profile updated",
+    "error": "Could not save profile"
+  },
+  "otp": {
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "registeredEmailHint": "Use the same email address you used when you registered your interest. Codes are only sent to registered emails.",
+    "sendCode": "Send sign-in code",
+    "sending": "Sending…",
+    "codeSentTo": "Enter the 6-digit code sent to",
+    "codeSentToast": "If this email is registered, a code will arrive shortly.",
+    "signedIn": "Signed in",
+    "verify": "Verify and sign in",
+    "verifying": "Verifying…",
+    "changeEmail": "Use a different email",
+    "devConsoleHint": "Local dev: if email is not configured, the 6-digit code is printed in the backend terminal (uvicorn).",
+    "notRegistered": "Not registered yet?",
+    "registerLink": "Register your interest",
+    "errors": {
+      "emailRequired": "Enter your email to continue.",
+      "codeRequired": "Enter the full 6-digit code.",
+      "invalidCode": "Invalid or expired code. Try again or request a new code.",
+      "generic": "Something went wrong. Please try again."
+    }
+  }
+}

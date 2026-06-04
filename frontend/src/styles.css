@@ -181,4 +181,78 @@
 
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee { animation: none; }
+  .scholarship-card-enter {
+    animation: none !important;
+  }
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scholarship-card-enter {
+  animation: card-enter 0.35s ease-out both;
+}
+
+@media print {
+  .scholarship-print nav,
+  .scholarship-print footer {
+    display: none !important;
+  }
+  .scholarship-print [class*="print:hidden"] {
+    display: none !important;
+  }
+  .scholarship-print {
+    background: white !important;
+    color: black !important;
+  }
+  .scholarship-print .hero-gradient {
+    background: none !important;
+    padding-top: 1rem !important;
+  }
+  .scholarship-print .hero-gradient * {
+    color: black !important;
+  }
+}
+
+/* Paystack inline checkout — hide Radix/modal layers; keep Paystack iframes clickable */
+body.paystack-checkout-active [data-paystack-suppressed="true"],
+body.paystack-checkout-active [data-radix-dialog-overlay],
+body.paystack-checkout-active [data-radix-dialog-content] {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+body.paystack-checkout-active iframe[src*="paystack"],
+body.paystack-checkout-active iframe[src*="checkout"] {
+  z-index: 2147483646 !important;
+  pointer-events: auto !important;
+}
+
+iframe[src*="paystack"],
+iframe[src*="checkout"],
+.paystack-checkout-iframe,
+#paystack-checkout-container,
+[id*="paystack"],
+[class*="paystack"] {
+  pointer-events: auto !important;
+}
+
+body.paystack-checkout-active > div:has(iframe[src*="paystack"]),
+body.paystack-checkout-active > div:has(iframe[src*="checkout"]) {
+  z-index: 2147483645 !important;
+  pointer-events: auto !important;
+}
+
+body.paystack-checkout-active .toaster,
+body.paystack-checkout-active [data-sonner-toaster] {
+  pointer-events: none !important;
 }

@@ -1,0 +1,53 @@
+import { apiRoot, parseApiError, parseJsonResponse } from "@/lib/api/apiBase";
+
+function authBase(): string {
+  const root = apiRoot();
+  return root ? `${root}/api/auth` : "/api/auth";
+}
+
+const fetchOpts: RequestInit = { credentials: "include" };
+
+export async function requestOtp(email: string): Promise<{ message: string }> {
+  const res = await fetch(`${authBase()}/otp/request`, {
+    ...fetchOpts,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: email.trim().toLowerCase() }),
+  });
+  if (!res.ok) throw new Error(await parseApiError(res));
+  return parseJsonResponse<{ message: string }>(res);
+}
+
+export async function verifyOtp(email: string, code: string): Promise<{
+  message: string;
+  email: string;
+  fullName: string;
+}> {
+  const res = await fetch(`${authBase()}/otp/verify`, {
+    ...fetchOpts,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: email.trim().toLowerCase(), code }),
+  });
+  if (!res.ok) throw new Error(await parseApiError(res));
+  return parseJsonResponse<{ message: string; email: string; fullName: string }>(res);
+}
+
+export async function logoutPortal(): Promise<void> {
+  const res = await fetch(`${authBase()}/logout`, { ...fetchOpts, method: "POST" });
+  if (!res.ok) throw new Error(await parseApiError(res));
+}
+
+export type PortalProfile = { email: string; fullName: string };
+
+type MeResponse =
+  | { authenticated: false }
+  | { authenticated: true; email: string; fullName: string };
+
+export async function fetchMe(): Promise<PortalProfile | null> {
+  const res = await fetch(`${authBase()}/me`, fetchOpts);
+  if (!res.ok) throw new Error(await parseApiError(res));
+  const data = await parseJsonResponse<MeResponse>(res);
+  if (!data.authenticated) return null;
+  return { email: data.email, fullName: data.fullName };
+}

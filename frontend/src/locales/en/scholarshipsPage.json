@@ -26,9 +26,38 @@
     "applicationStatus": "Application status",
     "germanLevel": "German level",
     "tag": "Tag",
+    "intake": "Intake month",
+    "programTypes": "Program types",
     "allStatuses": "All statuses",
     "allLevels": "All levels",
-    "allTags": "All tags"
+    "allTags": "All tags",
+    "allIntakes": "All intakes"
+  },
+  "deadline": {
+    "soon": "Closing soon",
+    "rolling": "Rolling intake"
+  },
+  "compare": {
+    "toggle": "Add to compare",
+    "selected": "{{count}} selected",
+    "open": "Compare",
+    "title": "Compare programs",
+    "field": "Field",
+    "clear": "Clear",
+    "rows": {
+      "provider": "Provider",
+      "funding": "Funding",
+      "deadline": "Deadline",
+      "host": "Host country",
+      "german": "German level",
+      "status": "Status"
+    }
+  },
+  "emptyState": {
+    "hint": "Try fewer filters or clear your search.",
+    "clearFilters": "Clear all filters",
+    "picks": "Verified picks you may like",
+    "signIn": "Student portal"
   },
   "applicationStatusBadge": "Status",
   "verifiedBadge": "Verified",
@@ -39,6 +68,15 @@
   "details": "Details",
   "apply": "Apply",
   "offeredBy": "Offered by",
+  "gate": {
+    "badge": "Members only",
+    "formTitle": "Register to view scholarships",
+    "formSubtitle": "Tell us about your background — we'll email you a sign-in code when you're ready to browse.",
+    "successTitle": "You're registered",
+    "successBody": "Sign in to the student portal with the one-time code we'll send to your email.",
+    "signInCta": "Sign in to view scholarships"
+  },
+  "signInPrompt": "Already registered? Sign in on the student portal to browse scholarships and use the scholarship assistant.",
   "detail": {
     "back": "Back to scholarships",
     "notFoundTitle": "Scholarship not found",
@@ -54,6 +92,11 @@
     "visitOfficial": "Visit Official Website",
     "keyFacts": "Key Facts",
     "checkEligibility": "Check My Eligibility",
+    "share": "Share",
+    "linkCopied": "Link copied to clipboard",
+    "similarTitle": "Similar programs",
+    "relatedGuides": "Related guides",
+    "partnerSchool": "Partner school",
     "facts": {
       "hostCountry": "Host Country",
       "studyIn": "Study In",

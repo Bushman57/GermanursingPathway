@@ -10,6 +10,7 @@ export type PublicScholarshipFilters = {
   application_status?: string;
   program_type?: string;
   german_level_required?: string;
+  intake_month?: string;
 };
 
 export async function fetchScholarships(
@@ -21,14 +22,19 @@ export async function fetchScholarships(
   if (filters?.german_level_required) {
     params.set("german_level_required", filters.german_level_required);
   }
+  if (filters?.intake_month) params.set("intake_month", filters.intake_month);
   const qs = params.toString();
-  const res = await fetch(`${scholarshipsBase()}${qs ? `?${qs}` : ""}`);
+  const res = await fetch(`${scholarshipsBase()}${qs ? `?${qs}` : ""}`, {
+    credentials: "include",
+  });
   if (!res.ok) throw new Error(await parseApiError(res));
   return (await res.json()) as ScholarshipSummary[];
 }
 
 export async function fetchScholarshipBySlug(slug: string): Promise<Scholarship> {
-  const res = await fetch(`${scholarshipsBase()}/${encodeURIComponent(slug)}`);
+  const res = await fetch(`${scholarshipsBase()}/${encodeURIComponent(slug)}`, {
+    credentials: "include",
+  });
   if (!res.ok) throw new Error(await parseApiError(res));
   return (await res.json()) as Scholarship;
 }

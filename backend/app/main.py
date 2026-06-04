@@ -1,18 +1,41 @@
+import logging
+
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.config import get_settings
 from app.db.session import init_db
-from app.routers import admin_content, chat, leads, payments, resources, scholarships
+from app.routers import (
+    admin_content,
+    auth,
+    chat,
+    eligibility,
+    leads,
+    partners,
+    payments,
+    portal,
+    resources,
+    scholarships,
+)
 
 app = FastAPI(title="German Nursing Pathway API", version="1.0.0")
 
 
 @app.on_event("startup")
 def on_startup() -> None:
-    if get_settings().database_url:
+    settings = get_settings()
+    if settings.database_url:
         init_db()
+    log = logging.getLogger("app.startup")
+    if settings.otp_email_configured:
+        log.info("OTP email: SMTP host %s (port %s)", settings.smtp_host.strip(), settings.smtp_port)
+    elif settings.resend_api_key.strip():
+        log.info("OTP email: Resend API configured")
+    else:
+        log.warning(
+            "OTP email: not configured — set SMTP_HOST or RESEND_API_KEY in backend/.env and restart uvicorn"
+        )
 
 
 @app.exception_handler(HTTPException)
@@ -30,6 +53,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth.router)
+app.include_router(portal.router)
+app.include_router(eligibility.router)
+app.include_router(partners.router)
 app.include_router(chat.router)
 app.include_router(leads.router)
 app.include_router(payments.router)

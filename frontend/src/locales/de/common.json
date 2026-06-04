@@ -9,7 +9,16 @@
     "register": "Registrieren",
     "eligibility": "Eignung prüfen",
     "whatsapp": "WhatsApp beitreten",
-    "portal": "Kandidatenportal"
+    "portal": "Kandidatenportal",
+    "menu": "Menü",
+    "sections": {
+      "explore": "Entdecken",
+      "getStarted": "Loslegen"
+    },
+    "hints": {
+      "scholarships": "Geprüfte Programme durchsuchen",
+      "portal": "Mit E-Mail-Code anmelden"
+    }
   },
   "hero": {
     "title": "Kenianische Pflege trifft deutsche Chancen",
@@ -64,8 +73,29 @@
   },
   "portal": {
     "title": "Kandidatenportal",
-    "comingSoon": "Bewerbungsstatus, Dokumente und Meilensteine — Phase 2.",
-    "loginSoon": "Login wird verfügbar, sobald Ihre Registrierung bestätigt ist."
+    "comingSoon": "Mit E-Mail-OTP anmelden, Stipendien durchsuchen und Ihre Reise verfolgen.",
+    "loginSoon": "Melden Sie sich mit dem Einmalcode an, den wir an Ihre registrierte E-Mail senden."
+  },
+  "search": {
+    "placeholder": "Seiten und Stipendien suchen…",
+    "shortcut": "Suche ⌘K",
+    "open": "Suche öffnen",
+    "noResults": "Keine Ergebnisse.",
+    "pages": "Seiten",
+    "recent": "Zuletzt",
+    "scholarships": "Stipendien",
+    "guides": "Leitfäden",
+    "signInHint": "Anmelden, um Stipendien zu suchen"
+  },
+  "theme": {
+    "toggle": "Design umschalten",
+    "light": "Hell",
+    "dark": "Dunkel",
+    "system": "System"
+  },
+  "home": {
+    "testimonialsTitle": "Erfahrungen auf dem Weg",
+    "recentScholarships": "Stipendien entdecken"
   },
   "meta": {
     "home": {
@@ -102,7 +132,7 @@
     },
     "portal": {
       "title": "Kandidatenportal — German Nursing Pathway",
-      "description": "Kandidatenportal zur Bewerbungsverfolgung — demnächst verfügbar."
+      "description": "Mit E-Mail-OTP Stipendien durchsuchen und Ihre Bewerbungsreise verfolgen."
     }
   },
   "partnersPage": {

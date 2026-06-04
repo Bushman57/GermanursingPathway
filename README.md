@@ -76,7 +76,14 @@ DATABASE_URL=postgresql://...
 CORS_ORIGINS=https://germanursingpathway.com,https://www.germanursingpathway.com,http://localhost:8080
 ```
 
-For M-Pesa STK Push, see `backend/.env.example` (KCB keys, `KCB_CALLBACK_BASE_URL` = this API’s public HTTPS base, `PAYMENT_AMOUNT_KES`).
+For homepage program payments (Paystack — card + M-Pesa), see `backend/.env.example`:
+
+- `PAYSTACK_SECRET_KEY`, `PAYSTACK_PUBLIC_KEY`
+- `PAYSTACK_CALLBACK_BASE_URL` = this API’s public HTTPS base (e.g. ngrok in dev)
+- Webhook in Paystack dashboard: `{PAYSTACK_CALLBACK_BASE_URL}/api/payments/paystack/webhook`
+- `PAYMENT_AMOUNT_KES` (KES equivalent of the €1,550 program fee)
+
+Test card: `4084084084084081` (Paystack test mode). Restart the API after changing `.env`.
 
 Run migrations on deploy: `alembic upgrade head`.
 

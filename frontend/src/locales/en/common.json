@@ -9,7 +9,16 @@
     "register": "Register",
     "eligibility": "Check Readiness",
     "whatsapp": "Join WhatsApp",
-    "portal": "Student Portal"
+    "portal": "Student Portal",
+    "menu": "Menu",
+    "sections": {
+      "explore": "Explore",
+      "getStarted": "Get started"
+    },
+    "hints": {
+      "scholarships": "Browse verified programs",
+      "portal": "Sign in with email code"
+    }
   },
   "hero": {
     "title": "Connecting Kenyan Healthcare with German opportunity",
@@ -64,8 +73,29 @@
   },
   "portal": {
     "title": "Student Portal",
-    "comingSoon": "Track your application progress, documents, and milestones — coming in Phase 2.",
-    "loginSoon": "Login will be available once your registration is approved."
+    "comingSoon": "Sign in with email OTP to browse scholarships and track your journey.",
+    "loginSoon": "Sign in with the one-time code sent to your registered email."
+  },
+  "search": {
+    "placeholder": "Search pages and scholarships…",
+    "shortcut": "Search ⌘K",
+    "open": "Open search",
+    "noResults": "No results found.",
+    "pages": "Pages",
+    "recent": "Recent",
+    "scholarships": "Scholarships",
+    "guides": "Guides",
+    "signInHint": "Sign in to search scholarships"
+  },
+  "theme": {
+    "toggle": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "home": {
+    "testimonialsTitle": "Stories from the pathway",
+    "recentScholarships": "Explore scholarships"
   },
   "meta": {
     "home": {
@@ -102,7 +132,7 @@
     },
     "portal": {
       "title": "Student Portal — German Nursing Pathway",
-      "description": "Candidate portal for application tracking — coming soon."
+      "description": "Sign in with email OTP to browse scholarships and track your application journey."
     }
   },
   "partnersPage": {

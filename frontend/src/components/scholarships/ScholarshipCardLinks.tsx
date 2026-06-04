@@ -7,6 +7,7 @@ import {
   scholarshipExternalUrl,
 } from "@/lib/scholarshipLinks";
 import type { ScholarshipSummary } from "@/lib/scholarships";
+import { trackEvent } from "@/lib/analytics";
 
 const titleLinkClass =
   "font-heading text-base font-semibold text-foreground leading-snug line-clamp-2 hover:text-warm transition-colors";
@@ -61,7 +62,12 @@ export function ScholarshipApplyButton({
   if (external) {
     return (
       <Button variant="warm" size={size} className={className} asChild>
-        <a href={url} target="_blank" rel="noopener noreferrer">
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => trackEvent("external_apply_click", { slug: scholarship.slug })}
+        >
           {applyLabel} <ExternalLink className="w-3.5 h-3.5 ml-1" />
         </a>
       </Button>

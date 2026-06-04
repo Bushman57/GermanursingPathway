@@ -10,6 +10,43 @@ class Base(DeclarativeBase):
     pass
 
 
+class EligibilityCheck(Base):
+    __tablename__ = "eligibility_checks"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    email: Mapped[str | None] = mapped_column(String(320), nullable=True, index=True)
+    payload: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    score: Mapped[int] = mapped_column(Integer, nullable=False)
+    status: Mapped[str] = mapped_column(String(30), nullable=False)
+    locale: Mapped[str] = mapped_column(String(5), default="en")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class PortalDocument(Base):
+    __tablename__ = "portal_documents"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    email: Mapped[str] = mapped_column(String(320), nullable=False, index=True)
+    doc_type: Mapped[str] = mapped_column(String(60), nullable=False)
+    filename: Mapped[str] = mapped_column(String(300), nullable=False)
+    storage_path: Mapped[str] = mapped_column(String(500), nullable=False)
+    status: Mapped[str] = mapped_column(String(30), default="uploaded")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class OtpChallenge(Base):
+    __tablename__ = "otp_challenges"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    email: Mapped[str] = mapped_column(String(320), nullable=False, index=True)
+    code_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    attempts: Mapped[int] = mapped_column(Integer, default=0)
+    consumed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    ip_hash: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
 class Lead(Base):
     __tablename__ = "leads"
 
@@ -107,7 +144,9 @@ class Payment(Base):
     __tablename__ = "payments"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    phone_number: Mapped[str] = mapped_column(String(20), nullable=False)
+    provider: Mapped[str] = mapped_column(String(20), default="paystack", nullable=False)
+    email: Mapped[str | None] = mapped_column(String(320), nullable=True)
+    phone_number: Mapped[str | None] = mapped_column(String(20), nullable=True)
     amount_kes: Mapped[int] = mapped_column(Integer, nullable=False)
     invoice_number: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
     merchant_request_id: Mapped[str | None] = mapped_column(String(80), nullable=True)

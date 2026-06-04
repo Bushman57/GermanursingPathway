@@ -16,6 +16,8 @@ import enChat from "@/locales/en/chat.json";
 import deChat from "@/locales/de/chat.json";
 import enPayment from "@/locales/en/payment.json";
 import dePayment from "@/locales/de/payment.json";
+import enPortal from "@/locales/en/portal.json";
+import dePortal from "@/locales/de/portal.json";
 
 const STORAGE_KEY = "gnp_locale";
 
@@ -35,6 +37,7 @@ i18n.use(initReactI18next).init({
       scholarshipsPage: enScholarshipsPage,
       chat: enChat,
       payment: enPayment,
+      portal: enPortal,
     },
     de: {
       common: deCommon,
@@ -45,6 +48,7 @@ i18n.use(initReactI18next).init({
       scholarshipsPage: deScholarshipsPage,
       chat: deChat,
       payment: dePayment,
+      portal: dePortal,
     },
   },
   lng: getStoredLocale(),
@@ -59,6 +63,7 @@ i18n.use(initReactI18next).init({
     "scholarshipsPage",
     "chat",
     "payment",
+    "portal",
   ],
   interpolation: { escapeValue: false },
 });

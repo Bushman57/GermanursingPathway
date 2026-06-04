@@ -1,23 +1,26 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import {
-  Lock,
-  LayoutDashboard,
-  Mail,
-  Loader2,
-  CheckCircle2,
-  Circle,
-  Clock,
-  LogOut,
-  FileText,
-  GraduationCap,
-  Plane,
-  Info,
-} from "lucide-react";
-import { getSession, signIn, signOut, type DummySession } from "@/lib/dummyAuth";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ChatWidget } from "@/components/ChatWidget";
+import { PortalOtpLogin } from "@/components/auth/PortalOtpLogin";
+import { PortalJourney } from "@/components/portal/PortalJourney";
+import { PortalDocuments } from "@/components/portal/PortalDocuments";
+import { PortalNotifications } from "@/components/portal/PortalNotifications";
+import { PortalProfileHeader } from "@/components/portal/PortalProfileHeader";
+import { PortalSettings } from "@/components/portal/PortalSettings";
+import { ScholarshipApplyButton, ScholarshipTitleLink } from "@/components/scholarships/ScholarshipCardLinks";
+import { useAuthMeQuery } from "@/lib/queries/auth";
+import { useScholarshipsQuery } from "@/lib/queries/scholarships";
+import { scholarshipText } from "@/lib/scholarships";
+import { getSavedSlugs } from "@/lib/savedScholarships";
+import { signOutPortal } from "@/lib/portalAuth";
+import { toast } from "sonner";
+import { queryClient } from "@/lib/queryClient";
+import { queryKeys } from "@/lib/queries/keys";
+import { Loader2, GraduationCap, ArrowRight, Heart } from "lucide-react";
 
 export const Route = createFileRoute("/portal")({
   head: () => ({
@@ -26,7 +29,7 @@ export const Route = createFileRoute("/portal")({
       {
         name: "description",
         content:
-          "Track your application progress, documents, and milestones in your student portal.",
+          "Sign in with email OTP to browse scholarships and track your application progress.",
       },
     ],
   }),
@@ -34,22 +37,31 @@ export const Route = createFileRoute("/portal")({
 });
 
 function PortalPage() {
-  const [session, setSession] = useState<DummySession | null>(null);
-  const [hydrated, setHydrated] = useState(false);
+  const { t } = useTranslation("portal");
+  const { data: me, isLoading } = useAuthMeQuery();
 
-  useEffect(() => {
-    setSession(getSession());
-    setHydrated(true);
-  }, []);
+  const handleSignOut = async () => {
+    await signOutPortal();
+    queryClient.setQueryData(queryKeys.auth.me, null);
+    queryClient.invalidateQueries({ queryKey: queryKeys.auth.me });
+    toast.success(t("signedOut"));
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
       <main className="flex-1 pt-24 pb-20 px-4">
-        {!hydrated ? null : session ? (
-          <Dashboard session={session} onSignOut={() => { signOut(); setSession(null); }} />
+        {isLoading ? null : me ? (
+          <>
+            <PortalDashboard session={me} onSignOut={handleSignOut} />
+            <ChatWidget mode="scholarship" enableUploads accent="primary" />
+          </>
         ) : (
-          <LoginCard onSignIn={(s) => setSession(s)} />
+          <PortalOtpLogin
+            onSignedIn={() => {
+              queryClient.invalidateQueries({ queryKey: queryKeys.auth.me });
+            }}
+          />
         )}
       </main>
       <Footer />
@@ -57,273 +69,125 @@ function PortalPage() {
   );
 }
 
-function LoginCard({ onSignIn }: { onSignIn: (s: DummySession) => void }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    if (!email || !password) {
-      setError("Enter your email and password to continue.");
-      return;
-    }
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 500));
-    onSignIn(signIn(email));
-    setLoading(false);
-  };
-
-  const inputClass =
-    "w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30";
-
-  return (
-    <div className="max-w-md mx-auto">
-      <div className="text-center mb-8">
-        <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-          <Lock className="w-7 h-7 text-primary" />
-        </div>
-        <h1 className="font-heading text-3xl font-bold text-foreground">Student Portal</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Sign in to track your application progress.
-        </p>
-      </div>
-
-      <div className="bg-warm-light/40 border border-warm/20 text-foreground/80 rounded-xl px-4 py-3 mb-6 flex items-start gap-2 text-xs">
-        <Info className="w-4 h-4 shrink-0 mt-0.5 text-warm" />
-        <span>
-          <strong className="font-semibold">Phase 2 preview.</strong> Real authentication is coming
-          soon — for now any email + password will sign you in to see the dashboard layout.
-        </span>
-      </div>
-
-      <form
-        onSubmit={submit}
-        className="bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-5 shadow-sm"
-      >
-        <div>
-          <label className="block text-sm font-medium mb-1.5">Email</label>
-          <input
-            type="email"
-            className={inputClass}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            autoComplete="email"
-          />
-        </div>
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <label className="text-sm font-medium">Password</label>
-            <button
-              type="button"
-              className="text-xs text-muted-foreground hover:text-foreground"
-              onClick={() => setError("Password reset will be available in Phase 2.")}
-            >
-              Forgot password?
-            </button>
-          </div>
-          <input
-            type="password"
-            className={inputClass}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            autoComplete="current-password"
-          />
-        </div>
-
-        {error && (
-          <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-lg">{error}</p>
-        )}
-
-        <Button type="submit" variant="warm" size="lg" className="w-full py-6" disabled={loading}>
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Signing in…
-            </>
-          ) : (
-            <>
-              <Mail className="w-4 h-4 mr-2" /> Sign in
-            </>
-          )}
-        </Button>
-
-        <p className="text-center text-xs text-muted-foreground">
-          New here?{" "}
-          <Link to="/register" className="text-warm font-medium hover:underline">
-            Register your interest
-          </Link>{" "}
-          first.
-        </p>
-      </form>
-    </div>
-  );
-}
-
-type Stage = {
-  key: string;
-  title: string;
-  description: string;
-  status: "done" | "in_progress" | "pending";
-  icon: React.ComponentType<{ className?: string }>;
-};
-
-const STAGES: Stage[] = [
-  {
-    key: "register",
-    title: "Registration received",
-    description: "We have your details and assigned you a case officer.",
-    status: "done",
-    icon: CheckCircle2,
-  },
-  {
-    key: "eligibility",
-    title: "Eligibility review",
-    description: "Your qualifications and German level are being verified.",
-    status: "done",
-    icon: FileText,
-  },
-  {
-    key: "documents",
-    title: "Document collection",
-    description: "Upload transcripts, certificates, and passport copy.",
-    status: "in_progress",
-    icon: FileText,
-  },
-  {
-    key: "language",
-    title: "German language training",
-    description: "Enroll in A1–B2 pathway with our partner schools.",
-    status: "pending",
-    icon: GraduationCap,
-  },
-  {
-    key: "placement",
-    title: "Hospital placement",
-    description: "Matching with German hospital and Ausbildung contract.",
-    status: "pending",
-    icon: GraduationCap,
-  },
-  {
-    key: "visa",
-    title: "Visa & travel",
-    description: "Embassy appointment, visa issuance, and flight to Germany.",
-    status: "pending",
-    icon: Plane,
-  },
-];
-
-function Dashboard({
+function PortalDashboard({
   session,
   onSignOut,
 }: {
-  session: DummySession;
+  session: { email: string; fullName: string };
   onSignOut: () => void;
 }) {
-  const completed = STAGES.filter((s) => s.status === "done").length;
-  const progress = Math.round((completed / STAGES.length) * 100);
+  const { t, i18n } = useTranslation("portal");
+  const lang = i18n.language;
+  const { data: scholarships = [], isLoading: loadingList } = useScholarshipsQuery();
+  const savedSlugs = getSavedSlugs(session.email);
+  const saved = scholarships.filter((s) => savedSlugs.includes(s.slug));
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-        <div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-            <LayoutDashboard className="w-3.5 h-3.5" /> Student Portal
-          </div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-bold">
-            Welcome back, {session.fullName}
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">{session.email}</p>
-        </div>
-        <Button variant="outline" size="sm" onClick={onSignOut} className="gap-2 self-start">
-          <LogOut className="w-4 h-4" /> Sign out
-        </Button>
-      </div>
+    <div className="max-w-5xl mx-auto space-y-8">
+      <PortalProfileHeader
+        email={session.email}
+        fullName={session.fullName}
+        onSignOut={onSignOut}
+      />
 
-      <div className="bg-card border border-border rounded-2xl p-6 mb-6 shadow-sm">
-        <div className="flex items-baseline justify-between mb-3">
-          <h2 className="font-heading font-semibold">Application progress</h2>
-          <span className="text-sm text-muted-foreground">{progress}% complete</span>
-        </div>
-        <div className="h-2 bg-muted rounded-full overflow-hidden">
-          <div
-            className="h-full warm-gradient transition-all"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-        <p className="text-xs text-muted-foreground mt-3">
-          Stage {completed + 1} of {STAGES.length} —{" "}
-          {STAGES.find((s) => s.status === "in_progress")?.title ?? "All stages complete"}
-        </p>
-      </div>
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList className="flex flex-wrap h-auto gap-1">
+          <TabsTrigger value="overview">{t("tabs.overview")}</TabsTrigger>
+          <TabsTrigger value="saved">
+            {t("tabs.saved")} {saved.length > 0 && `(${saved.length})`}
+          </TabsTrigger>
+          <TabsTrigger value="documents">{t("tabs.documents")}</TabsTrigger>
+          <TabsTrigger value="settings">{t("tabs.settings")}</TabsTrigger>
+        </TabsList>
 
-      <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-        <h2 className="font-heading font-semibold mb-5">Your journey</h2>
-        <ol className="space-y-5">
-          {STAGES.map((stage, i) => (
-            <li key={stage.key} className="flex gap-4">
-              <div className="flex flex-col items-center">
-                <StageDot status={stage.status} />
-                {i < STAGES.length - 1 && (
-                  <div
-                    className={`w-px flex-1 mt-1 ${
-                      stage.status === "done" ? "bg-warm/60" : "bg-border"
-                    }`}
-                  />
-                )}
+        <TabsContent value="overview" className="space-y-8">
+          <PortalJourney />
+          <PortalNotifications />
+
+          <section className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+              <div>
+                <h2 className="font-heading text-lg font-semibold flex items-center gap-2">
+                  <GraduationCap className="w-5 h-5 text-warm" />
+                  {t("scholarships.title")}
+                </h2>
+                <p className="text-sm text-muted-foreground mt-1">{t("scholarships.subtitle")}</p>
               </div>
-              <div className="pb-2 flex-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="font-medium text-foreground">{stage.title}</h3>
-                  <StatusBadge status={stage.status} />
-                </div>
-                <p className="text-sm text-muted-foreground mt-1">{stage.description}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </div>
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/scholarships">
+                  {t("scholarships.browseAll")} <ArrowRight className="w-4 h-4 ml-1" />
+                </Link>
+              </Button>
+            </div>
 
-      <p className="text-center text-xs text-muted-foreground mt-8">
-        Need help? <Link to="/about" className="text-warm hover:underline">Contact your case officer</Link>.
-      </p>
+            {loadingList ? (
+              <p className="text-sm text-muted-foreground flex items-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" /> {t("scholarships.loading")}
+              </p>
+            ) : scholarships.length === 0 ? (
+              <p className="text-sm text-muted-foreground">{t("scholarships.empty")}</p>
+            ) : (
+              <ul className="divide-y divide-border">
+                {scholarships.slice(0, 8).map((s) => (
+                  <li
+                    key={s.slug}
+                    className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+                  >
+                    <ScholarshipTitleLink
+                      scholarship={s}
+                      title={scholarshipText(s, "title", lang)}
+                    />
+                    <ScholarshipApplyButton
+                      scholarship={s}
+                      applyLabel={t("scholarships.viewDetails")}
+                      size="sm"
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </TabsContent>
+
+        <TabsContent value="saved">
+          <section className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+            <h2 className="font-heading text-lg font-semibold flex items-center gap-2">
+              <Heart className="w-5 h-5 text-warm" />
+              {t("saved.title")}
+            </h2>
+            {saved.length === 0 ? (
+              <p className="text-sm text-muted-foreground mt-4">{t("saved.empty")}</p>
+            ) : (
+              <ul className="mt-4 divide-y divide-border">
+                {saved.map((s) => (
+                  <li key={s.slug} className="py-3 flex justify-between gap-2">
+                    <ScholarshipTitleLink
+                      scholarship={s}
+                      title={scholarshipText(s, "title", lang)}
+                    />
+                    <ScholarshipApplyButton
+                      scholarship={s}
+                      applyLabel={t("scholarships.viewDetails")}
+                      size="sm"
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
+            <Button variant="warm" className="mt-6" asChild>
+              <Link to="/scholarships">{t("saved.browse")}</Link>
+            </Button>
+          </section>
+        </TabsContent>
+
+        <TabsContent value="documents" className="space-y-6">
+          <PortalDocuments />
+        </TabsContent>
+
+        <TabsContent value="settings">
+          <PortalSettings email={session.email} />
+        </TabsContent>
+      </Tabs>
     </div>
-  );
-}
-
-function StageDot({ status }: { status: Stage["status"] }) {
-  if (status === "done")
-    return (
-      <div className="w-7 h-7 rounded-full warm-gradient flex items-center justify-center">
-        <CheckCircle2 className="w-4 h-4 text-warm-foreground" />
-      </div>
-    );
-  if (status === "in_progress")
-    return (
-      <div className="w-7 h-7 rounded-full bg-warm/15 border-2 border-warm flex items-center justify-center">
-        <Clock className="w-3.5 h-3.5 text-warm" />
-      </div>
-    );
-  return (
-    <div className="w-7 h-7 rounded-full border-2 border-border flex items-center justify-center">
-      <Circle className="w-3 h-3 text-muted-foreground" />
-    </div>
-  );
-}
-
-function StatusBadge({ status }: { status: Stage["status"] }) {
-  const map = {
-    done: { label: "Complete", cls: "bg-success/15 text-success" },
-    in_progress: { label: "In progress", cls: "bg-warm/15 text-warm" },
-    pending: { label: "Upcoming", cls: "bg-muted text-muted-foreground" },
-  } as const;
-  const { label, cls } = map[status];
-  return (
-    <span className={`text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full ${cls}`}>
-      {label}
-    </span>
   );
 }
