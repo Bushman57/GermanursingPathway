@@ -51,10 +51,10 @@ Other root scripts: `npm run build`, `npm run db:migrate`, `npm run export:schol
 **Environment variable (required for chat, leads, payments):**
 
 ```env
-VITE_API_URL=https://api.germanursingpathway.com
+VITE_API_URL=https://germanursingpathway.onrender.com
 ```
 
-Use your real API host (no trailing slash). Without this, `/api/*` requests hit the static site and fail (405 / HTML instead of JSON).
+Use your real API host (**HTTPS**, no trailing slash, do not append `/api`). Without this, `/api/*` requests hit the static site and fail. Using `http://` can redirect POST to GET and break Pay now (`uuid_parsing` on `initialize`). See `docs/PAYSTACK_PAYMENTS.md` for payment env and deploy checklist.
 
 **Custom domain:** point `germanursingpathway.com` (and `www` if used) to Vercel.
 

@@ -1,4 +1,4 @@
-import { parseApiError, parseJsonResponse } from "@/lib/api/apiBase";
+import { apiRoot, parseApiError, parseJsonResponse, requireApiRoot } from "@/lib/api/apiBase";
 
 export type PaymentConfig = {
   amount_kes: number;
@@ -29,8 +29,8 @@ export type PaymentStatus = {
 };
 
 function paymentsBase(): string {
-  const base = import.meta.env.VITE_API_URL as string | undefined;
-  if (base) return `${base.replace(/\/$/, "")}/api/payments`;
+  const root = import.meta.env.PROD ? requireApiRoot() : apiRoot();
+  if (root) return `${root}/api/payments`;
   return "/api/payments";
 }
 
@@ -64,7 +64,7 @@ export async function verifyPayment(reference: string): Promise<PaymentStatus> {
 }
 
 export async function getPaymentStatus(id: string): Promise<PaymentStatus> {
-  const res = await fetch(`${paymentsBase()}/${id}`);
+  const res = await fetch(`${paymentsBase()}/status/${encodeURIComponent(id)}`);
   if (!res.ok) throw new Error(await parseApiError(res));
   return parseJsonResponse<PaymentStatus>(res);
 }

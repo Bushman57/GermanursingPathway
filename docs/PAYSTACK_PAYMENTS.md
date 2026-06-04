@@ -58,4 +58,32 @@ If the user completes checkout via Paystack redirect, the API sends them to `{PU
 | POST | `/api/payments/verify` | `{ "reference": "GNP-..." }` |
 | POST | `/api/payments/paystack/webhook` | Paystack events |
 | GET | `/api/payments/paystack/callback` | Redirect to `PUBLIC_SITE_URL/?payment=ref` |
-| GET | `/api/payments/{id}` | Poll status |
+| GET | `/api/payments/status/{id}` | Poll status by payment UUID |
+| GET | `/api/payments/initialize` | Returns 405 — use POST with `email` and `phone` |
+
+## Production deploy (Render + Vercel)
+
+**Render (API)** — set at minimum:
+
+- `PAYSTACK_SECRET_KEY`, `PAYSTACK_PUBLIC_KEY`, `PAYSTACK_CALLBACK_BASE_URL=https://<your-render-host>` (HTTPS, no path suffix)
+- `PAYMENT_AMOUNT_KES`, `DATABASE_URL`, `CORS_ORIGINS` (include your Vercel/marketing origins)
+- `PUBLIC_SITE_URL` = frontend URL (Paystack browser redirect)
+- Build: `alembic upgrade head` then start uvicorn
+
+**Vercel (frontend)** — required:
+
+```env
+VITE_API_URL=https://<your-render-host>
+```
+
+Use **HTTPS**. If `VITE_API_URL` is missing, Pay now posts to the static site and fails. If it uses `http://`, redirects can turn POST into GET and hit the wrong route.
+
+After deploy, verify:
+
+```bash
+curl -X POST "https://<api-host>/api/payments/initialize" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","phone":"0712345678"}'
+```
+
+Expect JSON with `access_code` (or 503 if Paystack keys missing), not `uuid_parsing` or 405 with `allow: GET`.

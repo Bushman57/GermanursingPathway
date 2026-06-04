@@ -229,7 +229,15 @@ def paystack_browser_callback(
     return RedirectResponse(url=f"{site}/?payment={ref}")
 
 
-@router.get("/{payment_id}", response_model=PaymentStatusResponse)
+@router.get("/initialize")
+def initialize_payment_get_not_allowed() -> None:
+    raise HTTPException(
+        status_code=405,
+        detail="Use POST /api/payments/initialize with JSON body: email, phone",
+    )
+
+
+@router.get("/status/{payment_id}", response_model=PaymentStatusResponse)
 def get_payment_status(
     payment_id: uuid.UUID,
     db: Session = Depends(optional_db),

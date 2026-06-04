@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -43,6 +44,20 @@ async def http_exception_handler(_request: Request, exc: HTTPException) -> JSONR
     detail = exc.detail
     message = detail if isinstance(detail, str) else str(detail)
     return JSONResponse(status_code=exc.status_code, content={"error": message})
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(_request: Request, exc: RequestValidationError) -> JSONResponse:
+    errors = exc.errors()
+    message = "Invalid request"
+    if errors:
+        first = errors[0]
+        loc = first.get("loc", ())
+        if "payment_id" in loc and first.get("type") == "uuid_parsing":
+            message = "Invalid payment ID. Use GET /api/payments/status/{uuid} to poll status."
+        elif msg := first.get("msg"):
+            message = str(msg)
+    return JSONResponse(status_code=422, content={"error": message})
 
 settings = get_settings()
 app.add_middleware(
