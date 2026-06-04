@@ -276,7 +276,11 @@ function AuthenticatedScholarshipsListing({ email }: { email: string }) {
 
   const patchSearch = (patch: Partial<ScholarshipsSearch>) => {
     navigate({
-      search: (prev) => ({ ...defaultScholarshipsSearch, ...prev, ...patch }),
+      search: (prev: ScholarshipsSearch) => ({
+        ...defaultScholarshipsSearch,
+        ...prev,
+        ...patch,
+      }),
       replace: true,
     });
   };
