@@ -87,6 +87,8 @@ Test card: `4084084084084081` (Paystack test mode). Restart the API after changi
 
 Run migrations on deploy: `alembic upgrade head`.
 
+After deploy, open `https://<api-host>/openapi.json` and confirm paths include `/api/auth/otp/request` and `/api/payments/initialize`. If you only see `/api/payments/stk`, the service is still on an old build (OTP returns 404, Pay now returns 405).
+
 **Recommended DNS:** `api.germanursingpathway.com` → API host; marketing domain → Vercel.
 
 ## Content admin (scholarships & resources)

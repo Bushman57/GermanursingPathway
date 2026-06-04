@@ -1,8 +1,21 @@
-import { apiRoot, parseApiError, parseJsonResponse } from "@/lib/api/apiBase";
+import { apiRoot, parseApiError, parseJsonResponse, requireApiRoot } from "@/lib/api/apiBase";
 
 function authBase(): string {
-  const root = apiRoot();
+  const root = import.meta.env.PROD ? requireApiRoot() : apiRoot();
   return root ? `${root}/api/auth` : "/api/auth";
+}
+
+function staleApiMessage(status: number): string | null {
+  if (status === 404) {
+    return (
+      "Portal sign-in is not available on this API yet (missing /api/auth routes). " +
+      "Redeploy the latest backend on Render, then try again."
+    );
+  }
+  if (status === 405) {
+    return "This API build is outdated. Redeploy the latest backend on Render.";
+  }
+  return null;
 }
 
 const fetchOpts: RequestInit = { credentials: "include" };
@@ -14,7 +27,9 @@ export async function requestOtp(email: string): Promise<{ message: string }> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: email.trim().toLowerCase() }),
   });
-  if (!res.ok) throw new Error(await parseApiError(res));
+  if (!res.ok) {
+    throw new Error(staleApiMessage(res.status) ?? (await parseApiError(res)));
+  }
   return parseJsonResponse<{ message: string }>(res);
 }
 
