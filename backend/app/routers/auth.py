@@ -53,24 +53,32 @@ def _client_ip_hash(request: Request, secret: str) -> str | None:
 
 
 def _set_session_cookie(response: Response, token: str, settings: Settings) -> None:
+    samesite = settings.portal_cookie_samesite.lower()
+    if samesite not in {"lax", "strict", "none"}:
+        samesite = "lax"
+    secure = settings.portal_cookie_secure or samesite == "none"
     response.set_cookie(
         key=settings.portal_cookie_name,
         value=token,
         httponly=True,
-        secure=settings.portal_cookie_secure,
-        samesite="lax",
+        secure=secure,
+        samesite=samesite,
         max_age=settings.jwt_expire_minutes * 60,
         path="/",
     )
 
 
 def _clear_session_cookie(response: Response, settings: Settings) -> None:
+    samesite = settings.portal_cookie_samesite.lower()
+    if samesite not in {"lax", "strict", "none"}:
+        samesite = "lax"
+    secure = settings.portal_cookie_secure or samesite == "none"
     response.delete_cookie(
         key=settings.portal_cookie_name,
         path="/",
         httponly=True,
-        secure=settings.portal_cookie_secure,
-        samesite="lax",
+        secure=secure,
+        samesite=samesite,
     )
 
 

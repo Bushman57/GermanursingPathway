@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { requestOtp, verifyOtp } from "@/lib/api/auth";
 import type { PortalSession } from "@/lib/portalAuth";
+import { queryClient } from "@/lib/queryClient";
+import { queryKeys } from "@/lib/queries/keys";
 import { trackEvent } from "@/lib/analytics";
 import { toast } from "sonner";
 import { Loader2, Mail, Lock } from "lucide-react";
@@ -65,6 +67,10 @@ export function PortalOtpLogin({ onSignedIn }: Props) {
       trackEvent("otp_verify");
       toast.success(t("otp.signedIn", { defaultValue: "Signed in" }));
       onSignedIn({ email: res.email, fullName: res.fullName });
+      queryClient.setQueryData(queryKeys.auth.me, {
+        email: res.email,
+        fullName: res.fullName,
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : t("otp.errors.invalidCode"));
     } finally {

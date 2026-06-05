@@ -12,6 +12,8 @@ OTP emails are sent as **HTML + plain text** (Paystack-style card). Set `PUBLIC_
 
 Restart uvicorn after changing `backend/.env` (settings are loaded at process start).
 
+**Production sign-in (Vercel + Render):** The frontend calls the API on a different domain. Set `PORTAL_COOKIE_SAMESITE=none` and `PORTAL_COOKIE_SECURE=true` on the API host, and include your marketing domain in `CORS_ORIGINS`. Without this, OTP verify may succeed but the session cookie is not sent on later requests, so the portal stays logged out.
+
 ## Guest (not signed in)
 
 - [ ] `GET /api/auth/me` returns **200** `{"authenticated":false}` (not an error — you are not signed in yet).

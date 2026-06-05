@@ -92,8 +92,9 @@ def verify_otp_code(
     settings = settings or get_settings()
     normalized = normalize_email(email)
     now = datetime.now(timezone.utc)
+    normalized_code = code.strip()
 
-    challenge = (
+    challenges = (
         db.query(OtpChallenge)
         .filter(
             OtpChallenge.email == normalized,
@@ -101,22 +102,24 @@ def verify_otp_code(
             OtpChallenge.expires_at > now,
         )
         .order_by(OtpChallenge.created_at.desc())
-        .first()
+        .all()
     )
-    if challenge is None:
+    if not challenges:
         return False
 
-    if challenge.attempts >= settings.otp_max_attempts:
-        return False
+    expected = hash_otp_code(normalized_code, settings.jwt_secret)
+    for challenge in challenges:
+        if challenge.attempts >= settings.otp_max_attempts:
+            continue
+        if secrets.compare_digest(challenge.code_hash, expected):
+            challenge.consumed_at = now
+            db.commit()
+            return True
 
-    expected = hash_otp_code(code.strip(), settings.jwt_secret)
-    if secrets.compare_digest(challenge.code_hash, expected):
-        challenge.consumed_at = now
+    latest = challenges[0]
+    if latest.attempts < settings.otp_max_attempts:
+        latest.attempts += 1
         db.commit()
-        return True
-
-    challenge.attempts += 1
-    db.commit()
     return False
 
 
