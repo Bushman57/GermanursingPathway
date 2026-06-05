@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { WhatsAppLink } from "@/components/WhatsAppButton";
 import { submitLead } from "@/lib/api/submitLead";
 import { loadEligibilityPrefill, clearEligibilityPrefill } from "@/lib/eligibilityPrefill";
+import { savePostRegisterContext } from "@/lib/postRegister";
 import { trackEvent } from "@/lib/analytics";
 import { registerWhatsAppMessage, whatsappUrlWithMessage } from "@/lib/whatsappContext";
 import { toast } from "sonner";
@@ -110,8 +111,10 @@ export function RegisterInterestForm({ source, compact }: Props) {
         message: form.message || undefined,
         source,
         locale: i18n.language.startsWith("de") ? "de" : "en",
+        eligibility_check_id: prefill?.eligibility_check_id,
       });
       trackEvent("register_submit", { source });
+      savePostRegisterContext({ email: form.email, full_name: form.full_name });
       clearEligibilityPrefill();
       toast.success(t("register.successToast", { defaultValue: "Registration received" }));
       setStatus("success");
@@ -134,28 +137,29 @@ export function RegisterInterestForm({ source, compact }: Props) {
         <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">{title}</h2>
         <p className="mt-3 text-sm text-muted-foreground max-w-md mx-auto">{body}</p>
         <div className="mt-6 flex flex-col gap-3">
-          {isGate ? (
-            <Button variant="warm" size="lg" asChild>
-              <Link to="/portal">{t(`${gateKey}.signInCta`, { ns })}</Link>
+          <Button variant="warm" size="lg" className="w-full" asChild>
+            <Link to="/eligibility" search={{ from: "register" }}>
+              {t("register.eligibilityCta", { defaultValue: "Complete eligibility review" })}
+            </Link>
+          </Button>
+          <Button variant="outline" asChild className="gap-2">
+            <Link to="/portal">
+              <LayoutDashboard className="w-4 h-4" />
+              {isGate
+                ? t(`${gateKey}.signInCta`, { ns })
+                : t("register.signInPortal", { defaultValue: "Sign in to your portal" })}
+            </Link>
+          </Button>
+          {!isGate && (
+            <Button variant="outline" className="w-full" asChild>
+              <a
+                href={whatsappUrlWithMessage(registerWhatsAppMessage(form.full_name))}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t("nav.whatsapp")}
+              </a>
             </Button>
-          ) : (
-            <>
-              <Button variant="warm" className="w-full" asChild>
-                <a
-                  href={whatsappUrlWithMessage(registerWhatsAppMessage(form.full_name))}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t("nav.whatsapp")}
-                </a>
-              </Button>
-              <Button variant="outline" asChild className="gap-2">
-                <Link to="/portal">
-                  <LayoutDashboard className="w-4 h-4" />
-                  Go to Student Portal
-                </Link>
-              </Button>
-            </>
           )}
         </div>
       </div>

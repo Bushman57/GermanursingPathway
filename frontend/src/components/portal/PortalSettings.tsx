@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { PortalProfileAvatar } from "@/components/portal/PortalProfileAvatar";
 import { usePortalProfileQuery, useUpdatePortalProfileMutation } from "@/lib/queries/portal";
-import { getNotifyPrefs, setNotifyPrefs } from "@/lib/portalPrefs";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -24,11 +23,10 @@ export function PortalSettings({ email }: { email: string }) {
       setFullName(profile.fullName);
       setPhone(profile.phone ?? "");
       setGermanLevel(profile.germanLevel ?? "none");
+      setNotifyDeadlines(profile.notifyDeadlines ?? true);
+      setNotifyDocuments(profile.notifyDocuments ?? true);
     }
-    const prefs = getNotifyPrefs(email);
-    setNotifyDeadlines(prefs.notifyDeadlines);
-    setNotifyDocuments(prefs.notifyDocuments);
-  }, [profile, email]);
+  }, [profile]);
 
   const save = async () => {
     try {
@@ -36,8 +34,9 @@ export function PortalSettings({ email }: { email: string }) {
         fullName,
         phone,
         germanLevel,
+        notifyDeadlines,
+        notifyDocuments,
       });
-      setNotifyPrefs(email, { notifyDeadlines, notifyDocuments });
       toast.success(t("settings.saved"));
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("settings.error"));

@@ -25,6 +25,9 @@
   },
   "journey": {
     "title": "Bewerbungsreise",
+    "loading": "Reise wird geladen…",
+    "eligibilitySummary": "Eignungswertung: {{score}} % ({{status}})",
+    "completeEligibility": "Eignungsprüfung abschließen",
     "percent": "{{progress}} % abgeschlossen",
     "status": {
       "done": "Abgeschlossen",

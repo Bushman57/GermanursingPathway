@@ -9,10 +9,19 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from app.config import get_settings
-from app.db.models import Lead, PortalDocument
+from app.db.models import PortalDocument
 from app.db.session import get_db
 from app.deps.portal_auth import PortalUser, require_portal_user
 from app.services.otp_service import latest_lead_profile, normalize_email
+from app.services.user_service import (
+    compute_portal_journey,
+    eligibility_to_dict,
+    get_latest_eligibility,
+    get_latest_lead,
+    list_application_slugs,
+    record_scholarship_apply,
+    set_saved_scholarship,
+)
 
 router = APIRouter(prefix="/api/portal", tags=["portal"])
 
@@ -48,6 +57,10 @@ class ProfileUpdateBody(BaseModel):
     notify_documents: bool | None = None
 
 
+class SavedScholarshipBody(BaseModel):
+    saved: bool = True
+
+
 def _email_dir(email: str) -> Path:
     digest = hashlib.sha256(email.encode()).hexdigest()[:16]
     path = UPLOAD_ROOT / digest
@@ -80,12 +93,7 @@ def get_profile(
     profile = latest_lead_profile(db, user.email)
     if profile is None:
         raise HTTPException(status_code=404, detail="Profile not found")
-    lead = (
-        db.query(Lead)
-        .filter(Lead.email == normalize_email(user.email))
-        .order_by(Lead.created_at.desc())
-        .first()
-    )
+    lead = get_latest_lead(db, user.email)
     avatar_path = _find_avatar_path(user.email)
     avatar_updated = None
     if avatar_path is not None:
@@ -95,8 +103,8 @@ def get_profile(
         **profile,
         "phone": lead.phone if lead else None,
         "germanLevel": lead.german_level if lead else None,
-        "notifyDeadlines": True,
-        "notifyDocuments": True,
+        "notifyDeadlines": lead.notify_deadlines if lead else True,
+        "notifyDocuments": lead.notify_documents if lead else True,
         "hasAvatar": avatar_path is not None,
         "avatarUpdatedAt": avatar_updated,
     }
@@ -109,7 +117,7 @@ def update_profile(
     db: Session = Depends(require_db),
 ) -> dict[str, str]:
     email = normalize_email(user.email)
-    lead = db.query(Lead).filter(Lead.email == email).order_by(Lead.created_at.desc()).first()
+    lead = get_latest_lead(db, email)
     if lead is None:
         raise HTTPException(status_code=404, detail="Profile not found")
 
@@ -119,6 +127,10 @@ def update_profile(
         lead.phone = body.phone.strip()[:40] or None
     if body.german_level:
         lead.german_level = body.german_level.strip()[:40]
+    if body.notify_deadlines is not None:
+        lead.notify_deadlines = body.notify_deadlines
+    if body.notify_documents is not None:
+        lead.notify_documents = body.notify_documents
 
     db.commit()
     return {"message": "Profile updated"}
@@ -250,3 +262,63 @@ def list_notifications(
             }
         )
     return items
+
+
+@router.get("/eligibility")
+def get_portal_eligibility(
+    user: PortalUser = Depends(require_portal_user),
+    db: Session = Depends(require_db),
+) -> dict:
+    row = get_latest_eligibility(db, user.email)
+    if row is None:
+        raise HTTPException(status_code=404, detail="No eligibility check found")
+    return eligibility_to_dict(row)
+
+
+@router.get("/journey")
+def get_portal_journey(
+    user: PortalUser = Depends(require_portal_user),
+    db: Session = Depends(require_db),
+) -> dict:
+    return compute_portal_journey(db, user.email)
+
+
+@router.get("/saved-scholarships")
+def get_saved_scholarships(
+    user: PortalUser = Depends(require_portal_user),
+    db: Session = Depends(require_db),
+) -> dict[str, list[str]]:
+    email = normalize_email(user.email)
+    slugs = list_application_slugs(db, email, stage="saved")
+    return {"slugs": slugs}
+
+
+@router.put("/saved-scholarships/{slug}")
+def update_saved_scholarship(
+    slug: str,
+    body: SavedScholarshipBody,
+    user: PortalUser = Depends(require_portal_user),
+    db: Session = Depends(require_db),
+) -> dict[str, list[str]]:
+    email = normalize_email(user.email)
+    try:
+        slugs = set_saved_scholarship(db, email, slug, saved=body.saved)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    db.commit()
+    return {"slugs": slugs}
+
+
+@router.post("/applications/{slug}/apply", status_code=201)
+def record_application(
+    slug: str,
+    user: PortalUser = Depends(require_portal_user),
+    db: Session = Depends(require_db),
+) -> dict[str, str]:
+    email = normalize_email(user.email)
+    try:
+        record_scholarship_apply(db, email, slug)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    db.commit()
+    return {"message": "Application recorded", "slug": slug}

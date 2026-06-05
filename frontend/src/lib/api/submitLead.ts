@@ -11,6 +11,7 @@ export type LeadPayload = {
   source?: string;
   locale?: string;
   whatsapp_joined?: boolean;
+  eligibility_check_id?: string;
 };
 
 function apiBase(): string {

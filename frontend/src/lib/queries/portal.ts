@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   deletePortalAvatar,
   fetchPortalDocuments,
+  fetchPortalJourney,
   fetchPortalNotifications,
   fetchPortalProfile,
   updatePortalProfile,
@@ -30,6 +31,14 @@ export function usePortalNotificationsQuery(enabled = true) {
   return useQuery({
     queryKey: queryKeys.portal.notifications,
     queryFn: fetchPortalNotifications,
+    enabled,
+  });
+}
+
+export function usePortalJourneyQuery(enabled = true) {
+  return useQuery({
+    queryKey: queryKeys.portal.journey,
+    queryFn: fetchPortalJourney,
     enabled,
   });
 }

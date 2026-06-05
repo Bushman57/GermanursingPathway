@@ -8,6 +8,8 @@ import {
 } from "@/lib/scholarshipLinks";
 import type { ScholarshipSummary } from "@/lib/scholarships";
 import { trackEvent } from "@/lib/analytics";
+import { recordScholarshipApply } from "@/lib/api/portal";
+import { useAuthMeQuery } from "@/lib/queries/auth";
 
 const titleLinkClass =
   "font-heading text-base font-semibold text-foreground leading-snug line-clamp-2 hover:text-warm transition-colors";
@@ -58,6 +60,14 @@ export function ScholarshipApplyButton({
 }) {
   const url = scholarshipApplyUrl(scholarship);
   const external = scholarshipApplyIsExternal(url);
+  const { data: me } = useAuthMeQuery();
+
+  const handleExternalApply = () => {
+    trackEvent("external_apply_click", { slug: scholarship.slug });
+    if (me?.email) {
+      void recordScholarshipApply(scholarship.slug).catch(() => undefined);
+    }
+  };
 
   if (external) {
     return (
@@ -66,7 +76,7 @@ export function ScholarshipApplyButton({
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => trackEvent("external_apply_click", { slug: scholarship.slug })}
+          onClick={handleExternalApply}
         >
           {applyLabel} <ExternalLink className="w-3.5 h-3.5 ml-1" />
         </a>

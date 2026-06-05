@@ -78,6 +78,9 @@
     "eligibleDesc": "Gute Nachrichten! Sie erfüllen die Kernvoraussetzungen für einen Pflegepfad in Deutschland.",
     "almostDesc": "Sie sind zu {{score}} % bereit für Deutschland — nur noch wenige Punkte.",
     "notDesc": "Geben Sie nicht auf — das sollten Sie verbessern.",
+    "viewPortal": "Zum Portal",
+    "browseScholarships": "Passende Stipendien ansehen",
+    "whatsapp": "Auf WhatsApp besprechen",
     "gapTitle": "Lückenanalyse",
     "gaps": {
       "qualificationRequired": "Eine anerkannte Pflegequalifikation ist erforderlich",
