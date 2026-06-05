@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import i18n from "@/i18n";
 import { metaTags } from "@/lib/routeHead";
+import { VideoEmbed, extractVideoUrl } from "@/components/resources/VideoEmbed";
 
 export const Route = createFileRoute("/resources/$slug")({
   loader: async ({ params }) => {
@@ -31,6 +32,8 @@ function ResourceArticlePage() {
   const isDe = i18n.language.startsWith("de");
   const excerpt = isDe ? article.excerptDe : article.excerptEn;
   const body = isDe ? article.bodyDe : article.bodyEn;
+  const videoUrl = extractVideoUrl(body);
+  const bodyWithoutVideo = videoUrl && body ? body.replace(videoUrl, "").trim() : body;
 
   return (
     <div className="min-h-screen bg-background">
@@ -45,14 +48,21 @@ function ResourceArticlePage() {
         <h1 className="font-heading text-3xl sm:text-4xl font-bold text-foreground">
           {isDe ? article.titleDe : article.titleEn}
         </h1>
-        {body?.trim() ? (
+        {videoUrl && (
+          <div className="mt-6">
+            <VideoEmbed url={videoUrl} title={isDe ? article.titleDe : article.titleEn} />
+          </div>
+        )}
+        {bodyWithoutVideo?.trim() ? (
           <div className="mt-6 text-muted-foreground leading-relaxed text-lg whitespace-pre-wrap">
-            {body}
+            {bodyWithoutVideo}
           </div>
         ) : (
-          <p className="mt-6 text-muted-foreground leading-relaxed text-lg">
-            {t("resourcesPage.body", { excerpt })}
-          </p>
+          !videoUrl && (
+            <p className="mt-6 text-muted-foreground leading-relaxed text-lg">
+              {t("resourcesPage.body", { excerpt })}
+            </p>
+          )
         )}
         <div className="mt-10">
           <Button variant="warm" asChild>
