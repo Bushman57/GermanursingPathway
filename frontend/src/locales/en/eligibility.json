@@ -78,6 +78,9 @@
     "eligibleDesc": "Great news! You meet the core requirements for a German nursing pathway.",
     "almostDesc": "You're {{score}}% ready for Germany — just a few things to work on.",
     "notDesc": "Don't give up — here's what you need to improve.",
+    "viewPortal": "View your portal",
+    "browseScholarships": "Browse matching scholarships",
+    "whatsapp": "Discuss on WhatsApp",
     "gapTitle": "Gap Analysis",
     "gaps": {
       "qualificationRequired": "A recognised nursing qualification is required",

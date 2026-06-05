@@ -103,3 +103,53 @@ export async function fetchPortalNotifications(): Promise<PortalNotification[]> 
   if (!res.ok) throw new Error(await parseApiError(res));
   return (await res.json()) as PortalNotification[];
 }
+
+export async function fetchSavedScholarshipSlugs(): Promise<string[]> {
+  const res = await fetch(`${portalBase()}/saved-scholarships`, { credentials: "include" });
+  if (!res.ok) throw new Error(await parseApiError(res));
+  const data = (await res.json()) as { slugs?: string[] };
+  return Array.isArray(data.slugs) ? data.slugs : [];
+}
+
+export async function updateSavedScholarship(slug: string, saved: boolean): Promise<string[]> {
+  const res = await fetch(`${portalBase()}/saved-scholarships/${encodeURIComponent(slug)}`, {
+    method: "PUT",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ saved }),
+  });
+  if (!res.ok) throw new Error(await parseApiError(res));
+  const data = (await res.json()) as { slugs?: string[] };
+  return Array.isArray(data.slugs) ? data.slugs : [];
+}
+
+export async function recordScholarshipApply(slug: string): Promise<void> {
+  const res = await fetch(`${portalBase()}/applications/${encodeURIComponent(slug)}/apply`, {
+    method: "POST",
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error(await parseApiError(res));
+}
+
+export type JourneyStageStatus = "done" | "in_progress" | "pending";
+
+export type PortalJourneyStage = {
+  key: string;
+  status: JourneyStageStatus;
+};
+
+export type PortalJourney = {
+  stages: PortalJourneyStage[];
+  progress: number;
+  eligibility?: {
+    score: number;
+    status: string;
+    gaps: string[];
+  };
+};
+
+export async function fetchPortalJourney(): Promise<PortalJourney> {
+  const res = await fetch(`${portalBase()}/journey`, { credentials: "include" });
+  if (!res.ok) throw new Error(await parseApiError(res));
+  return (await res.json()) as PortalJourney;
+}

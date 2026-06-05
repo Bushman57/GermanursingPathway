@@ -15,6 +15,7 @@ from app.services.otp_service import (
     normalize_email,
     verify_otp_code,
 )
+from app.services.user_service import ensure_user_and_candidate, get_latest_lead
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -114,6 +115,11 @@ def verify_otp(
     profile = latest_lead_profile(db, email)
     if profile is None:
         raise HTTPException(status_code=403, detail="No registration found for this email")
+
+    lead = get_latest_lead(db, email)
+    if lead is not None:
+        ensure_user_and_candidate(db, lead)
+        db.commit()
 
     token = issue_portal_token(email, settings=settings)
     _set_session_cookie(response, token, settings)

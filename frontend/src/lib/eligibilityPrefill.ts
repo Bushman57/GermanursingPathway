@@ -8,6 +8,7 @@ export type EligibilityPrefill = {
   german_level_filter?: string;
   score?: number;
   status?: string;
+  eligibility_check_id?: string;
 };
 
 const QUALIFICATION_MAP: Record<string, string> = {
@@ -51,6 +52,18 @@ export function loadEligibilityPrefill(): EligibilityPrefill | null {
     return raw ? (JSON.parse(raw) as EligibilityPrefill) : null;
   } catch {
     return null;
+  }
+}
+
+export function saveEligibilityCheckId(checkId: string) {
+  try {
+    const prefill = loadEligibilityPrefill();
+    if (prefill) {
+      prefill.eligibility_check_id = checkId;
+      sessionStorage.setItem(KEY, JSON.stringify(prefill));
+    }
+  } catch {
+    /* ignore */
   }
 }
 

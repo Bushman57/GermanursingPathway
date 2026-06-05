@@ -19,5 +19,6 @@ export const queryKeys = {
     profile: ["portal", "profile"] as const,
     documents: ["portal", "documents"] as const,
     notifications: ["portal", "notifications"] as const,
+    journey: ["portal", "journey"] as const,
   },
 };

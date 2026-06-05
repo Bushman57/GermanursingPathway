@@ -25,6 +25,9 @@
   },
   "journey": {
     "title": "Application journey",
+    "loading": "Loading journey…",
+    "eligibilitySummary": "Eligibility score: {{score}}% ({{status}})",
+    "completeEligibility": "Complete eligibility review",
     "percent": "{{progress}}% complete",
     "status": {
       "done": "Complete",

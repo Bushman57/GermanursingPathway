@@ -12,6 +12,7 @@ class LeadCreate(BaseModel):
     source: str = Field(default="homepage", max_length=60)
     locale: str = Field(default="en", pattern="^(en|de)$")
     whatsapp_joined: bool = False
+    eligibility_check_id: str | None = Field(default=None, max_length=36)
 
 
 class LeadResponse(BaseModel):

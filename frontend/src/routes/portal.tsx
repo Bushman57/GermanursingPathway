@@ -15,7 +15,7 @@ import { ScholarshipApplyButton, ScholarshipTitleLink } from "@/components/schol
 import { useAuthMeQuery } from "@/lib/queries/auth";
 import { useScholarshipsQuery } from "@/lib/queries/scholarships";
 import { scholarshipText } from "@/lib/scholarships";
-import { getSavedSlugs } from "@/lib/savedScholarships";
+import { useSavedScholarships } from "@/hooks/useSavedScholarships";
 import { signOutPortal } from "@/lib/portalAuth";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/queryClient";
@@ -79,7 +79,7 @@ function PortalDashboard({
   const { t, i18n } = useTranslation("portal");
   const lang = i18n.language;
   const { data: scholarships = [], isLoading: loadingList } = useScholarshipsQuery();
-  const savedSlugs = getSavedSlugs(session.email);
+  const { saved: savedSlugs } = useSavedScholarships(session.email);
   const saved = scholarships.filter((s) => savedSlugs.includes(s.slug));
 
   return (

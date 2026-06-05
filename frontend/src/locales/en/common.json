@@ -41,6 +41,8 @@
     "message": "Anything else we should know? (optional)",
     "submit": "Submit Registration",
     "success": "Thank you! We have received your details and will be in touch soon.",
+    "eligibilityCta": "Complete eligibility review",
+    "signInPortal": "Sign in to your portal",
     "whatsappPrompt": "Join our WhatsApp community for updates while you wait.",
     "selectQualification": "Select qualification",
     "selectTimeline": "Select timeline",

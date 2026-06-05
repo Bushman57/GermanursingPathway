@@ -1,7 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { saveEligibilityPrefill } from "@/lib/eligibilityPrefill";
+import { saveEligibilityPrefill, saveEligibilityCheckId } from "@/lib/eligibilityPrefill";
+import {
+  clearPostRegisterContext,
+  isPostRegisterFlow,
+  loadPostRegisterContext,
+} from "@/lib/postRegister";
 import { submitEligibilityCheck } from "@/lib/api/eligibility";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
@@ -14,6 +19,9 @@ import { ArrowRight, ArrowLeft, AlertCircle, User, Briefcase, GraduationCap, Boo
 
 export const Route = createFileRoute("/eligibility")({
   head: () => metaFromKeys("eligibility"),
+  validateSearch: (search: Record<string, unknown>) => ({
+    from: typeof search.from === "string" ? search.from : undefined,
+  }),
   component: Eligibility,
 });
 
@@ -59,11 +67,17 @@ const initialData: FormData = {
 
 function Eligibility() {
   const { t } = useTranslation("eligibility");
+  const { from } = Route.useSearch();
+  const postRegister = isPostRegisterFlow(from);
+  const postCtx = loadPostRegisterContext();
   const stepLabels = t("steps", { returnObjects: true }) as string[];
   const steps = stepLabels.map((label, i) => ({ label, icon: STEP_ICONS[i] ?? User }));
 
   const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState<FormData>(initialData);
+  const [formData, setFormData] = useState<FormData>(() => ({
+    ...initialData,
+    name: postCtx?.full_name ?? "",
+  }));
   const [showResults, setShowResults] = useState(false);
   const [resultSnapshot, setResultSnapshot] = useState<{
     score: number;
@@ -152,16 +166,21 @@ function Eligibility() {
       status: resultSnapshot.status,
     });
     void submitEligibilityCheck({
+      email: postRegister && postCtx?.email ? postCtx.email : undefined,
       payload: formData as unknown as Record<string, unknown>,
       score: resultSnapshot.score,
       status: resultSnapshot.status,
+      gaps: resultSnapshot.gaps,
+      source: postRegister ? "post_register" : "public",
       locale: "en",
     })
-      .then(() => {
+      .then(({ id }) => {
+        saveEligibilityCheckId(id);
+        if (postRegister) clearPostRegisterContext();
         toast.success(t("savedToast"));
       })
       .catch(() => undefined);
-  }, [showResults, resultSnapshot, formData, t]);
+  }, [showResults, resultSnapshot, formData, postRegister, postCtx, t]);
 
   if (showResults && resultSnapshot) {
     const { score, gaps, status, germanFilter } = resultSnapshot;
@@ -217,12 +236,21 @@ function Eligibility() {
               )}
 
               <div className="mt-8 space-y-3">
-                <Button variant="warm" size="lg" className="w-full py-6" asChild>
-                  <Link to="/register" search={{}} state={{ fromEligibility: true }}>
-                    {t("registerCta")}
-                    <ArrowRight className="w-4 h-4 ml-1" />
-                  </Link>
-                </Button>
+                {postRegister ? (
+                  <Button variant="warm" size="lg" className="w-full py-6" asChild>
+                    <Link to="/portal">
+                      {t("results.viewPortal", { defaultValue: "View your portal" })}
+                      <ArrowRight className="w-4 h-4 ml-1" />
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button variant="warm" size="lg" className="w-full py-6" asChild>
+                    <Link to="/register" search={{}} state={{ fromEligibility: true }}>
+                      {t("registerCta")}
+                      <ArrowRight className="w-4 h-4 ml-1" />
+                    </Link>
+                  </Button>
+                )}
                 {germanFilter && (
                   <Button variant="outline" size="lg" className="w-full py-6" asChild>
                     <Link
@@ -240,16 +268,18 @@ function Eligibility() {
                     </Link>
                   </Button>
                 )}
-                <Button variant="outline" size="lg" className="w-full" asChild>
-                  <a
-                    href={whatsappUrlWithMessage(eligibilityWhatsAppMessage(score, status))}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => trackEvent("whatsapp_context_click", { context: "eligibility" })}
-                  >
-                    {t("results.whatsapp", { defaultValue: "Discuss on WhatsApp" })}
-                  </a>
-                </Button>
+                {!postRegister && (
+                  <Button variant="outline" size="lg" className="w-full" asChild>
+                    <a
+                      href={whatsappUrlWithMessage(eligibilityWhatsAppMessage(score, status))}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => trackEvent("whatsapp_context_click", { context: "eligibility" })}
+                    >
+                      {t("results.whatsapp", { defaultValue: "Discuss on WhatsApp" })}
+                    </a>
+                  </Button>
+                )}
                 <Button
                   variant="outline"
                   size="lg"
