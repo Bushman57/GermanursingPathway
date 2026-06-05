@@ -74,6 +74,10 @@ Set at minimum:
 ```env
 DATABASE_URL=postgresql://...
 CORS_ORIGINS=https://germanursingpathway.com,https://www.germanursingpathway.com,http://localhost:8080
+JWT_SECRET=your-long-random-secret
+# Required when marketing site and API are on different hosts (cross-origin cookies):
+PORTAL_COOKIE_SECURE=true
+PORTAL_COOKIE_SAMESITE=none
 ```
 
 For homepage program payments (Paystack — card + M-Pesa), see `backend/.env.example`:

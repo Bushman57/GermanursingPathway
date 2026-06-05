@@ -36,6 +36,7 @@ class Settings(BaseSettings):
     smtp_use_ssl: bool = False
     resend_api_key: str = ""
     portal_cookie_secure: bool = False
+    portal_cookie_samesite: str = "lax"
     portal_cookie_name: str = "portal_session"
 
     paystack_secret_key: str = ""

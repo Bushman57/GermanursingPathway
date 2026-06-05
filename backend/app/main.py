@@ -37,6 +37,10 @@ def on_startup() -> None:
         log.warning(
             "OTP email: not configured — set SMTP_HOST or RESEND_API_KEY in backend/.env and restart uvicorn"
         )
+    if settings.portal_cookie_samesite.lower() == "none" and not settings.portal_cookie_secure:
+        log.warning(
+            "PORTAL_COOKIE_SAMESITE=none requires PORTAL_COOKIE_SECURE=true for browsers to accept the session cookie"
+        )
 
 
 @app.exception_handler(HTTPException)
