@@ -5,10 +5,13 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.config import get_settings
-from app.db.models import ResourceArticle, Scholarship
+from app.db.models import BlogPost, ResourceArticle, Scholarship
 from app.db.session import get_db
 from app.deps.auth import require_admin
+from app.models.blog import BlogPayload
 from app.models.resource import ResourcePayload
+from app.services.blog_mapper import apply_row_to_model as apply_blog_row
+from app.services.blog_mapper import row_to_public as blog_to_public
 from app.services.resource_mapper import apply_row_to_model, row_to_public as resource_to_public
 from app.schemas.scholarship_fields import validate_scholarship_questionnaire
 from app.services.scholarship_mapper import apply_row_to_model as apply_scholarship_row
@@ -153,5 +156,64 @@ def admin_delete_resource(slug: str, db: Session = Depends(require_db)) -> None:
     record = db.query(ResourceArticle).filter(ResourceArticle.slug == slug).one_or_none()
     if record is None:
         raise HTTPException(status_code=404, detail="Resource not found")
+    db.delete(record)
+    db.commit()
+
+
+# --- Blogs ---
+
+
+@router.get("/blogs")
+def admin_list_blogs(db: Session = Depends(require_db)) -> list[dict]:
+    rows = (
+        db.query(BlogPost)
+        .order_by(BlogPost.module_id.nulls_last(), BlogPost.topic_index.nulls_last(), BlogPost.title_en)
+        .all()
+    )
+    return [blog_to_public(r, include_body=True) for r in rows]
+
+
+@router.post("/blogs", status_code=201)
+def admin_create_blog(body: BlogPayload, db: Session = Depends(require_db)) -> dict:
+    if db.query(BlogPost).filter(BlogPost.slug == body.slug).one_or_none():
+        raise HTTPException(status_code=409, detail="Blog slug already exists")
+    try:
+        from app.services.blog_mapper import payload_to_row
+
+        row = payload_to_row(body.model_dump())
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    record = BlogPost(**row)
+    db.add(record)
+    db.commit()
+    db.refresh(record)
+    return blog_to_public(record, include_body=True)
+
+
+@router.put("/blogs/{slug}")
+def admin_update_blog(
+    slug: str,
+    body: BlogPayload,
+    db: Session = Depends(require_db),
+) -> dict:
+    record = db.query(BlogPost).filter(BlogPost.slug == slug).one_or_none()
+    if record is None:
+        raise HTTPException(status_code=404, detail="Blog not found")
+    payload = body.model_dump()
+    payload["slug"] = slug
+    try:
+        apply_blog_row(record, payload)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    db.commit()
+    db.refresh(record)
+    return blog_to_public(record, include_body=True)
+
+
+@router.delete("/blogs/{slug}", status_code=204)
+def admin_delete_blog(slug: str, db: Session = Depends(require_db)) -> None:
+    record = db.query(BlogPost).filter(BlogPost.slug == slug).one_or_none()
+    if record is None:
+        raise HTTPException(status_code=404, detail="Blog not found")
     db.delete(record)
     db.commit()
