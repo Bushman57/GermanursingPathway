@@ -180,7 +180,7 @@ export function RegisterInterestForm({ source, compact }: Props) {
           <p className="mt-2 text-muted-foreground text-sm">{subtitle}</p>
         </div>
       )}
-      {compact && (
+      {compact && !isBlog && (
         <div className="text-center mb-6">
           <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground">{title}</h2>
           <p className="mt-2 text-muted-foreground text-sm">{subtitle}</p>
