@@ -135,6 +135,10 @@
       "title": "Resources — German Nursing Pathway",
       "description": "Guides on language, visa, Ausbildung, and life in Germany for nursing candidates."
     },
+    "blog": {
+      "title": "Blog — German Nursing Pathway",
+      "description": "In-depth articles on the German nursing pathway — language, visas, jobs, and real candidate stories."
+    },
     "about": {
       "title": "About Us — German Nursing Pathway",
       "description": "Our mission, services, and ethical approach to healthcare migration from Kenya to Germany."
@@ -207,6 +211,20 @@
     "articleLocked": "This article is part of the premium Learning Hub. Unlock all modules for KES {{amount}}.",
     "learningReturnLabel": "Lesson guide — return to Learning Hub when done.",
     "learningReturnCta": "Continue lessons"
+  },
+  "blogPage": {
+    "breadcrumbHome": "Home",
+    "breadcrumbBlog": "Blog",
+    "title": "Learning Hub Blog",
+    "subtitle": "Practical guides on language, visas, recognition, and life in Germany — written for Kenyan healthcare professionals.",
+    "empty": "No blog posts yet. Check back soon.",
+    "share": "Share",
+    "linkCopied": "Link copied to clipboard",
+    "byAuthor": "By {{author}}",
+    "bodyFallback": "This guide is part of the German Nursing Pathway blog. {{excerpt}} Register your interest for personalised support.",
+    "sidebarTitle": "Start Your Journey",
+    "sidebarSubtitle": "Register interest and our team will follow up with clear next steps.",
+    "externalLink": "Read full article"
   },
   "errors": {
     "404": {

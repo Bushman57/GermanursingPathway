@@ -4,9 +4,11 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.config import get_settings
-from app.db.session import init_db
+from app.db.session import _get_engine, init_db
 from app.routers import (
     admin_content,
     auth,
@@ -64,6 +66,15 @@ async def validation_exception_handler(_request: Request, exc: RequestValidation
             message = str(msg)
     return JSONResponse(status_code=422, content={"error": message})
 
+
+@app.exception_handler(SQLAlchemyError)
+async def sqlalchemy_exception_handler(_request: Request, exc: SQLAlchemyError) -> JSONResponse:
+    logging.getLogger("app.db").exception("Database error: %s", exc)
+    return JSONResponse(
+        status_code=503,
+        content={"error": "Database schema out of date or unavailable — contact support"},
+    )
+
 settings = get_settings()
 app.add_middleware(
     CORSMiddleware,
@@ -88,4 +99,18 @@ app.include_router(admin_content.router)
 
 @app.get("/health")
 async def health() -> dict[str, str]:
-    return {"status": "ok"}
+    payload: dict[str, str] = {"status": "ok"}
+    settings = get_settings()
+    if settings.database_url:
+        engine = _get_engine()
+        if engine is not None:
+            try:
+                with engine.connect() as conn:
+                    conn.execute(text("SELECT 1"))
+                    revision = conn.execute(text("SELECT version_num FROM alembic_version")).scalar()
+                    if revision:
+                        payload["dbRevision"] = str(revision)
+            except SQLAlchemyError:
+                payload["status"] = "degraded"
+                payload["db"] = "unavailable"
+    return payload

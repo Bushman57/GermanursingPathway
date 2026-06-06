@@ -3,6 +3,7 @@
   "subtitle": "Enter your email. We'll send a 6-digit code.",
   "signOut": "Sign out",
   "signedOut": "You have been signed out.",
+  "serviceUnavailable": "Portal temporarily unavailable — try again shortly.",
   "welcome": "Welcome back, {{name}}",
   "tabs": {
     "overview": "Overview",

@@ -1,6 +1,8 @@
 import hashlib
 from collections.abc import Generator
 
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.orm import Session
@@ -18,6 +20,8 @@ from app.services.otp_service import (
 from app.services.user_service import ensure_user_and_candidate, get_latest_lead
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
+
+logger = logging.getLogger(__name__)
 
 GENERIC_OTP_MESSAGE = "A sign-in code has been sent to your email."
 NOT_REGISTERED_OTP_MESSAGE = (
@@ -143,8 +147,12 @@ def verify_otp(
 
     lead = get_latest_lead(db, email)
     if lead is not None:
-        ensure_user_and_candidate(db, lead)
-        db.commit()
+        try:
+            ensure_user_and_candidate(db, lead)
+            db.commit()
+        except Exception:
+            logger.exception("Could not sync user/candidate for %s — sign-in continues", email)
+            db.rollback()
 
     token = issue_portal_token(email, settings=settings)
     _set_session_cookie(response, token, settings)

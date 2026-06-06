@@ -23,7 +23,7 @@ export function TopicNav({
       <div className="flex gap-2 flex-1">
         {prevSlug ? (
           <Button variant="outline" size="sm" asChild className="flex-1 sm:flex-none">
-            <Link to="/resources/$slug" params={{ slug: prevSlug }}>
+            <Link to="/blog/$slug" params={{ slug: prevSlug }}>
               <ArrowLeft className="w-4 h-4 mr-1" />
               {t("resourcesPage.prevTopic")}
             </Link>
@@ -33,7 +33,7 @@ export function TopicNav({
         )}
         {nextSlug ? (
           <Button variant="outline" size="sm" asChild className="flex-1 sm:flex-none">
-            <Link to="/resources/$slug" params={{ slug: nextSlug }}>
+            <Link to="/blog/$slug" params={{ slug: nextSlug }}>
               {t("resourcesPage.nextTopic")}
               <ArrowRight className="w-4 h-4 ml-1" />
             </Link>

@@ -10,6 +10,7 @@
     "db:migrate": "cd backend && alembic upgrade head",
     "db:load-scholarships": "cd backend && python scripts/load_scholarships.py",
     "db:seed-resources": "cd backend && python scripts/seed_resources.py",
+    "db:seed-blogs": "cd backend && python scripts/seed_blogs.py",
     "db:revision": "cd backend && alembic revision --autogenerate -m",
     "export:scholarships": "npx --yes tsx scripts/export-scholarships.ts",
     "lint": "npm run lint --prefix frontend",

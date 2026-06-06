@@ -1,13 +1,59 @@
 {
   "title": "About German Nursing Pathway",
-  "intro": "German Nursing Pathway bridges the gap between ambitious nursing students and verified opportunities abroad. Through direct connections with accredited schools, structured language training, visa guidance, and end-to-end application support, we help you move from eligibility check to a sustainable healthcare career in Germany.",
+  "heroBadge": "About Us",
+  "intro": "At German Nursing Pathway, we help ambitious nurses take their first step toward a career in Germany. From eligibility checks and language training to visa guidance and post-arrival integration, we walk every step with you — making the process stress-free and building the skills and confidence you need to succeed in the German healthcare system.",
+  "empowering": {
+    "title": "Empowering Nursing Careers in",
+    "titleAccent": "Germany",
+    "text": "We bridge talent and opportunity by connecting Kenyan and East African nurses with accredited German hospitals, recognised Ausbildung schools, structured B1/B2 language preparation, and full visa support — all delivered with a human-first approach and unwavering integrity.",
+    "stats": [
+      { "value": "500+", "label": "Nurses Guided" },
+      { "value": "50+", "label": "Partner Hospitals" },
+      { "value": "12", "label": "German Cities" }
+    ]
+  },
+  "recognition": {
+    "title": "Trusted Partners &",
+    "titleAccent": "Recognition",
+    "subtitle": "Working alongside accredited institutions, language bodies, and German healthcare networks.",
+    "items": [
+      "Goethe-Institut Aligned",
+      "telc Exam Preparation",
+      "German Embassy Liaison",
+      "Anerkennung Process Support",
+      "Federal Employment Agency (ZAV)"
+    ]
+  },
+  "history": {
+    "title": "Our History &",
+    "titleAccent": "Background",
+    "p1": "German Nursing Pathway was built on a simple idea: making it easier for qualified nurses from Kenya and East Africa to find verified career opportunities in Germany. With deep experience in healthcare recruitment, German language education, and migration advisory, we bring the right support at the right time.",
+    "p2": "Our focus has always been on practical training, transparent guidance, and direct relationships with accredited German pflegeschulen and hospital networks — so every candidate moves forward on a real, verified path.",
+    "imageAlt": "Bridge connecting Kenya and Germany"
+  },
   "vision": {
-    "sectionTitle": "Strategic Direction &",
+    "sectionTitle": "Mission &",
     "sectionAccent": "Vision",
     "visionTitle": "Our Vision",
-    "visionText": "Transforming dreams into global healthcare careers.",
+    "visionText": "To be the most trusted partner for East African nurses building a long-term career in Germany — connecting talent with verified hospitals, schools, and opportunities across the country.",
     "missionTitle": "Our Mission",
-    "missionText": "Fast-tracking verified students into trusted nursing scholarship opportunities, language training, visa guidance, and career pathways through direct connections with accredited nursing schools and healthcare institutions in Germany."
+    "missionText": "To equip verified candidates with the language skills, recognised qualifications, visa guidance, and continuous support they need to grow a sustainable nursing career in Germany — through direct connections with accredited Pflegeschulen and healthcare employers."
+  },
+  "whyChoose": {
+    "title": "Why Choose",
+    "titleAccent": "German Nursing Pathway",
+    "subtitle": "End-to-end support to make your journey to Germany smooth, transparent, and results-driven.",
+    "items": [
+      "Direct access to accredited German Pflegeschulen and hospitals",
+      "Structured German language training (A1 → B2) with Goethe / telc exam prep",
+      "Anerkennung (qualification recognition) guidance",
+      "Document translation, attestation & legalisation support",
+      "Mock and real interviews with German healthcare employers",
+      "Visa filing, embassy appointment & travel assistance",
+      "Pre-approved Ausbildung and direct-employment pathways",
+      "Post-arrival integration: Anmeldung, insurance & housing"
+    ],
+    "imageAlt": "Nurse preparing for career in Germany"
   },
   "gallery": {
     "title": "Glimpses of",
@@ -72,5 +118,12 @@
       { "title": "Transparent Fees", "desc": "All costs are disclosed upfront with flexible payment options." },
       { "title": "Data Privacy", "desc": "Your personal information is protected and never sold to third parties." }
     ]
+  },
+  "cta": {
+    "title": "Start Your Nursing Career in",
+    "titleAccent": "Germany Today",
+    "subtitle": "Ready to take the first step toward your dream nursing career abroad? Get in touch and let's map out your pathway.",
+    "primary": "Join WhatsApp Community",
+    "secondary": "Check Your Eligibility"
   }
 }

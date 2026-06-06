@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 import { LearningHubUnlockDialog } from "@/features/payments";
 import { ModuleProgressBar } from "@/components/resources/ModuleProgressBar";
 import { TopicLink, topicIsLinked } from "@/components/resources/TopicLink";
-import { useResourcesQuery } from "@/lib/queries/resources";
+import { useBlogsQuery } from "@/lib/queries/blogs";
 import {
   buildModuleTopics,
-  getFeaturedArticlesForModule,
+  getFeaturedBlogsForModule,
   getFirstUnreadTopic,
   getModuleById,
   getModuleProgress,
@@ -42,7 +42,7 @@ function ModulePage() {
   const module = getModuleById(moduleId);
   if (!module) throw notFound();
 
-  const { data: articles = [], isLoading } = useResourcesQuery();
+  const { data: blogs = [], isLoading } = useBlogsQuery();
   const { completed, isTopicDone } = useLearningProgress();
   const { unlocked, isAuthenticated, amountKes, refetch } = useLearningAccess();
   const { t, i18n } = useTranslation("common");
@@ -51,10 +51,10 @@ function ModulePage() {
 
   const locked = moduleRequiresUnlock(moduleId, unlocked);
 
-  const topics = buildModuleTopics(module, articles);
-  const progress = getModuleProgress(moduleId, articles, completed);
-  const featured = getFeaturedArticlesForModule(moduleId, articles);
-  const startTopic = getFirstUnreadTopic(moduleId, articles, completed);
+  const topics = buildModuleTopics(module, blogs);
+  const progress = getModuleProgress(moduleId, blogs, completed);
+  const featured = getFeaturedBlogsForModule(moduleId, blogs);
+  const startTopic = getFirstUnreadTopic(moduleId, blogs, completed);
   const returnTo = `/resources/module/${moduleId}`;
   const Icon = module.icon;
 
@@ -132,7 +132,7 @@ function ModulePage() {
               <div className="mt-6">
                 {startTopic.slug ? (
                   <Button variant="warm" asChild>
-                    <Link to="/resources/$slug" params={{ slug: startTopic.slug }}>
+                    <Link to="/blog/$slug" params={{ slug: startTopic.slug }}>
                       {t("resourcesPage.startModule")}
                       <ArrowRight />
                     </Link>
@@ -214,7 +214,7 @@ function ModulePage() {
                   return (
                     <li key={topic.index}>
                       <Link
-                        to="/resources/$slug"
+                        to="/blog/$slug"
                         params={{ slug }}
                         className="group block p-4 rounded-xl border border-border hover:border-warm/40 hover:bg-card transition-all"
                       >
@@ -251,7 +251,7 @@ function ModulePage() {
               {featured.map((a) => (
                 <Link
                   key={a.slug}
-                  to="/resources/$slug"
+                  to="/blog/$slug"
                   params={{ slug: a.slug }}
                   className="block p-4 rounded-2xl bg-card border border-border hover:border-warm/40 hover:shadow-md transition-all group"
                 >

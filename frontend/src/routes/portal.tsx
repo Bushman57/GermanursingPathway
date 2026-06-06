@@ -12,6 +12,7 @@ import { PortalNotifications } from "@/components/portal/PortalNotifications";
 import { PortalProfileHeader } from "@/components/portal/PortalProfileHeader";
 import { PortalSettings } from "@/components/portal/PortalSettings";
 import { ScholarshipApplyButton, ScholarshipTitleLink } from "@/components/scholarships/ScholarshipCardLinks";
+import { PortalUnavailableError } from "@/lib/api/auth";
 import { useAuthMeQuery } from "@/lib/queries/auth";
 import { useScholarshipsQuery } from "@/lib/queries/scholarships";
 import { scholarshipText } from "@/lib/scholarships";
@@ -37,7 +38,8 @@ export const Route = createFileRoute("/portal")({
 
 function PortalPage() {
   const { t } = useTranslation("portal");
-  const { data: me, isLoading } = useAuthMeQuery();
+  const { data: me, isLoading, isError, error } = useAuthMeQuery();
+  const serviceUnavailable = isError && error instanceof PortalUnavailableError;
 
   const handleSignOut = async () => {
     await signOutPortal();
@@ -50,6 +52,11 @@ function PortalPage() {
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
       <main className="flex-1 pt-24 pb-20 px-4">
+        {serviceUnavailable && (
+          <p className="max-w-md mx-auto mb-6 text-center text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3">
+            {t("serviceUnavailable")}
+          </p>
+        )}
         {isLoading ? null : me ? (
           <>
             <PortalDashboard session={me} onSignOut={handleSignOut} />

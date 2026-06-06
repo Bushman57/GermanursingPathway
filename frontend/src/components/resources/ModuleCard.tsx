@@ -16,10 +16,10 @@ import { TopicLink, topicIsLinked } from "@/components/resources/TopicLink";
 import type { LearningModule } from "@/lib/learningModules";
 import {
   buildModuleTopics,
-  getFeaturedArticlesForModule,
+  getFeaturedBlogsForModule,
   type ModuleProgress,
 } from "@/lib/learningHub";
-import type { ResourceArticle } from "@/lib/resources";
+import type { BlogPost } from "@/lib/blogs";
 import { useLearningProgress } from "@/lib/useLearningProgress";
 import { cn } from "@/lib/utils";
 import type { TFunction } from "i18next";
@@ -27,7 +27,7 @@ import type { TFunction } from "i18next";
 type Props = {
   module: LearningModule;
   moduleIndex: number;
-  articles: ResourceArticle[];
+  blogs: BlogPost[];
   isLoading: boolean;
   isDe: boolean;
   expanded: boolean;
@@ -44,7 +44,7 @@ type Props = {
 export function ModuleCard({
   module,
   moduleIndex,
-  articles,
+  blogs,
   isLoading,
   isDe,
   expanded,
@@ -58,8 +58,8 @@ export function ModuleCard({
   t,
 }: Props) {
   const Icon = module.icon;
-  const topics = buildModuleTopics(module, articles);
-  const moduleArticles = getFeaturedArticlesForModule(module.id, articles);
+  const topics = buildModuleTopics(module, blogs);
+  const moduleBlogs = getFeaturedBlogsForModule(module.id, blogs);
   const linkedCount = topics.filter((tp) => tp.hasContent).length;
   const { isTopicDone } = useLearningProgress();
   const returnTo = `/resources/module/${module.id}`;
@@ -276,7 +276,7 @@ export function ModuleCard({
                         return (
                           <li key={topic.index}>
                             <Link
-                              to="/resources/$slug"
+                              to="/blog/$slug"
                               params={{ slug }}
                               className={cn(
                                 rowClass,
@@ -302,10 +302,10 @@ export function ModuleCard({
                   <h3 className="text-sm font-semibold text-foreground mb-1">
                     {t("resourcesPage.featuredGuides")}
                   </h3>
-                  {moduleArticles.slice(0, 3).map((a) => (
+                  {moduleBlogs.slice(0, 3).map((a) => (
                     <Link
                       key={a.slug}
-                      to="/resources/$slug"
+                      to="/blog/$slug"
                       params={{ slug: a.slug }}
                       className="block p-4 rounded-2xl bg-card border border-border hover:border-warm/50 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group"
                     >
@@ -323,7 +323,7 @@ export function ModuleCard({
                       </p>
                     </Link>
                   ))}
-                  {moduleArticles.length === 0 && !isLoading && (
+                  {moduleBlogs.length === 0 && !isLoading && (
                     <div className="p-4 rounded-2xl border border-dashed border-border text-xs text-muted-foreground">
                       {t("resourcesPage.comingSoon")}
                     </div>
