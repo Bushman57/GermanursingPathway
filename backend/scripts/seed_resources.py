@@ -28,6 +28,7 @@ DEFAULT_ARTICLES = [
         "category": "language",
         "read_minutes": 6,
         "sort_order": 0,
+        "article_data": {"moduleId": "german-language", "topicOrder": 0},
     },
     {
         "slug": "nursing-visa-germany-checklist",
@@ -40,6 +41,7 @@ DEFAULT_ARTICLES = [
         "category": "visa",
         "read_minutes": 8,
         "sort_order": 1,
+        "article_data": {"moduleId": "visa-immigration", "topicOrder": 1},
     },
     {
         "slug": "ausbildung-vs-scholarship",
@@ -52,6 +54,7 @@ DEFAULT_ARTICLES = [
         "category": "guide",
         "read_minutes": 7,
         "sort_order": 2,
+        "article_data": {"moduleId": "getting-started", "topicOrder": 3},
     },
     {
         "slug": "candidate-story-nairobi-to-berlin",
@@ -64,6 +67,7 @@ DEFAULT_ARTICLES = [
         "category": "story",
         "read_minutes": 5,
         "sort_order": 3,
+        "article_data": {"moduleId": "timelines-stories", "topicOrder": 1},
     },
     {
         "slug": "anmeldung-first-week",
@@ -76,8 +80,16 @@ DEFAULT_ARTICLES = [
         "category": "guide",
         "read_minutes": 6,
         "sort_order": 4,
+        "article_data": {"moduleId": "life-in-germany", "topicOrder": 4},
     },
 ]
+
+
+def _seed_value(key: str, value: object) -> object:
+    """Map empty strings to None; keep 0/false for numeric/bool columns."""
+    if isinstance(value, str) and value == "":
+        return None
+    return value
 
 
 def seed_resources(*, dry_run: bool = False) -> int:
@@ -108,7 +120,7 @@ def seed_resources(*, dry_run: bool = False) -> int:
             existing = session.query(ResourceArticle).filter(ResourceArticle.slug == entry["slug"]).one_or_none()
             if existing:
                 for key, value in entry.items():
-                    setattr(existing, key, value or None)
+                    setattr(existing, key, _seed_value(key, value))
                 existing.is_published = True
                 updated += 1
                 action = "update"

@@ -26,6 +26,7 @@ import { Route as ResourcesSlugRouteImport } from './routes/resources.$slug'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminScholarshipsIndexRouteImport } from './routes/admin/scholarships/index'
 import { Route as AdminResourcesIndexRouteImport } from './routes/admin/resources/index'
+import { Route as ResourcesModuleModuleIdRouteImport } from './routes/resources.module.$moduleId'
 import { Route as AdminScholarshipsNewRouteImport } from './routes/admin/scholarships/new'
 import { Route as AdminResourcesNewRouteImport } from './routes/admin/resources/new'
 import { Route as AdminScholarshipsSlugEditRouteImport } from './routes/admin/scholarships/$slug.edit'
@@ -116,6 +117,11 @@ const AdminResourcesIndexRoute = AdminResourcesIndexRouteImport.update({
   path: '/resources/',
   getParentRoute: () => AdminRoute,
 } as any)
+const ResourcesModuleModuleIdRoute = ResourcesModuleModuleIdRouteImport.update({
+  id: '/module/$moduleId',
+  path: '/module/$moduleId',
+  getParentRoute: () => ResourcesRoute,
+} as any)
 const AdminScholarshipsNewRoute = AdminScholarshipsNewRouteImport.update({
   id: '/scholarships/new',
   path: '/scholarships/new',
@@ -156,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/admin/resources/new': typeof AdminResourcesNewRoute
   '/admin/scholarships/new': typeof AdminScholarshipsNewRoute
+  '/resources/module/$moduleId': typeof ResourcesModuleModuleIdRoute
   '/admin/resources/': typeof AdminResourcesIndexRoute
   '/admin/scholarships/': typeof AdminScholarshipsIndexRoute
   '/admin/resources/$slug/edit': typeof AdminResourcesSlugEditRoute
@@ -178,6 +185,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/admin/resources/new': typeof AdminResourcesNewRoute
   '/admin/scholarships/new': typeof AdminScholarshipsNewRoute
+  '/resources/module/$moduleId': typeof ResourcesModuleModuleIdRoute
   '/admin/resources': typeof AdminResourcesIndexRoute
   '/admin/scholarships': typeof AdminScholarshipsIndexRoute
   '/admin/resources/$slug/edit': typeof AdminResourcesSlugEditRoute
@@ -202,6 +210,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/admin/resources/new': typeof AdminResourcesNewRoute
   '/admin/scholarships/new': typeof AdminScholarshipsNewRoute
+  '/resources/module/$moduleId': typeof ResourcesModuleModuleIdRoute
   '/admin/resources/': typeof AdminResourcesIndexRoute
   '/admin/scholarships/': typeof AdminScholarshipsIndexRoute
   '/admin/resources/$slug/edit': typeof AdminResourcesSlugEditRoute
@@ -227,6 +236,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/resources/new'
     | '/admin/scholarships/new'
+    | '/resources/module/$moduleId'
     | '/admin/resources/'
     | '/admin/scholarships/'
     | '/admin/resources/$slug/edit'
@@ -249,6 +259,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/resources/new'
     | '/admin/scholarships/new'
+    | '/resources/module/$moduleId'
     | '/admin/resources'
     | '/admin/scholarships'
     | '/admin/resources/$slug/edit'
@@ -272,6 +283,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/resources/new'
     | '/admin/scholarships/new'
+    | '/resources/module/$moduleId'
     | '/admin/resources/'
     | '/admin/scholarships/'
     | '/admin/resources/$slug/edit'
@@ -413,6 +425,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminResourcesIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/resources/module/$moduleId': {
+      id: '/resources/module/$moduleId'
+      path: '/module/$moduleId'
+      fullPath: '/resources/module/$moduleId'
+      preLoaderRoute: typeof ResourcesModuleModuleIdRouteImport
+      parentRoute: typeof ResourcesRoute
+    }
     '/admin/scholarships/new': {
       id: '/admin/scholarships/new'
       path: '/scholarships/new'
@@ -470,10 +489,12 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface ResourcesRouteChildren {
   ResourcesSlugRoute: typeof ResourcesSlugRoute
+  ResourcesModuleModuleIdRoute: typeof ResourcesModuleModuleIdRoute
 }
 
 const ResourcesRouteChildren: ResourcesRouteChildren = {
   ResourcesSlugRoute: ResourcesSlugRoute,
+  ResourcesModuleModuleIdRoute: ResourcesModuleModuleIdRoute,
 }
 
 const ResourcesRouteWithChildren = ResourcesRoute._addFileChildren(

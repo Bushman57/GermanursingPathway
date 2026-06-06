@@ -18,6 +18,7 @@ from app.services.user_service import (
     eligibility_to_dict,
     get_latest_eligibility,
     get_latest_lead,
+    learning_access_dict,
     list_application_slugs,
     record_scholarship_apply,
     set_saved_scholarship,
@@ -108,6 +109,15 @@ def get_profile(
         "hasAvatar": avatar_path is not None,
         "avatarUpdatedAt": avatar_updated,
     }
+
+
+@router.get("/learning-access")
+def get_learning_access(
+    user: PortalUser = Depends(require_portal_user),
+    db: Session = Depends(require_db),
+) -> dict:
+    settings = get_settings()
+    return learning_access_dict(db, user.email, settings=settings)
 
 
 @router.patch("/profile")

@@ -17,6 +17,9 @@ export type LearningTopic = {
   title: string;
   slug?: string; // optional link to a resource article
   video?: string; // YouTube URL or embed src
+  /** In-app route (e.g. `/onboarding-process` or `/` with hash) */
+  href?: string;
+  hash?: string;
 };
 
 export type LearningModule = {
@@ -38,9 +41,9 @@ export const learningModules: LearningModule[] = [
     description: "Orient yourself: who qualifies, the roadmap, and the big choices.",
     accent: "from-sky-500/20 to-cyan-500/10",
     topics: [
-      { title: "Overview of the Germany nursing pathway" },
-      { title: "Step-by-step roadmap (Kenya → Germany)" },
-      { title: "Who qualifies to apply (eligibility criteria)" },
+      { title: "Overview of the Germany nursing pathway", href: "/", hash: "program-overview" },
+      { title: "Step-by-step roadmap (Kenya → Germany)", href: "/onboarding-process" },
+      { title: "Who qualifies to apply (eligibility criteria)", href: "/", hash: "eligibility" },
       { title: "Differences between Ausbildung vs direct employment" },
     ],
   },

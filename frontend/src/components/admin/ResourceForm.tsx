@@ -1,10 +1,18 @@
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormField, TextArea, TextInput } from "@/components/admin/FormField";
-import type { ResourceArticle, ResourceCategory } from "@/lib/resources";
+import type { ArticleData, ResourceArticle, ResourceCategory } from "@/lib/resources";
+import { learningModules } from "@/lib/learningModules";
 import { slugify } from "@/lib/slugify";
 
 type ResourceFormData = ResourceArticle & { isPublished: boolean };
+
+const emptyArticleData = (): ArticleData => ({
+  moduleId: undefined,
+  topicOrder: undefined,
+  videoUrl: undefined,
+  takeaways: undefined,
+});
 
 const emptyResource = (): ResourceFormData => ({
   slug: "",
@@ -17,6 +25,7 @@ const emptyResource = (): ResourceFormData => ({
   category: "guide",
   readMinutes: 5,
   isPublished: true,
+  articleData: emptyArticleData(),
 });
 
 type Props = {
@@ -33,6 +42,7 @@ export function ResourceForm({ initial, isNew, onSubmit }: Props) {
           bodyEn: initial.bodyEn ?? "",
           bodyDe: initial.bodyDe ?? "",
           isPublished: initial.isPublished ?? true,
+          articleData: initial.articleData ?? emptyArticleData(),
         }
       : emptyResource(),
   );
@@ -42,6 +52,12 @@ export function ResourceForm({ initial, isNew, onSubmit }: Props) {
 
   const set = <K extends keyof ResourceFormData>(key: K, value: ResourceFormData[K]) =>
     setData((d) => ({ ...d, [key]: value }));
+
+  const setArticleData = <K extends keyof ArticleData>(key: K, value: ArticleData[K]) =>
+    setData((d) => ({
+      ...d,
+      articleData: { ...emptyArticleData(), ...d.articleData, [key]: value },
+    }));
 
   const updateTitleEn = (titleEn: string) => {
     setData((d) => {
@@ -59,13 +75,31 @@ export function ResourceForm({ initial, isNew, onSubmit }: Props) {
     setError("");
     try {
       const slug = slugify(data.slug || data.titleEn) || slugify(data.titleEn);
-      await onSubmit({ ...data, slug });
+      const articleData = data.articleData;
+      const cleanedData: ArticleData | undefined =
+        articleData?.moduleId ||
+        articleData?.topicOrder !== undefined ||
+        articleData?.videoUrl ||
+        (articleData?.takeaways?.length ?? 0) > 0
+          ? {
+              moduleId: articleData?.moduleId || undefined,
+              topicOrder:
+                articleData?.topicOrder !== undefined && articleData.topicOrder !== null
+                  ? Number(articleData.topicOrder)
+                  : undefined,
+              videoUrl: articleData?.videoUrl?.trim() || undefined,
+              takeaways: articleData?.takeaways?.filter(Boolean),
+            }
+          : undefined;
+      await onSubmit({ ...data, slug, articleData: cleanedData });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Save failed");
     } finally {
       setSaving(false);
     }
   };
+
+  const takeawaysText = (data.articleData?.takeaways ?? []).join("\n");
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl">
@@ -112,6 +146,57 @@ export function ResourceForm({ initial, isNew, onSubmit }: Props) {
           <option value="story">Story</option>
           <option value="guide">Guide</option>
         </select>
+      </FormField>
+      <FormField label="Learning module (optional)">
+        <select
+          className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm"
+          value={data.articleData?.moduleId ?? ""}
+          onChange={(e) => setArticleData("moduleId", e.target.value || undefined)}
+        >
+          <option value="">— Not linked to a module —</option>
+          {learningModules.map((m) => (
+            <option key={m.id} value={m.id}>
+              {m.emoji} {m.title}
+            </option>
+          ))}
+        </select>
+      </FormField>
+      <FormField label="Topic order in module (0-based, optional)">
+        <TextInput
+          type="number"
+          min={0}
+          value={data.articleData?.topicOrder ?? ""}
+          onChange={(e) =>
+            setArticleData(
+              "topicOrder",
+              e.target.value === "" ? undefined : Number(e.target.value),
+            )
+          }
+          placeholder="e.g. 0 for first topic"
+        />
+      </FormField>
+      <FormField label="Video URL (optional)">
+        <TextInput
+          value={data.articleData?.videoUrl ?? ""}
+          onChange={(e) => setArticleData("videoUrl", e.target.value)}
+          placeholder="https://www.youtube.com/watch?v=..."
+        />
+      </FormField>
+      <FormField label="Key takeaways (optional, one per line)">
+        <TextArea
+          rows={4}
+          value={takeawaysText}
+          onChange={(e) =>
+            setArticleData(
+              "takeaways",
+              e.target.value
+                .split("\n")
+                .map((l) => l.trim())
+                .filter(Boolean),
+            )
+          }
+          placeholder="Bullet points shown above the article body"
+        />
       </FormField>
       <FormField label="Read time (minutes)">
         <TextInput

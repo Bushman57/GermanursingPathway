@@ -1,5 +1,12 @@
 export type ResourceCategory = "language" | "visa" | "story" | "guide";
 
+export type ArticleData = {
+  moduleId?: string;
+  topicOrder?: number;
+  videoUrl?: string;
+  takeaways?: string[];
+};
+
 export type ResourceArticle = {
   slug: string;
   titleEn: string;
@@ -11,4 +18,6 @@ export type ResourceArticle = {
   category: ResourceCategory;
   readMinutes: number;
   isPublished?: boolean;
+  articleData?: ArticleData;
+  locked?: boolean;
 };

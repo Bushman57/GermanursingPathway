@@ -8,6 +8,7 @@
   "phoneLabel": "M-Pesa phone number",
   "phonePlaceholder": "0712345678",
   "phoneHint": "Safaricom number (07… or 254…). In Paystack choose Mobile Money — we'll send the STK prompt to this number.",
+  "payHint": "You'll be redirected to Paystack's secure page to pay with M-Pesa or card.",
   "payButton": "Pay {{amount}}",
   "payNow": "Pay now",
   "opening": "Opening checkout…",
@@ -26,5 +27,16 @@
   "verifyError": "Payment could not be confirmed. If you were charged, contact support with your reference.",
   "timeout": "Payment timed out. If you completed checkout, contact support with your email.",
   "failed": "Payment was not completed.",
-  "cancelled": "Checkout was closed before payment completed."
+  "cancelled": "Checkout was closed before payment completed.",
+  "learningHubTitle": "Unlock Learning Hub",
+  "learningHubDescriptionWithAmount": "Pay <strong>{{amount}}</strong> once to unlock modules 2–11 — all premium guides, topics, and articles.",
+  "learningHubDescriptionGeneric": "Pay once to unlock modules 2–11 in the Learning Hub.",
+  "learningHubSignInPrompt": "Sign in with your portal email before paying.",
+  "learningHubPayButton": "Unlock for {{amount}}",
+  "learningHubPayNow": "Unlock now",
+  "learningHubSuccessTitle": "Learning Hub unlocked",
+  "learningHubSuccessBody": "You now have full access to modules 2–11. Expand any module and continue learning.",
+  "learningHubPaymentConfirmed": "Learning Hub unlocked successfully.",
+  "learningHubDone": "Start learning",
+  "learningHubPayHint": "You'll be redirected to Paystack's secure page to pay with M-Pesa or card."
 }

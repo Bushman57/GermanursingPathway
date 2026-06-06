@@ -3,26 +3,28 @@ import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { useRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { InvestmentPaymentDialog } from "@/components/InvestmentPaymentDialog";
+import { InvestmentPaymentDialog } from "@/features/payments";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
 import { HomeSocialProof } from "@/components/home/HomeSocialProof";
 import { WhatsAppLink } from "@/components/WhatsAppButton";
 import { TAGLINE_SECONDARY } from "@/lib/constants";
+import { parseLearningSearch } from "@/lib/learningSearchParams";
 import { metaFromKeys } from "@/lib/pageMeta";
 import {
   CheckCircle, ArrowRight,
   Briefcase, Award, Home as HomeIcon, Shield,
   DollarSign, Plane, Languages
 } from "lucide-react";
-import heroBridge from "@/assets/hero-bridge.jpg";
+import heroBridge from "@/assets/hero-bridge.webp";
 import programOverview from "@/assets/program-overview.jpg";
 import eligibilityNurse from "@/assets/eligibility-nurse.jpg";
 import whySalary from "@/assets/why/salary.jpg";
 import whyRelocation from "@/assets/why/relocation.jpg";
 import whyImmigration from "@/assets/why/immigration.jpg";
 import customerCare2 from "@/assets/Care/CustomerCare_2.jpg";
+import { LearningReturnBanner } from "@/components/resources/LearningReturnBanner";
 
 function easeOutQuart(t: number) {
   return 1 - Math.pow(1 - t, 4);
@@ -89,7 +91,11 @@ function AnimatedStat({ value, label }: { value: string; label: string }) {
 
 function parseHomeSearch(raw: Record<string, unknown>) {
   const payment = typeof raw.payment === "string" ? raw.payment.trim() : "";
-  return { payment: payment || undefined };
+  const learning = parseLearningSearch(raw);
+  return {
+    payment: payment || undefined,
+    ...learning,
+  };
 }
 
 export const Route = createFileRoute("/")({
@@ -104,7 +110,7 @@ const WHY_ICONS = [DollarSign, HomeIcon, Shield] as const;
 const WHY_IMAGES = [whySalary, whyRelocation, whyImmigration] as const;
 
 function Index() {
-  const { payment: returnReference } = Route.useSearch();
+  const { payment: returnReference, learningReturn, learningTopic } = Route.useSearch();
   const navigate = useNavigate({ from: "/" });
   const { t: tc } = useTranslation("common");
   const { t } = useTranslation("home");
@@ -125,6 +131,7 @@ function Index() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
+      <LearningReturnBanner learningReturn={learningReturn} learningTopic={learningTopic} />
 
       {/* Hero — Full-width with background image like GHIC */}
       <section className="relative min-h-[90vh] flex items-center justify-center pt-16">
@@ -135,6 +142,8 @@ function Index() {
             className="w-full h-full object-cover"
             width={1920}
             height={1080}
+            fetchPriority="high"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-primary/75" />
         </div>
@@ -172,7 +181,7 @@ function Index() {
       </section>
 
       {/* Program Overview — Split screen like GHIC */}
-      <section className="py-20">
+      <section id="program-overview" className="py-20 scroll-mt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div className="rounded-2xl overflow-hidden shadow-xl">
@@ -340,7 +349,7 @@ function Index() {
       </section>
 
       {/* Eligibility Requirements — Split with image like GHIC */}
-      <section className="py-20 bg-card">
+      <section id="eligibility" className="py-20 bg-card scroll-mt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>

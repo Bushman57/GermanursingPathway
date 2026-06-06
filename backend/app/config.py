@@ -44,6 +44,8 @@ class Settings(BaseSettings):
     paystack_callback_base_url: str = ""
     payment_amount_kes: int = 0
     payment_currency_label: str = "KES"
+    learning_hub_amount_kes: int = 3000
+    learning_hub_free_module_id: str = "getting-started"
 
     @property
     def cors_origin_list(self) -> list[str]:
@@ -52,6 +54,10 @@ class Settings(BaseSettings):
     @property
     def payment_amount_subunits(self) -> int:
         return self.payment_amount_kes * 100
+
+    @property
+    def learning_hub_amount_subunits(self) -> int:
+        return self.learning_hub_amount_kes * 100
 
     @property
     def paystack_callback_url(self) -> str:
@@ -82,6 +88,15 @@ class Settings(BaseSettings):
             and self.paystack_public_key.strip()
             and self.paystack_callback_base_url.strip()
             and self.payment_amount_kes > 0
+        )
+
+    @property
+    def learning_hub_payments_configured(self) -> bool:
+        return bool(
+            self.paystack_secret_key.strip()
+            and self.paystack_public_key.strip()
+            and self.paystack_callback_base_url.strip()
+            and self.learning_hub_amount_kes > 0
         )
 
 

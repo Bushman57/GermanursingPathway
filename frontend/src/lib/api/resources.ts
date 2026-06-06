@@ -13,7 +13,9 @@ export async function fetchResources(): Promise<ResourceArticle[]> {
 }
 
 export async function fetchResourceBySlug(slug: string): Promise<ResourceArticle> {
-  const res = await fetch(`${resourcesBase()}/${encodeURIComponent(slug)}`);
+  const res = await fetch(`${resourcesBase()}/${encodeURIComponent(slug)}`, {
+    credentials: "include",
+  });
   if (!res.ok) throw new Error(await parseApiError(res));
   return (await res.json()) as ResourceArticle;
 }

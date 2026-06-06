@@ -47,9 +47,9 @@
         "title": "Document collection",
         "description": "Upload transcripts, certificates, and passport copy."
       },
-      "language": {
-        "title": "German language training",
-        "description": "Enroll in A1–B2 pathway with our partner schools."
+      "anerkennung": {
+        "title": "Credential recognition (Anerkennung)",
+        "description": "We guide your diploma review and recognition with German authorities—no language course enrollment."
       },
       "placement": {
         "title": "Hospital placement",

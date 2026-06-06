@@ -1,6 +1,13 @@
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
+
+
+class ArticleDataPayload(BaseModel):
+    moduleId: str | None = None
+    topicOrder: int | None = None
+    videoUrl: str | None = None
+    takeaways: list[str] | None = None
 
 
 class ResourcePayload(BaseModel):
@@ -15,3 +22,4 @@ class ResourcePayload(BaseModel):
     readMinutes: int = Field(default=5, ge=1, le=120)
     isPublished: bool = True
     sortOrder: int = 0
+    articleData: ArticleDataPayload | dict[str, Any] | None = None

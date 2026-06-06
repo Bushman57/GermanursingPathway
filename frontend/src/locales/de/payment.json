@@ -8,6 +8,7 @@
   "phoneLabel": "M-Pesa-Telefonnummer",
   "phonePlaceholder": "0712345678",
   "phoneHint": "Safaricom-Nummer (07… oder 254…). In Paystack „Mobile Money“ wählen — STK-Anfrage an diese Nummer.",
+  "payHint": "Sie werden zur sicheren Paystack-Seite weitergeleitet — M-Pesa oder Karte.",
   "payButton": "{{amount}} zahlen",
   "payNow": "Jetzt zahlen",
   "opening": "Kasse wird geöffnet…",
@@ -26,5 +27,16 @@
   "verifyError": "Zahlung konnte nicht bestätigt werden. Bei Abbuchung kontaktieren Sie uns mit Ihrer Referenz.",
   "timeout": "Zeitüberschreitung. Wenn Sie bezahlt haben, kontaktieren Sie uns mit Ihrer E-Mail.",
   "failed": "Zahlung wurde nicht abgeschlossen.",
-  "cancelled": "Kasse wurde geschlossen, bevor die Zahlung abgeschlossen war."
+  "cancelled": "Kasse wurde geschlossen, bevor die Zahlung abgeschlossen war.",
+  "learningHubTitle": "Lernzentrum freischalten",
+  "learningHubDescriptionWithAmount": "Zahlen Sie einmal <strong>{{amount}}</strong>, um Module 2–11 freizuschalten — alle Premium-Leitfäden, Themen und Artikel.",
+  "learningHubDescriptionGeneric": "Einmal zahlen, um Module 2–11 im Lernzentrum freizuschalten.",
+  "learningHubSignInPrompt": "Melden Sie sich mit Ihrer Portal-E-Mail an, bevor Sie bezahlen.",
+  "learningHubPayButton": "Freischalten für {{amount}}",
+  "learningHubPayNow": "Jetzt freischalten",
+  "learningHubSuccessTitle": "Lernzentrum freigeschaltet",
+  "learningHubSuccessBody": "Sie haben jetzt vollen Zugang zu Modulen 2–11. Klappen Sie ein Modul auf und lernen Sie weiter.",
+  "learningHubPaymentConfirmed": "Lernzentrum erfolgreich freigeschaltet.",
+  "learningHubDone": "Weiterlernen",
+  "learningHubPayHint": "Sie werden zur sicheren Paystack-Seite weitergeleitet — M-Pesa oder Karte."
 }
