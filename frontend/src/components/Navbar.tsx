@@ -25,7 +25,7 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           <BrandLogo imageClassName="h-10 sm:h-11" />
 
-          <div className="hidden lg:flex items-center gap-5">
+          <div className="hidden xl:flex items-center gap-5">
             {exploreNavLinks.map((link) => {
               const active = isNavActive(pathname, link.to);
               return (
@@ -50,7 +50,7 @@ export function Navbar() {
             })}
           </div>
 
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden xl:flex items-center gap-3">
             <Button
               variant="ghost"
               size="sm"
@@ -74,7 +74,7 @@ export function Navbar() {
             </Button>
           </div>
 
-          <div className="flex lg:hidden items-center gap-2">
+          <div className="flex xl:hidden items-center gap-2">
             <Button variant="ghost" size="icon" onClick={openCommandMenu} aria-label={t("search.open", { ns: "common" })}>
               <Search className="w-5 h-5" />
             </Button>
