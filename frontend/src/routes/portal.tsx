@@ -64,8 +64,10 @@ function PortalPage() {
           </>
         ) : (
           <PortalOtpLogin
-            onSignedIn={() => {
-              queryClient.invalidateQueries({ queryKey: queryKeys.auth.me });
+            onSignedIn={(session) => {
+              queryClient.setQueryData(queryKeys.auth.me, session);
+              void queryClient.invalidateQueries({ queryKey: queryKeys.portal.profile });
+              void queryClient.invalidateQueries({ queryKey: queryKeys.portal.journey });
             }}
           />
         )}

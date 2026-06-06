@@ -1,7 +1,7 @@
 import logging
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.exceptions import RequestValidationError
+from fastapi.exceptions import RequestValidationError, ResponseValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
@@ -73,6 +73,17 @@ async def validation_exception_handler(_request: Request, exc: RequestValidation
         elif msg := first.get("msg"):
             message = str(msg)
     return JSONResponse(status_code=422, content={"error": message})
+
+
+@app.exception_handler(ResponseValidationError)
+async def response_validation_exception_handler(
+    _request: Request, exc: ResponseValidationError
+) -> JSONResponse:
+    logging.getLogger("app.api").error("Response validation failed: %s", exc.errors())
+    return JSONResponse(
+        status_code=500,
+        content={"error": "Internal server error — response schema mismatch"},
+    )
 
 
 @app.exception_handler(SQLAlchemyError)

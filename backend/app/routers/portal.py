@@ -1,4 +1,5 @@
 import hashlib
+import logging
 import uuid
 from collections.abc import Generator
 from pathlib import Path
@@ -16,6 +17,7 @@ from app.services.otp_service import latest_lead_profile, normalize_email
 from app.services.user_service import (
     compute_portal_journey,
     eligibility_to_dict,
+    ensure_user_and_candidate,
     get_latest_eligibility,
     get_latest_lead,
     learning_access_dict,
@@ -25,6 +27,7 @@ from app.services.user_service import (
 )
 
 router = APIRouter(prefix="/api/portal", tags=["portal"])
+logger = logging.getLogger(__name__)
 
 UPLOAD_ROOT = Path(__file__).resolve().parents[2] / "uploads" / "portal"
 
@@ -95,6 +98,14 @@ def get_profile(
     if profile is None:
         raise HTTPException(status_code=404, detail="Profile not found")
     lead = get_latest_lead(db, user.email)
+    if lead is not None:
+        try:
+            ensure_user_and_candidate(db, lead)
+            db.commit()
+        except Exception:
+            db.rollback()
+            logger.exception("Could not sync candidate profile for %s", user.email)
+
     avatar_path = _find_avatar_path(user.email)
     avatar_updated = None
     if avatar_path is not None:
@@ -135,12 +146,20 @@ def update_profile(
         lead.full_name = body.full_name.strip()[:200]
     if body.phone is not None:
         lead.phone = body.phone.strip()[:40] or None
-    if body.german_level:
-        lead.german_level = body.german_level.strip()[:40]
+    if body.german_level is not None:
+        level = body.german_level.strip()[:40]
+        lead.german_level = None if not level or level == "none" else level
     if body.notify_deadlines is not None:
         lead.notify_deadlines = body.notify_deadlines
     if body.notify_documents is not None:
         lead.notify_documents = body.notify_documents
+
+    try:
+        ensure_user_and_candidate(db, lead)
+    except Exception:
+        logger.exception("Could not sync candidate profile for %s", email)
+        db.rollback()
+        raise HTTPException(status_code=503, detail="Could not save profile — try again shortly") from None
 
     db.commit()
     return {"message": "Profile updated"}

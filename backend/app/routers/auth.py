@@ -43,6 +43,12 @@ class OtpRequestBody(BaseModel):
     email: EmailStr
 
 
+class OtpRequestResponse(BaseModel):
+    sent: bool
+    message: str
+    reason: str | None = None
+
+
 class OtpVerifyBody(BaseModel):
     email: EmailStr
     code: str = Field(min_length=6, max_length=6, pattern=r"^\d{6}$")
@@ -88,13 +94,13 @@ def _clear_session_cookie(response: Response, settings: Settings) -> None:
     )
 
 
-@router.post("/otp/request")
+@router.post("/otp/request", response_model=OtpRequestResponse)
 def request_otp(
     body: OtpRequestBody,
     request: Request,
     db: Session = Depends(require_db),
     settings: Settings = Depends(get_settings),
-) -> dict[str, str]:
+) -> OtpRequestResponse:
     if not settings.portal_auth_configured:
         raise HTTPException(
             status_code=503,
@@ -108,20 +114,20 @@ def request_otp(
         raise HTTPException(status_code=503, detail=str(exc)) from exc
 
     if outcome.sent:
-        return {"sent": True, "message": GENERIC_OTP_MESSAGE}
+        return OtpRequestResponse(sent=True, message=GENERIC_OTP_MESSAGE)
     if outcome.reason == "not_registered":
-        return {
-            "sent": False,
-            "reason": "not_registered",
-            "message": NOT_REGISTERED_OTP_MESSAGE,
-        }
+        return OtpRequestResponse(
+            sent=False,
+            reason="not_registered",
+            message=NOT_REGISTERED_OTP_MESSAGE,
+        )
     if outcome.reason == "rate_limited":
-        return {
-            "sent": False,
-            "reason": "rate_limited",
-            "message": RATE_LIMIT_OTP_MESSAGE,
-        }
-    return {"sent": False, "message": GENERIC_OTP_MESSAGE}
+        return OtpRequestResponse(
+            sent=False,
+            reason="rate_limited",
+            message=RATE_LIMIT_OTP_MESSAGE,
+        )
+    return OtpRequestResponse(sent=False, message=GENERIC_OTP_MESSAGE)
 
 
 @router.post("/otp/verify")
@@ -167,12 +173,16 @@ def logout(response: Response, settings: Settings = Depends(get_settings)) -> di
 
 @router.get("/me")
 def me(
+    response: Response,
     user: PortalUser | None = Depends(optional_portal_user),
     db: Session = Depends(require_db),
+    settings: Settings = Depends(get_settings),
 ) -> dict[str, str | bool]:
     if user is None:
         return {"authenticated": False}
     profile = latest_lead_profile(db, user.email)
     if profile is None:
-        raise HTTPException(status_code=404, detail="Profile not found")
+        logger.warning("Session for %s has no matching lead — clearing cookie", user.email)
+        _clear_session_cookie(response, settings)
+        return {"authenticated": False}
     return {"authenticated": True, **profile}

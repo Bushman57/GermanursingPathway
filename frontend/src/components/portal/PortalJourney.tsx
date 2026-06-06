@@ -26,14 +26,24 @@ const STAGE_ICONS: Record<string, React.ComponentType<{ className?: string }>> =
 
 export function PortalJourney() {
   const { t } = useTranslation("portal");
-  const { data, isLoading } = usePortalJourneyQuery();
+  const { data, isLoading, isError } = usePortalJourneyQuery();
 
-  if (isLoading || !data) {
+  if (isLoading) {
     return (
       <section className="bg-card border border-border rounded-2xl p-6 shadow-sm">
         <p className="text-sm text-muted-foreground flex items-center gap-2">
           <Loader2 className="w-4 h-4 animate-spin" />
           {t("journey.loading", { defaultValue: "Loading journey…" })}
+        </p>
+      </section>
+    );
+  }
+
+  if (isError || !data) {
+    return (
+      <section className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+        <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-lg">
+          {t("journey.loadError", { defaultValue: "Could not load your journey. Try refreshing the page." })}
         </p>
       </section>
     );

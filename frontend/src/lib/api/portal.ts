@@ -1,7 +1,7 @@
-import { apiRoot, parseApiError } from "@/lib/api/apiBase";
+import { apiRoot, parseApiError, requireApiRoot } from "@/lib/api/apiBase";
 
 function portalBase() {
-  const root = apiRoot();
+  const root = import.meta.env.PROD ? requireApiRoot() : apiRoot();
   return root ? `${root}/api/portal` : "/api/portal";
 }
 

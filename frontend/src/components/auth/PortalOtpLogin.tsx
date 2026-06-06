@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import { requestOtp, verifyOtp } from "@/lib/api/auth";
+import { requestOtp, verifyOtp, fetchMe } from "@/lib/api/auth";
 import type { PortalSession } from "@/lib/portalAuth";
+import { loadPostRegisterContext } from "@/lib/postRegister";
 import { queryClient } from "@/lib/queryClient";
 import { queryKeys } from "@/lib/queries/keys";
 import { trackEvent } from "@/lib/analytics";
@@ -24,6 +25,11 @@ export function PortalOtpLogin({ onSignedIn, compact = false }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
+
+  useEffect(() => {
+    const ctx = loadPostRegisterContext();
+    if (ctx?.email) setEmail(ctx.email);
+  }, []);
 
   const inputClass =
     "w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30";
@@ -76,13 +82,21 @@ export function PortalOtpLogin({ onSignedIn, compact = false }: Props) {
     setLoading(true);
     try {
       const res = await verifyOtp(email, code);
+      const session: PortalSession = { email: res.email, fullName: res.fullName };
+      queryClient.setQueryData(queryKeys.auth.me, session);
+      const me = await fetchMe();
+      if (!me) {
+        throw new Error(
+          t("otp.errors.sessionNotSaved", {
+            defaultValue:
+              "Code accepted, but your session could not be saved. Allow cookies for this site and try again.",
+          }),
+        );
+      }
+      queryClient.setQueryData(queryKeys.auth.me, me);
       trackEvent("otp_verify");
       toast.success(t("otp.signedIn", { defaultValue: "Signed in" }));
-      onSignedIn({ email: res.email, fullName: res.fullName });
-      queryClient.setQueryData(queryKeys.auth.me, {
-        email: res.email,
-        fullName: res.fullName,
-      });
+      onSignedIn(me);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("otp.errors.invalidCode"));
     } finally {
