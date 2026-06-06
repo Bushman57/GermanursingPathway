@@ -153,3 +153,16 @@ export async function fetchPortalJourney(): Promise<PortalJourney> {
   if (!res.ok) throw new Error(await parseApiError(res));
   return (await res.json()) as PortalJourney;
 }
+
+export type LearningAccess = {
+  unlocked: boolean;
+  freeModuleId: string;
+  amountKes: number;
+  unlockedAt?: string | null;
+};
+
+export async function fetchLearningAccess(): Promise<LearningAccess> {
+  const res = await fetch(`${portalBase()}/learning-access`, { credentials: "include" });
+  if (!res.ok) throw new Error(await parseApiError(res));
+  return (await res.json()) as LearningAccess;
+}

@@ -69,6 +69,9 @@ class Lead(Base):
     whatsapp_joined: Mapped[bool] = mapped_column(Boolean, default=False)
     notify_deadlines: Mapped[bool] = mapped_column(Boolean, default=True)
     notify_documents: Mapped[bool] = mapped_column(Boolean, default=True)
+    learning_hub_unlocked_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
@@ -155,6 +158,7 @@ class Payment(Base):
     email: Mapped[str | None] = mapped_column(String(320), nullable=True)
     phone_number: Mapped[str | None] = mapped_column(String(20), nullable=True)
     amount_kes: Mapped[int] = mapped_column(Integer, nullable=False)
+    purpose: Mapped[str] = mapped_column(String(40), default="program_fee", nullable=False)
     invoice_number: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
     merchant_request_id: Mapped[str | None] = mapped_column(String(80), nullable=True)
     checkout_request_id: Mapped[str | None] = mapped_column(String(80), nullable=True, unique=True)
@@ -184,6 +188,7 @@ class ResourceArticle(Base):
     read_minutes: Mapped[int] = mapped_column(Integer, default=5, nullable=False)
     is_published: Mapped[bool] = mapped_column(Boolean, default=True)
     sort_order: Mapped[int] = mapped_column(Integer, default=0)
+    article_data: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()

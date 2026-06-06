@@ -14,11 +14,11 @@ from app.routers import (
     eligibility,
     leads,
     partners,
-    payments,
     portal,
     resources,
     scholarships,
 )
+from app.payments import router as payments_router
 
 app = FastAPI(title="German Nursing Pathway API", version="1.0.0")
 
@@ -78,7 +78,7 @@ app.include_router(eligibility.router)
 app.include_router(partners.router)
 app.include_router(chat.router)
 app.include_router(leads.router)
-app.include_router(payments.router)
+app.include_router(payments_router)
 app.include_router(scholarships.router)
 app.include_router(resources.router)
 app.include_router(admin_content.router)

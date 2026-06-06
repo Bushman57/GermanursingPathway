@@ -14,8 +14,8 @@ import {
   FileStack, Languages, Stamp, Mic, Plane, Package, MapPin,
   CheckCircle,
 } from "lucide-react";
-import imageHero from "@/assets/image_hero.png";
-import heroBridge from "@/assets/hero-bridge.jpg";
+import imageHero from "@/assets/image_hero.webp";
+import heroBridge from "@/assets/hero-bridge.webp";
 import programOverview from "@/assets/program-overview.jpg";
 import eligibilityNurse from "@/assets/eligibility-nurse.jpg";
 

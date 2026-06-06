@@ -47,9 +47,9 @@
         "title": "Dokumentensammlung",
         "description": "Zeugnisse, Zertifikate und Passkopie hochladen."
       },
-      "language": {
-        "title": "Deutschkurs",
-        "description": "Einstieg in den A1–B2-Pfad mit Partnerschulen."
+      "anerkennung": {
+        "title": "Anerkennung der Berufsqualifikation",
+        "description": "Begleitung bei Diplomprüfung und Anerkennung bei deutschen Behörden—ohne Sprachkurs-Anmeldung."
       },
       "placement": {
         "title": "Krankenhausplatzierung",

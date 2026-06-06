@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from app.config import Settings
 from app.db.models import (
     Application,
     Candidate,
@@ -17,6 +18,7 @@ from app.db.models import (
 )
 from app.models.lead import LeadCreate
 from app.services.otp_service import normalize_email
+
 
 def _otp_password_hash() -> str:
     return hashlib.sha256(secrets.token_bytes(32)).hexdigest()
@@ -171,15 +173,64 @@ def link_eligibility_checks(
     return linked
 
 
+def has_learning_hub_access(db: Session, email: str) -> bool:
+    lead = get_latest_lead(db, email)
+    return lead is not None and lead.learning_hub_unlocked_at is not None
+
+
+def unlock_learning_hub(db: Session, email: str) -> Lead:
+    normalized = normalize_email(email)
+    lead = get_latest_lead(db, normalized)
+    if lead is None:
+        lead = Lead(
+            full_name=normalized.split("@")[0],
+            email=normalized,
+            nursing_qualification="unknown",
+            german_level="unknown",
+            timeline="unknown",
+            source="learning_hub",
+            locale="en",
+            status="new",
+        )
+        db.add(lead)
+        db.flush()
+    if lead.learning_hub_unlocked_at is None:
+        lead.learning_hub_unlocked_at = datetime.now(timezone.utc)
+        db.flush()
+    return lead
+
+
+def learning_access_dict(db: Session, email: str, *, settings: Settings) -> dict:
+    lead = get_latest_lead(db, email)
+    unlocked_at = lead.learning_hub_unlocked_at if lead else None
+    return {
+        "unlocked": unlocked_at is not None,
+        "freeModuleId": settings.learning_hub_free_module_id,
+        "amountKes": settings.learning_hub_amount_kes,
+        "unlockedAt": unlocked_at.isoformat() if unlocked_at else None,
+    }
+
+
 def compute_portal_journey(db: Session, email: str) -> dict:
     normalized = normalize_email(email)
     lead = get_latest_lead(db, normalized)
     eligibility = get_latest_eligibility(db, normalized)
-    doc_count = (
-        db.query(PortalDocument)
-        .filter(func.lower(PortalDocument.email) == normalized)
-        .count()
+    doc_query = db.query(PortalDocument).filter(func.lower(PortalDocument.email) == normalized)
+    doc_count = doc_query.count()
+    core_doc_types = {"diploma", "transcript"}
+    uploaded_types = {
+        row.doc_type
+        for row in doc_query.with_entities(PortalDocument.doc_type).all()
+    }
+    has_core_docs = core_doc_types.issubset(uploaded_types)
+
+    documents_status = (
+        "done" if doc_count >= 3 else ("in_progress" if doc_count > 0 else "pending")
     )
+    if documents_status == "done":
+        anerkennung_status = "done" if has_core_docs and doc_count >= 4 else "in_progress"
+    else:
+        anerkennung_status = "pending"
 
     stages = [
         {"key": "register", "status": "done" if lead else "pending"},
@@ -189,11 +240,8 @@ def compute_portal_journey(db: Session, email: str) -> dict:
             if eligibility
             else ("in_progress" if lead else "pending"),
         },
-        {
-            "key": "documents",
-            "status": "done" if doc_count >= 3 else ("in_progress" if doc_count > 0 else "pending"),
-        },
-        {"key": "language", "status": "pending"},
+        {"key": "documents", "status": documents_status},
+        {"key": "anerkennung", "status": anerkennung_status},
         {"key": "placement", "status": "pending"},
         {"key": "visa", "status": "pending"},
     ]

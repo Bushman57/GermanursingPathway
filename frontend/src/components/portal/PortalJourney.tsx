@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import {
+  Award,
   CheckCircle2,
   Circle,
   Clock,
@@ -18,7 +19,7 @@ const STAGE_ICONS: Record<string, React.ComponentType<{ className?: string }>> =
   register: UserCheck,
   eligibility: CheckCircle2,
   documents: FileText,
-  language: GraduationCap,
+  anerkennung: Award,
   placement: GraduationCap,
   visa: Plane,
 };

@@ -5,6 +5,8 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { WhatsAppLink } from "@/components/WhatsAppButton";
 import { metaFromKeys } from "@/lib/pageMeta";
+import { parseLearningSearch } from "@/lib/learningSearchParams";
+import { LearningReturnBanner } from "@/components/resources/LearningReturnBanner";
 import { ArrowRight } from "lucide-react";
 import step1 from "@/assets/steps/step1.jpg";
 import step2 from "@/assets/steps/step2.jpg";
@@ -17,6 +19,7 @@ import step8 from "@/assets/steps/step8.jpg";
 const STEP_IMAGES = [step1, step2, step3, step4, step6, step7, step8];
 
 export const Route = createFileRoute("/onboarding-process")({
+  validateSearch: parseLearningSearch,
   head: () => metaFromKeys("onboardingProcess"),
   component: OnboardingProcess,
 });
@@ -95,6 +98,7 @@ function TimelineNode({ number }: { number: number }) {
 }
 
 function OnboardingProcess() {
+  const { learningReturn, learningTopic } = Route.useSearch();
   const { t } = useTranslation("onboardingProcess");
   const { t: tc } = useTranslation("common");
   const steps = t("steps", { returnObjects: true }) as {
@@ -106,6 +110,7 @@ function OnboardingProcess() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
+      <LearningReturnBanner learningReturn={learningReturn} learningTopic={learningTopic} />
       <div className="pt-24 pb-20 bg-muted/40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14 sm:mb-16">

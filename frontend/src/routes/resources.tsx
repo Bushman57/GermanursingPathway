@@ -1,29 +1,71 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { useResourcesQuery } from "@/lib/queries/resources";
 import { useTranslation } from "react-i18next";
 import { metaFromKeys } from "@/lib/pageMeta";
-import { BookOpen, Clock, ArrowRight, Search, GraduationCap, PlayCircle, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Lock,
+  Search,
+  GraduationCap,
+  PlayCircle,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { learningModules, type LearningModule } from "@/lib/learningModules";
-import { VideoEmbed } from "@/components/resources/VideoEmbed";
+import { learningModules } from "@/lib/learningModules";
+import { ContinueLearning } from "@/components/resources/ContinueLearning";
+import { LearningHubUnlockDialog } from "@/features/payments";
+import { ModuleCard } from "@/components/resources/ModuleCard";
+import {
+  getContinueTarget,
+  getModuleProgress,
+  moduleRequiresUnlock,
+} from "@/lib/learningHub";
+import { useLearningAccess } from "@/lib/useLearningAccess";
+import { useLearningProgress } from "@/lib/useLearningProgress";
+import { cn } from "@/lib/utils";
+
+function parseResourcesSearch(raw: Record<string, unknown>) {
+  const payment = typeof raw.payment === "string" ? raw.payment.trim() : "";
+  return { payment: payment || undefined };
+}
 
 export const Route = createFileRoute("/resources")({
+  validateSearch: parseResourcesSearch,
   head: () => metaFromKeys("resources"),
   component: ResourcesPage,
 });
 
 function ResourcesPage() {
+  const { payment: returnReference } = Route.useSearch();
+  const navigate = useNavigate({ from: "/resources" });
   const { data: articles = [], isLoading } = useResourcesQuery();
+  const { completed } = useLearningProgress();
+  const { unlocked, isLoading: accessLoading, isAuthenticated, amountKes, refetch } =
+    useLearningAccess();
   const { t, i18n } = useTranslation("common");
   const isDe = i18n.language.startsWith("de");
   const [query, setQuery] = useState("");
-  const [activeId, setActiveId] = useState<string>(learningModules[0].id);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [unlockOpen, setUnlockOpen] = useState(false);
 
-  const filteredModules = useMemo<LearningModule[]>(() => {
+  const clearPaymentReturn = () => {
+    navigate({ search: { payment: undefined }, replace: true });
+  };
+
+  const openUnlock = () => setUnlockOpen(true);
+  const openSignIn = () => setUnlockOpen(true);
+
+  const continueTarget = useMemo(
+    () => getContinueTarget(completed, articles),
+    [completed, articles],
+  );
+
+  const storyArticle = articles.find((a) => a.slug === "candidate-story-nairobi-to-berlin");
+
+  const filteredModules = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return learningModules;
     return learningModules
@@ -39,45 +81,73 @@ function ResourcesPage() {
   }, [query]);
 
   const totalTopics = learningModules.reduce((n, m) => n + m.topics.length, 0);
+  const hasAnyProgress = completed.size > 0;
+  const hasSearch = query.trim().length > 0;
+
+  useEffect(() => {
+    if (hasSearch && filteredModules.length === 1) {
+      setExpandedId(filteredModules[0].id);
+    }
+  }, [hasSearch, filteredModules]);
+
+  const scrollToModule = (moduleId: string) => {
+    if (moduleRequiresUnlock(moduleId, unlocked)) {
+      if (isAuthenticated) openUnlock();
+      else openSignIn();
+      return;
+    }
+    setExpandedId(moduleId);
+    requestAnimationFrame(() => {
+      document.getElementById(moduleId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero */}
+      <LearningHubUnlockDialog
+        open={unlockOpen}
+        onOpenChange={setUnlockOpen}
+        returnReference={returnReference}
+        onReturnHandled={clearPaymentReturn}
+        onUnlocked={() => void refetch()}
+      />
+
       <section className="pt-28 pb-16 hero-gradient relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:24px_24px]" />
         <div className="relative max-w-5xl mx-auto px-4 text-center">
           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-primary-foreground/90 text-xs font-medium backdrop-blur">
             <GraduationCap className="w-3.5 h-3.5" />
-            Learning Hub
+            {t("resourcesPage.hubBadge")}
           </span>
           <h1 className="mt-4 font-heading text-4xl sm:text-5xl md:text-6xl font-bold text-primary-foreground tracking-tight">
-            Learn the German <span className="text-warm">Nursing Pathway</span>
+            {t("resourcesPage.hubTitle")}{" "}
+            <span className="text-warm">{t("resourcesPage.hubTitleAccent")}</span>
           </h1>
           <p className="mt-5 text-primary-foreground/80 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            A structured curriculum for Kenyan healthcare professionals — from your first
-            German word to your first shift in a German hospital.
+            {t("resourcesPage.hubSubtitle")}
           </p>
 
-          {/* Stat strip */}
           <div className="mt-8 flex flex-wrap justify-center gap-3 text-sm">
             <div className="px-4 py-2 rounded-full bg-white/10 text-primary-foreground/90 backdrop-blur">
-              <span className="font-semibold text-warm">{learningModules.length}</span> modules
+              <span className="font-semibold text-warm">{learningModules.length}</span>{" "}
+              {t("resourcesPage.statModules")}
             </div>
             <div className="px-4 py-2 rounded-full bg-white/10 text-primary-foreground/90 backdrop-blur">
-              <span className="font-semibold text-warm">{totalTopics}</span> topics
+              <span className="font-semibold text-warm">{totalTopics}</span>{" "}
+              {t("resourcesPage.statTopics")}
             </div>
             <div className="px-4 py-2 rounded-full bg-white/10 text-primary-foreground/90 backdrop-blur">
-              <span className="font-semibold text-warm">{articles.length}</span> in-depth articles
+              <span className="font-semibold text-warm">{articles.length}</span>{" "}
+              {t("resourcesPage.statArticles")}
             </div>
           </div>
 
-          {/* Search */}
           <div className="mt-8 max-w-xl mx-auto relative">
             <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search topics: visa, B2, CV, Anerkennung…"
+              placeholder={t("resourcesPage.searchPlaceholder")}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="pl-11 h-12 bg-background/95 backdrop-blur border-0 shadow-lg"
@@ -86,187 +156,134 @@ function ResourcesPage() {
         </div>
       </section>
 
-      {/* Module chips nav */}
+      {continueTarget && hasAnyProgress && (
+        <section className="py-6 border-b border-border bg-muted/20">
+          <div className="max-w-6xl mx-auto px-4">
+            <ContinueLearning target={continueTarget} />
+          </div>
+        </section>
+      )}
+
+      {isAuthenticated && !accessLoading && !unlocked && (
+        <section className="py-4 border-b border-warm/20 bg-warm/5">
+          <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex items-start gap-3">
+              <Lock className="w-5 h-5 text-warm shrink-0 mt-0.5" />
+              <div>
+                <p className="font-heading font-semibold text-foreground">
+                  {t("resourcesPage.unlockBannerTitle", { amount: amountKes.toLocaleString() })}
+                </p>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  {t("resourcesPage.unlockBannerBody")}
+                </p>
+              </div>
+            </div>
+            <Button variant="warm" size="sm" className="shrink-0" onClick={openUnlock}>
+              {t("resourcesPage.unlockAllModules", { amount: amountKes.toLocaleString() })}
+            </Button>
+          </div>
+        </section>
+      )}
+
       <section className="sticky top-16 z-30 bg-background/85 backdrop-blur border-b border-border">
         <div className="max-w-6xl mx-auto px-4 py-3 overflow-x-auto">
           <div className="flex gap-2 min-w-max">
-            {learningModules.map((m) => (
-              <a
-                key={m.id}
-                href={`#${m.id}`}
-                onClick={() => setActiveId(m.id)}
-                className={`group inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium border transition-all whitespace-nowrap ${
-                  activeId === m.id
-                    ? "bg-foreground text-background border-foreground"
-                    : "bg-card text-foreground/80 border-border hover:border-warm/40 hover:text-foreground"
-                }`}
-              >
-                <span aria-hidden>{m.emoji}</span>
-                {m.title}
-              </a>
-            ))}
+            {learningModules.map((m) => {
+              const progress = getModuleProgress(m.id, articles, completed);
+              const isActive = expandedId === m.id;
+              return (
+                <button
+                  key={m.id}
+                  type="button"
+                  onClick={() => scrollToModule(m.id)}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium border transition-all whitespace-nowrap",
+                    "hover:border-warm/40 hover:shadow-sm hover:-translate-y-px",
+                    isActive
+                      ? "bg-foreground text-background border-foreground shadow-md"
+                      : "bg-card text-foreground/80 border-border hover:text-foreground",
+                  )}
+                >
+                  <span aria-hidden>{m.emoji}</span>
+                  {m.title}
+                  {progress.total > 0 && progress.percent > 0 && (
+                    <span
+                      className={cn(
+                        "ml-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full",
+                        isActive ? "bg-background/20 text-background" : "bg-warm/15 text-warm",
+                      )}
+                    >
+                      {progress.percent}%
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Modules grid */}
       <section className="py-16">
-        <div className="max-w-6xl mx-auto px-4 space-y-12">
+        <div className="max-w-6xl mx-auto px-4 space-y-6">
           {filteredModules.length === 0 && (
-            <p className="text-center text-muted-foreground">No topics match "{query}"</p>
+            <p className="text-center text-muted-foreground">
+              {t("resourcesPage.noResults", { query })}
+            </p>
           )}
 
           {filteredModules.map((module, idx) => {
-            const Icon = module.icon;
-            const moduleArticles = articles.filter(
-              (a) =>
-                (module.id === "german-language" && a.category === "language") ||
-                (module.id === "visa-immigration" && a.category === "visa") ||
-                (module.id === "timelines-stories" && a.category === "story") ||
-                (!["german-language", "visa-immigration", "timelines-stories"].includes(module.id) &&
-                  a.category === "guide"),
-            );
-
+            const moduleIndex = learningModules.findIndex((m) => m.id === module.id);
+            const locked = moduleRequiresUnlock(module.id, unlocked);
             return (
-              <div key={module.id} id={module.id} className="scroll-mt-32">
-                {/* Header */}
-                <div className={`relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br ${module.accent} p-6 sm:p-8`}>
-                  <div className="flex items-start gap-4">
-                    <div className="shrink-0 w-12 h-12 rounded-2xl bg-background/80 backdrop-blur flex items-center justify-center shadow-sm">
-                      <Icon className="w-6 h-6 text-foreground" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-xs font-mono text-muted-foreground tracking-wider">
-                        MODULE {String(idx + 1).padStart(2, "0")}
-                      </div>
-                      <h2 className="mt-1 font-heading text-2xl sm:text-3xl font-bold text-foreground">
-                        <span className="mr-2" aria-hidden>{module.emoji}</span>
-                        {module.title}
-                      </h2>
-                      <p className="mt-2 text-sm sm:text-base text-muted-foreground max-w-2xl">
-                        {module.description}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Topics + sidebar */}
-                <div className="mt-6 grid lg:grid-cols-3 gap-6">
-                  <div className="lg:col-span-2">
-                    <ol className="space-y-2">
-                      {module.topics.map((topic, i) => {
-                        const linked = topic.slug
-                          ? articles.find((a) => a.slug === topic.slug)
-                          : undefined;
-                        const content = (
-                          <div className="flex items-start gap-3">
-                            <span className="shrink-0 mt-0.5 w-7 h-7 rounded-lg bg-muted text-muted-foreground text-xs font-mono flex items-center justify-center group-hover:bg-warm/15 group-hover:text-warm transition-colors">
-                              {String(i + 1).padStart(2, "0")}
-                            </span>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <span className="text-foreground font-medium">{topic.title}</span>
-                                {topic.video && (
-                                  <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-warm font-semibold">
-                                    <PlayCircle className="w-3 h-3" /> Video
-                                  </span>
-                                )}
-                                {linked && (
-                                  <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-emerald-600 dark:text-emerald-400 font-semibold">
-                                    <BookOpen className="w-3 h-3" /> Read
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                            <ArrowRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-warm group-hover:translate-x-0.5 transition-all shrink-0 mt-1" />
-                          </div>
-                        );
-
-                        const className =
-                          "group block p-3 rounded-xl border border-transparent hover:border-border hover:bg-card transition-colors";
-
-                        if (linked) {
-                          return (
-                            <li key={i}>
-                              <Link
-                                to="/resources/$slug"
-                                params={{ slug: linked.slug }}
-                                className={className}
-                              >
-                                {content}
-                              </Link>
-                            </li>
-                          );
-                        }
-                        return (
-                          <li key={i} className={className}>
-                            {content}
-                          </li>
-                        );
-                      })}
-                    </ol>
-                  </div>
-
-                  {/* Sidebar: related published articles */}
-                  <aside className="space-y-3">
-                    {moduleArticles.slice(0, 3).map((a) => (
-                      <Link
-                        key={a.slug}
-                        to="/resources/$slug"
-                        params={{ slug: a.slug }}
-                        className="block p-4 rounded-2xl bg-card border border-border hover:border-warm/40 hover:shadow-md transition-all group"
-                      >
-                        <div className="flex items-center gap-2 text-[11px] font-medium text-warm uppercase tracking-wider">
-                          <Sparkles className="w-3 h-3" /> Featured guide
-                          <span className="text-muted-foreground inline-flex items-center gap-1 normal-case">
-                            · <Clock className="w-3 h-3" /> {a.readMinutes} min
-                          </span>
-                        </div>
-                        <h3 className="mt-1.5 font-heading font-semibold text-foreground group-hover:text-warm transition-colors text-sm leading-snug">
-                          {isDe ? a.titleDe : a.titleEn}
-                        </h3>
-                        <p className="mt-1.5 text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                          {isDe ? a.excerptDe : a.excerptEn}
-                        </p>
-                      </Link>
-                    ))}
-                    {moduleArticles.length === 0 && !isLoading && (
-                      <div className="p-4 rounded-2xl border border-dashed border-border text-xs text-muted-foreground">
-                        More in-depth guides for this module are coming soon.
-                      </div>
-                    )}
-                  </aside>
-                </div>
-              </div>
+              <ModuleCard
+                key={module.id}
+                module={module}
+                moduleIndex={moduleIndex >= 0 ? moduleIndex : idx}
+                articles={articles}
+                isLoading={isLoading}
+                isDe={isDe}
+                expanded={!locked && expandedId === module.id}
+                onToggle={() =>
+                  setExpandedId((prev) => (prev === module.id ? null : module.id))
+                }
+                progress={getModuleProgress(module.id, articles, completed)}
+                locked={locked}
+                isAuthenticated={isAuthenticated}
+                amountKes={amountKes}
+                onUnlock={openUnlock}
+                onSignIn={openSignIn}
+                t={t}
+              />
             );
           })}
         </div>
       </section>
 
-      {/* Featured video CTA */}
       <section className="py-16 bg-muted/30 border-y border-border">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-warm/10 text-warm text-xs font-semibold uppercase tracking-wider">
-            <PlayCircle className="w-3.5 h-3.5" /> Watch & Learn
+            <PlayCircle className="w-3.5 h-3.5" /> {t("resourcesPage.watchLearnBadge")}
           </span>
           <h2 className="mt-3 font-heading text-2xl sm:text-3xl font-bold text-foreground">
-            Stories from Kenyan nurses already in Germany
+            {t("resourcesPage.storiesHeading")}
           </h2>
-          <p className="mt-2 text-muted-foreground">
-            Hear real timelines, costs, and lessons learned — straight from the people who walked the pathway.
-          </p>
-          <div className="mt-8">
-            <VideoEmbed
-              url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-              title="Kenyan nurses in Germany"
-            />
-          </div>
+          <p className="mt-2 text-muted-foreground">{t("resourcesPage.storiesSubtitle")}</p>
+          {storyArticle && (
+            <div className="mt-8">
+              <Button variant="outline" asChild>
+                <Link to="/resources/$slug" params={{ slug: storyArticle.slug }}>
+                  {t("resourcesPage.readStory")}
+                  <ArrowRight className="w-4 h-4 ml-1.5" />
+                </Link>
+              </Button>
+            </div>
+          )}
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button variant="warm" asChild>
               <Link to="/register">{t("resourcesPage.registerCta")}</Link>
             </Button>
             <Button variant="outline" asChild>
-              <Link to="/eligibility">Check your readiness</Link>
+              <Link to="/eligibility">{t("resourcesPage.eligibilityCta")}</Link>
             </Button>
           </div>
         </div>
