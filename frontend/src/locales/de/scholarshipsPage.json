@@ -41,13 +41,14 @@
   "offeredBy": "Angeboten von",
   "gate": {
     "badge": "Nur für registrierte Nutzer",
-    "formTitle": "Registrieren für Stipendienzugriff",
-    "formSubtitle": "Kurz Ihren Hintergrund angeben — zum Stöbern senden wir Ihnen einen Anmeldecode per E-Mail.",
-    "successTitle": "Registrierung erhalten",
-    "successBody": "Melden Sie sich im Studierendenportal mit dem Einmalcode an, den wir an Ihre E-Mail senden.",
-    "signInCta": "Anmelden und Stipendien ansehen"
+    "formTitle": "Registrieren, um Stipendien zu durchsuchen",
+    "formSubtitle": "Kostenloses Konto · dauert 2 Minuten",
+    "successTitle": "Geschafft",
+    "successBody": "Melden Sie sich im Portal an, um Programme zu durchsuchen.",
+    "signInCta": "Zum Portal"
   },
-  "signInPrompt": "Bereits registriert? Im Studierendenportal anmelden, um Stipendien zu durchsuchen und den Stipendien-Assistenten zu nutzen.",
+  "signInPrompt": "Bereits registriert?",
+  "signInLink": "Anmelden",
   "detail": {
     "back": "Zurück zu Stipendien",
     "notFoundTitle": "Stipendium nicht gefunden",

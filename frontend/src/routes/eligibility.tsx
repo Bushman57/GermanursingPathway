@@ -237,22 +237,22 @@ function Eligibility() {
 
               <div className="mt-8 space-y-3">
                 {postRegister ? (
-                  <Button variant="warm" size="lg" className="w-full py-6" asChild>
+                  <Button variant="warm" size="lg" className="w-full" asChild>
                     <Link to="/portal">
                       {t("results.viewPortal", { defaultValue: "View your portal" })}
-                      <ArrowRight className="w-4 h-4 ml-1" />
+                      <ArrowRight />
                     </Link>
                   </Button>
                 ) : (
-                  <Button variant="warm" size="lg" className="w-full py-6" asChild>
+                  <Button variant="warm" size="lg" className="w-full" asChild>
                     <Link to="/register" search={{}} state={{ fromEligibility: true }}>
                       {t("registerCta")}
-                      <ArrowRight className="w-4 h-4 ml-1" />
+                      <ArrowRight />
                     </Link>
                   </Button>
                 )}
                 {germanFilter && (
-                  <Button variant="outline" size="lg" className="w-full py-6" asChild>
+                  <Button variant="outline" size="lg" className="w-full" asChild>
                     <Link
                       to="/scholarships"
                       search={{
@@ -283,7 +283,7 @@ function Eligibility() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="w-full py-6"
+                  className="w-full"
                   onClick={() => {
                     setShowResults(false);
                     setResultSnapshot(null);
@@ -521,7 +521,7 @@ function Eligibility() {
               </Button>
               <Button variant="warm" onClick={next}>
                 {currentStep === steps.length - 1 ? t("seeResults") : t("continue")}
-                <ArrowRight className="w-4 h-4 ml-1" />
+                <ArrowRight />
               </Button>
             </div>
           </div>

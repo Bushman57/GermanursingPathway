@@ -48,17 +48,17 @@ export function ContinueLearning({ target }: Props) {
         {target.slug ? (
           <Link to="/resources/$slug" params={{ slug: target.slug }}>
             {t("resourcesPage.continueCta")}
-            <ArrowRight className="w-4 h-4 ml-1.5" />
+            <ArrowRight />
           </Link>
         ) : resumeHref ? (
           <a href={resumeHref} target="_blank" rel="noopener noreferrer">
             {t("resourcesPage.continueCta")}
-            <ArrowRight className="w-4 h-4 ml-1.5" />
+            <ArrowRight />
           </a>
         ) : (
           <Link to="/resources/module/$moduleId" params={{ moduleId: target.moduleId }}>
             {t("resourcesPage.continueCta")}
-            <ArrowRight className="w-4 h-4 ml-1.5" />
+            <ArrowRight />
           </Link>
         )}
       </Button>

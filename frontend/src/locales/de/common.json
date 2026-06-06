@@ -31,7 +31,7 @@
   },
   "register": {
     "title": "Interesse registrieren",
-    "subtitle": "Erzählen Sie uns von sich — unser Team meldet sich mit den nächsten Schritten.",
+    "subtitle": "Teilen Sie ein paar Angaben — so können wir Ihre Bewerbung unterstützen.",
     "fullName": "Vollständiger Name",
     "email": "E-Mail",
     "phone": "Telefon (optional)",
@@ -134,7 +134,7 @@
     },
     "portal": {
       "title": "Kandidatenportal — German Nursing Pathway",
-      "description": "Mit E-Mail-OTP Stipendien durchsuchen und Ihre Bewerbungsreise verfolgen."
+      "description": "Stipendien durchsuchen und Ihre Bewerbung verfolgen."
     }
   },
   "partnersPage": {
@@ -190,15 +190,15 @@
     "markComplete": "Als erledigt markieren",
     "markIncomplete": "Als offen markieren",
     "moduleLocked": "Premium",
-    "moduleLockedHint": "Melden Sie sich an und schalten Sie Module 2–11 frei, um diesen Inhalt zu lesen.",
-    "signInToUnlock": "Anmelden zum Freischalten",
+    "moduleLockedHint": "Anmelden, um Module 2–11 freizuschalten.",
+    "signInToUnlock": "Anmelden",
     "unlockAllModules": "Alle Module freischalten — KES {{amount}}",
     "unlockBannerTitle": "Module 2–11 für KES {{amount}} freischalten",
-    "unlockBannerBody": "Modul 1 ist kostenlos. Eine Zahlung schaltet den gesamten Lernplan frei.",
-    "premiumPaywallTitle": "Dieses Modul gehört zum Premium-Lernzentrum",
-    "premiumPaywallBody": "Schalten Sie Module 2–11 mit einer einmaligen Zahlung von KES {{amount}} frei.",
+    "unlockBannerBody": "Modul 1 ist kostenlos. Eine Zahlung schaltet den Rest frei.",
+    "premiumPaywallTitle": "Premium-Modul",
+    "premiumPaywallBody": "Alle Module für KES {{amount}} freischalten.",
     "articleLocked": "Dieser Artikel gehört zum Premium-Lernzentrum. Alle Module für KES {{amount}} freischalten.",
-    "learningReturnLabel": "Sie sehen einen Lektionsleitfaden — kehren Sie zum Lernzentrum zurück, wenn Sie bereit sind.",
+    "learningReturnLabel": "Lektionsleitfaden — zurück zum Lernzentrum, wenn Sie fertig sind.",
     "learningReturnCta": "Lektionen fortsetzen"
   },
   "errors": {

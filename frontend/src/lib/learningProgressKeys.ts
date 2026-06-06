@@ -25,6 +25,9 @@ export function buildLearningTopicHref(
   returnTo: string,
 ): string {
   const href = topic.href ?? "/";
+  if (/^https?:\/\//i.test(href)) {
+    return href;
+  }
   const params = new URLSearchParams({
     learningReturn: returnTo,
     learningTopic: topicProgressKey(moduleId, topic.index),

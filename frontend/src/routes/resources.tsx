@@ -273,7 +273,7 @@ function ResourcesPage() {
               <Button variant="outline" asChild>
                 <Link to="/resources/$slug" params={{ slug: storyArticle.slug }}>
                   {t("resourcesPage.readStory")}
-                  <ArrowRight className="w-4 h-4 ml-1.5" />
+                  <ArrowRight />
                 </Link>
               </Button>
             </div>

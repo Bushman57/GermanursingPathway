@@ -290,7 +290,7 @@ export function RegisterInterestForm({ source, compact }: Props) {
           type="submit"
           variant="warm"
           size="lg"
-          className="w-full py-6 text-base"
+          className="w-full"
           disabled={status === "loading"}
         >
           {status === "loading" ? (

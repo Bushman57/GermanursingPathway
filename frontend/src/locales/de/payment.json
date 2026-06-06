@@ -29,7 +29,7 @@
   "failed": "Zahlung wurde nicht abgeschlossen.",
   "cancelled": "Kasse wurde geschlossen, bevor die Zahlung abgeschlossen war.",
   "learningHubTitle": "Lernzentrum freischalten",
-  "learningHubDescriptionWithAmount": "Zahlen Sie einmal <strong>{{amount}}</strong>, um Module 2–11 freizuschalten — alle Premium-Leitfäden, Themen und Artikel.",
+  "learningHubDescriptionWithAmount": "Einmalig <strong>{{amount}}</strong> schaltet Module 2–11 frei.",
   "learningHubDescriptionGeneric": "Einmal zahlen, um Module 2–11 im Lernzentrum freizuschalten.",
   "learningHubSignInPrompt": "Melden Sie sich mit Ihrer Portal-E-Mail an, bevor Sie bezahlen.",
   "learningHubPayButton": "Freischalten für {{amount}}",

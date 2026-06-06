@@ -53,7 +53,7 @@ export function HomeSocialProof() {
         <div className="text-center mt-10">
           <Button variant="warm" asChild>
             <Link to="/scholarships">
-              {t("home.recentScholarships")} <ArrowRight className="w-4 h-4 ml-1" />
+              {t("home.recentScholarships")} <ArrowRight />
             </Link>
           </Button>
         </div>

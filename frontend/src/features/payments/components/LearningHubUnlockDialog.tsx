@@ -162,8 +162,8 @@ export function LearningHubUnlockDialog({
 
         {!me ? (
           <div className="py-2">
-            <p className="text-sm text-muted-foreground mb-4">{t("learningHubSignInPrompt")}</p>
             <PortalOtpLogin
+              compact
               onSignedIn={() => {
                 void queryClient.invalidateQueries({ queryKey: queryKeys.auth.me });
                 void queryClient.invalidateQueries({ queryKey: queryKeys.portal.learningAccess });

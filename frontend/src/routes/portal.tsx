@@ -28,8 +28,7 @@ export const Route = createFileRoute("/portal")({
       { title: "Student Portal — German Nursing Pathway" },
       {
         name: "description",
-        content:
-          "Sign in with email OTP to browse scholarships and track your application progress.",
+        content: "Browse scholarships and track your application.",
       },
     ],
   }),
@@ -115,7 +114,7 @@ function PortalDashboard({
               </div>
               <Button variant="outline" size="sm" asChild>
                 <Link to="/scholarships">
-                  {t("scholarships.browseAll")} <ArrowRight className="w-4 h-4 ml-1" />
+                  {t("scholarships.browseAll")} <ArrowRight />
                 </Link>
               </Button>
             </div>

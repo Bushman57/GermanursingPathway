@@ -252,7 +252,7 @@ function ScholarshipsPage() {
             <p className="text-center text-sm text-muted-foreground pb-16 px-4">
               {t("signInPrompt")}{" "}
               <Link to="/portal" className="text-warm font-medium hover:underline">
-                Student Portal
+                {t("signInLink")}
               </Link>
             </p>
           </>
