@@ -1,6 +1,58 @@
 {
   "title": "Über German Nursing Pathway",
-  "intro": "German Nursing Pathway schließt die Lücke zwischen ambitionierten Pflegestudierenden und verifizierten Chancen im Ausland. Durch direkte Verbindungen zu akkreditierten Schulen, strukturiertem Sprachtraining, Visumberatung und End-to-End-Bewerbungsbegleitung unterstützen wir Sie vom Eignungscheck bis zu einer nachhaltigen Karriere im deutschen Gesundheitswesen.",
+  "intro": "Bei German Nursing Pathway begleiten wir engagierte Pflegekräfte auf ihrem ersten Schritt in eine Karriere in Deutschland. Vom Eignungscheck und Sprachtraining über die Visumberatung bis hin zur Integration nach der Ankunft sind wir an Ihrer Seite — wir machen den Prozess stressfrei und bauen die Fähigkeiten und das Selbstvertrauen auf, die Sie im deutschen Gesundheitswesen brauchen.",
+  "empowering": {
+    "title": "Pflegekarrieren stärken in",
+    "titleAccent": "Deutschland",
+    "text": "Wir verbinden Talente mit Chancen, indem wir kenianische und ostafrikanische Pflegekräfte an akkreditierte deutsche Krankenhäuser, anerkannte Ausbildungsschulen, strukturierte B1/B2-Sprachvorbereitung und volle Visumunterstützung vermitteln — mit einem menschenzentrierten Ansatz und kompromissloser Integrität.",
+    "stats": [
+      { "value": "500+", "label": "Begleitete Pflegekräfte" },
+      { "value": "50+", "label": "Partnerkliniken" },
+      { "value": "12", "label": "Deutsche Städte" }
+    ]
+  },
+  "recognition": {
+    "title": "Vertrauensvolle Partner &",
+    "titleAccent": "Anerkennung",
+    "subtitle": "Wir arbeiten mit akkreditierten Institutionen, Sprachprüfungsstellen und deutschen Gesundheitsnetzwerken zusammen.",
+    "items": [
+      "Goethe-Institut konform",
+      "telc Prüfungsvorbereitung",
+      "Verbindung zur Deutschen Botschaft",
+      "Unterstützung im Anerkennungsverfahren",
+      "Bundesagentur für Arbeit (ZAV)"
+    ]
+  },
+  "history": {
+    "title": "Unsere Geschichte &",
+    "titleAccent": "Hintergrund",
+    "p1": "German Nursing Pathway wurde mit einer einfachen Idee gegründet: Qualifizierten Pflegekräften aus Kenia und Ostafrika den Zugang zu verifizierten Karrierechancen in Deutschland zu erleichtern. Mit tiefer Erfahrung in Gesundheitsrekrutierung, Deutschunterricht und Migrationsberatung bringen wir die richtige Unterstützung zum richtigen Zeitpunkt.",
+    "p2": "Unser Fokus lag schon immer auf praxisnahem Training, transparenter Beratung und direkten Beziehungen zu akkreditierten deutschen Pflegeschulen und Krankenhausnetzwerken — damit jeder Kandidat einen echten, verifizierten Weg geht.",
+    "imageAlt": "Brücke zwischen Kenia und Deutschland"
+  },
+  "whyChoose": {
+    "title": "Warum",
+    "titleAccent": "German Nursing Pathway",
+    "subtitle": "End-to-End-Begleitung, die Ihre Reise nach Deutschland reibungslos, transparent und ergebnisorientiert macht.",
+    "items": [
+      "Direkter Zugang zu akkreditierten deutschen Pflegeschulen und Kliniken",
+      "Strukturierter Deutschunterricht (A1 → B2) mit Goethe-/telc-Prüfungsvorbereitung",
+      "Beratung zum Anerkennungsverfahren",
+      "Dokumentenübersetzung, Beglaubigung & Legalisation",
+      "Probe- und echte Vorstellungsgespräche mit deutschen Arbeitgebern",
+      "Visaantrag, Botschaftstermin & Reiseunterstützung",
+      "Vorab genehmigte Ausbildungs- und Direktanstellungswege",
+      "Integration nach Ankunft: Anmeldung, Versicherung & Wohnung"
+    ],
+    "imageAlt": "Pflegekraft bereitet sich auf Karriere in Deutschland vor"
+  },
+  "cta": {
+    "title": "Starten Sie Ihre Pflegekarriere in",
+    "titleAccent": "Deutschland",
+    "subtitle": "Bereit für den ersten Schritt in Ihre Traumkarriere als Pflegekraft im Ausland? Nehmen Sie Kontakt auf und wir planen Ihren Weg gemeinsam.",
+    "primary": "Kostenloses Beratungsgespräch",
+    "secondary": "Eignung prüfen"
+  },
   "vision": {
     "sectionTitle": "Strategische Ausrichtung &",
     "sectionAccent": "Vision",
