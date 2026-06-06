@@ -8,6 +8,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
 import { HomeSocialProof } from "@/components/home/HomeSocialProof";
+import { HomeBlogSection } from "@/components/home/HomeBlogSection";
 import { WhatsAppLink } from "@/components/WhatsAppButton";
 import { TAGLINE_SECONDARY } from "@/lib/constants";
 import { parseLearningSearch } from "@/lib/learningSearchParams";
@@ -262,6 +263,11 @@ function Index() {
           </div>
         </div>
       </section>
+
+      <HomeBlogSection
+        returnReference={returnReference}
+        onReturnHandled={clearPaymentReturn}
+      />
 
       {/* Investment Breakdown — Table like GHIC */}
       <section className="py-20 hero-gradient">

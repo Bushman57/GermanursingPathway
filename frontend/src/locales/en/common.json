@@ -97,7 +97,14 @@
   },
   "home": {
     "testimonialsTitle": "Stories from the pathway",
-    "recentScholarships": "Explore scholarships"
+    "recentScholarships": "Explore scholarships",
+    "blog": {
+      "title": "Learning Hub Guides",
+      "subtitle": "Practical articles on language, visas, recognition, and life in Germany — written for Kenyan healthcare professionals.",
+      "readMore": "Read more",
+      "viewMore": "View more guides",
+      "lockedHint": "Unlock to read"
+    }
   },
   "meta": {
     "home": {

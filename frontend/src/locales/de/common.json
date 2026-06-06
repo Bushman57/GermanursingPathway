@@ -97,7 +97,14 @@
   },
   "home": {
     "testimonialsTitle": "Erfahrungen auf dem Weg",
-    "recentScholarships": "Stipendien entdecken"
+    "recentScholarships": "Stipendien entdecken",
+    "blog": {
+      "title": "Learning-Hub-Ratgeber",
+      "subtitle": "Praktische Artikel zu Sprache, Visa, Anerkennung und Leben in Deutschland — für kenianische Gesundheitsfachkräfte.",
+      "readMore": "Mehr lesen",
+      "viewMore": "Weitere Ratgeber",
+      "lockedHint": "Freischalten zum Lesen"
+    }
   },
   "meta": {
     "home": {
