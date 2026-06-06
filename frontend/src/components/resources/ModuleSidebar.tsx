@@ -73,7 +73,7 @@ export function ModuleSidebar({ context, activeSlug, isTopicDone }: Props) {
             return (
               <li key={topic.index}>
                 <Link
-                  to="/resources/$slug"
+                  to="/blog/$slug"
                   params={{ slug }}
                   className={cn(
                     "flex items-start gap-2.5 p-2.5 rounded-xl border transition-colors",

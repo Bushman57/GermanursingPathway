@@ -1,5 +1,6 @@
 import { apiRoot, parseApiError } from "@/lib/api/apiBase";
 import { getAdminToken } from "@/lib/adminAuth";
+import type { BlogPost } from "@/lib/blogs";
 import type { ResourceArticle } from "@/lib/resources";
 import type { Scholarship } from "@/lib/scholarships";
 
@@ -76,4 +77,26 @@ export async function adminUpdateResource(
 
 export async function adminDeleteResource(slug: string): Promise<void> {
   await adminFetch(`/api/admin/resources/${encodeURIComponent(slug)}`, { method: "DELETE" });
+}
+
+export async function adminListBlogs(): Promise<BlogPost[]> {
+  return adminFetch("/api/admin/blogs");
+}
+
+export async function adminCreateBlog(body: BlogPost & { isPublished?: boolean }): Promise<BlogPost> {
+  return adminFetch("/api/admin/blogs", { method: "POST", body: JSON.stringify(body) });
+}
+
+export async function adminUpdateBlog(
+  slug: string,
+  body: BlogPost & { isPublished?: boolean },
+): Promise<BlogPost> {
+  return adminFetch(`/api/admin/blogs/${encodeURIComponent(slug)}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function adminDeleteBlog(slug: string): Promise<void> {
+  await adminFetch(`/api/admin/blogs/${encodeURIComponent(slug)}`, { method: "DELETE" });
 }

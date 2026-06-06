@@ -19,6 +19,9 @@ export function AdminShell() {
               <Link to="/admin/scholarships">Scholarships</Link>
             </Button>
             <Button variant="ghost" size="sm" asChild>
+              <Link to="/admin/blogs">Blogs</Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
               <Link to="/admin/resources">Resources</Link>
             </Button>
             <Button

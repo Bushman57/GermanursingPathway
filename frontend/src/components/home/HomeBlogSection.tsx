@@ -14,9 +14,9 @@ import { LearningHubUnlockDialog } from "@/features/payments";
 import { learningModules } from "@/lib/learningModules";
 import { buildModuleTopics, moduleRequiresUnlock } from "@/lib/learningHub";
 import { buildLearningTopicHref } from "@/lib/learningProgressKeys";
-import { useResourcesQuery } from "@/lib/queries/resources";
+import { useBlogsQuery } from "@/lib/queries/blogs";
 import { useLearningAccess } from "@/lib/useLearningAccess";
-import type { ResourceArticle } from "@/lib/resources";
+import type { BlogPost } from "@/lib/blogs";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 
@@ -44,12 +44,12 @@ function formatBlogDate(moduleIndex: number, topicIndex: number, locale: string)
   return base.toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" });
 }
 
-export function getHomeBlogEntries(articles: ResourceArticle[], locale: string): HomeBlogEntry[] {
+export function getHomeBlogEntries(blogs: BlogPost[], locale: string): HomeBlogEntry[] {
   const entries: HomeBlogEntry[] = [];
 
   for (let moduleIndex = 0; moduleIndex < PREMIUM_MODULES.length; moduleIndex++) {
     const module = PREMIUM_MODULES[moduleIndex];
-    const topics = buildModuleTopics(module, articles);
+    const topics = buildModuleTopics(module, blogs);
     for (const topic of topics) {
       entries.push({
         id: `${module.id}-${topic.index}`,
@@ -73,7 +73,7 @@ export function getHomeBlogEntries(articles: ResourceArticle[], locale: string):
 }
 
 function getTopicHref(entry: HomeBlogEntry): string | null {
-  if (entry.slug) return `/resources/${entry.slug}`;
+  if (entry.slug) return `/blog/${entry.slug}`;
   if (entry.href) {
     return buildLearningTopicHref(
       { href: entry.href, hash: entry.hash, index: entry.topicIndex },
@@ -181,7 +181,7 @@ function BlogCard({ entry, locked, onLockedClick, readMoreLabel, lockedHint }: B
 
   if (entry.slug) {
     return (
-      <Link to="/resources/$slug" params={{ slug: entry.slug }} className="group block h-full">
+      <Link to="/blog/$slug" params={{ slug: entry.slug }} className="group block h-full">
         {cardBody}
       </Link>
     );
@@ -202,11 +202,11 @@ type Props = {
 export function HomeBlogSection({ returnReference, onReturnHandled }: Props) {
   const { t, i18n } = useTranslation("common");
   const locale = i18n.language.startsWith("de") ? "de-DE" : "en-GB";
-  const { data: articles = [] } = useResourcesQuery();
+  const { data: blogs = [] } = useBlogsQuery();
   const { unlocked, refetch } = useLearningAccess();
   const [unlockOpen, setUnlockOpen] = useState(false);
 
-  const entries = useMemo(() => getHomeBlogEntries(articles, locale), [articles, locale]);
+  const entries = useMemo(() => getHomeBlogEntries(blogs, locale), [blogs, locale]);
 
   const openUnlock = () => setUnlockOpen(true);
 
@@ -268,7 +268,7 @@ export function HomeBlogSection({ returnReference, onReturnHandled }: Props) {
 
         <div className="text-center mt-10">
           <Button variant="warm" asChild>
-            <Link to="/resources">
+            <Link to="/blog">
               {t("home.blog.viewMore")}
               <ArrowRight className="group-hover:translate-x-0.5 transition-transform" />
             </Link>

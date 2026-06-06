@@ -46,7 +46,7 @@ export function ContinueLearning({ target }: Props) {
       </div>
       <Button variant="warm" asChild className="shrink-0">
         {target.slug ? (
-          <Link to="/resources/$slug" params={{ slug: target.slug }}>
+          <Link to="/blog/$slug" params={{ slug: target.slug }}>
             {t("resourcesPage.continueCta")}
             <ArrowRight />
           </Link>

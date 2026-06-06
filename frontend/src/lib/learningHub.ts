@@ -1,6 +1,6 @@
 import { learningModules, type LearningModule } from "@/lib/learningModules";
 import { isTopicDoneInSet } from "@/lib/learningProgressKeys";
-import type { ResourceArticle } from "@/lib/resources";
+import type { BlogPost } from "@/lib/blogs";
 
 export const FREE_MODULE_ID = "getting-started";
 
@@ -19,7 +19,7 @@ export type ModuleTopicEntry = {
   href?: string;
   hash?: string;
   videoUrl?: string;
-  article?: ResourceArticle;
+  blog?: BlogPost;
   hasContent: boolean;
 };
 
@@ -63,19 +63,19 @@ export function getModuleById(moduleId: string): LearningModule | undefined {
   return learningModules.find((m) => m.id === moduleId);
 }
 
-export function resolveModuleArticles(articles: ResourceArticle[]): Map<string, ResourceArticle[]> {
-  const byModule = new Map<string, ResourceArticle[]>();
-  for (const article of articles) {
-    const moduleId = article.articleData?.moduleId;
+export function resolveModuleBlogs(blogs: BlogPost[]): Map<string, BlogPost[]> {
+  const byModule = new Map<string, BlogPost[]>();
+  for (const blog of blogs) {
+    const moduleId = blog.moduleId;
     if (!moduleId) continue;
     const list = byModule.get(moduleId) ?? [];
-    list.push(article);
+    list.push(blog);
     byModule.set(moduleId, list);
   }
   for (const [moduleId, list] of byModule) {
     list.sort((a, b) => {
-      const ao = a.articleData?.topicOrder ?? 999;
-      const bo = b.articleData?.topicOrder ?? 999;
+      const ao = a.topicIndex ?? 999;
+      const bo = b.topicIndex ?? 999;
       return ao - bo;
     });
     byModule.set(moduleId, list);
@@ -83,62 +83,53 @@ export function resolveModuleArticles(articles: ResourceArticle[]): Map<string, 
   return byModule;
 }
 
-export function buildModuleTopics(
-  module: LearningModule,
-  articles: ResourceArticle[],
-): ModuleTopicEntry[] {
-  const moduleArticles = resolveModuleArticles(articles).get(module.id) ?? [];
-  const byOrder = new Map<number, ResourceArticle>();
-  const bySlug = new Map<string, ResourceArticle>();
+export function buildModuleTopics(module: LearningModule, blogs: BlogPost[]): ModuleTopicEntry[] {
+  const moduleBlogs = resolveModuleBlogs(blogs).get(module.id) ?? [];
+  const byOrder = new Map<number, BlogPost>();
+  const bySlug = new Map<string, BlogPost>();
 
-  for (const article of moduleArticles) {
-    bySlug.set(article.slug, article);
-    const order = article.articleData?.topicOrder;
-    if (order !== undefined) {
-      byOrder.set(order, article);
+  for (const blog of moduleBlogs) {
+    bySlug.set(blog.slug, blog);
+    if (blog.topicIndex !== undefined && blog.topicIndex !== null) {
+      byOrder.set(blog.topicIndex, blog);
     }
   }
 
   return module.topics.map((topic, index) => {
     const fromOrder = byOrder.get(index);
-    const fromSlug = topic.slug ? bySlug.get(topic.slug) ?? articles.find((a) => a.slug === topic.slug) : undefined;
-    const article = fromOrder ?? fromSlug;
-    const slug = article?.slug ?? topic.slug;
-    const videoUrl = article?.articleData?.videoUrl ?? topic.video;
+    const fromSlug = topic.slug ? bySlug.get(topic.slug) ?? blogs.find((b) => b.slug === topic.slug) : undefined;
+    const blog = fromOrder ?? fromSlug;
+    const slug = blog?.slug ?? topic.slug;
     return {
       index,
       title: topic.title,
       slug,
-      href: topic.href,
+      href: topic.href ?? blog?.externalUrl ?? undefined,
       hash: topic.hash,
-      videoUrl,
-      article,
-      hasContent: Boolean(slug || topic.href),
+      blog,
+      hasContent: Boolean(slug || topic.href || blog?.externalUrl),
     };
   });
 }
 
-export function getLinkedArticlesForModule(
-  moduleId: string,
-  articles: ResourceArticle[],
-): ResourceArticle[] {
+export function getLinkedBlogsForModule(moduleId: string, blogs: BlogPost[]): BlogPost[] {
   const module = getModuleById(moduleId);
   if (!module) return [];
-  return buildModuleTopics(module, articles)
+  return buildModuleTopics(module, blogs)
     .filter((t) => t.slug)
-    .map((t) => t.article!)
+    .map((t) => t.blog!)
     .filter(Boolean);
 }
 
 export function getModuleProgress(
   moduleId: string,
-  articles: ResourceArticle[],
+  blogs: BlogPost[],
   completed: Set<string>,
 ): ModuleProgress {
   const module = getModuleById(moduleId);
   if (!module) return { completed: 0, total: 0, percent: 0 };
 
-  const topics = buildModuleTopics(module, articles).filter((t) => t.hasContent);
+  const topics = buildModuleTopics(module, blogs).filter((t) => t.hasContent);
   const total = topics.length;
   if (total === 0) return { completed: 0, total: 0, percent: 0 };
 
@@ -150,13 +141,10 @@ export function getModuleProgress(
   };
 }
 
-export function getModuleContext(
-  slug: string,
-  articles: ResourceArticle[],
-): ModuleContext | null {
+export function getModuleContext(slug: string, blogs: BlogPost[]): ModuleContext | null {
   for (let moduleIndex = 0; moduleIndex < learningModules.length; moduleIndex++) {
     const module = learningModules[moduleIndex];
-    const topics = buildModuleTopics(module, articles);
+    const topics = buildModuleTopics(module, blogs);
     const topicIndex = topics.findIndex((t) => t.slug === slug);
     if (topicIndex === -1) continue;
 
@@ -176,16 +164,13 @@ export function getModuleContext(
   return null;
 }
 
-export function getContinueTarget(
-  completed: Set<string>,
-  articles: ResourceArticle[],
-): ContinueTarget | null {
+export function getContinueTarget(completed: Set<string>, blogs: BlogPost[]): ContinueTarget | null {
   for (const module of learningModules) {
-    const topics = buildModuleTopics(module, articles);
+    const topics = buildModuleTopics(module, blogs);
     for (const topic of topics) {
       if (!topic.hasContent || isTopicDoneInSet(topic, module.id, completed)) continue;
 
-      const title = topic.article ? topic.article.titleEn : topic.title;
+      const title = topic.blog ? topic.blog.titleEn : topic.title;
       return {
         moduleId: module.id,
         moduleTitle: module.title,
@@ -200,23 +185,21 @@ export function getContinueTarget(
   return null;
 }
 
-export function getFeaturedArticlesForModule(
+export function getFeaturedBlogsForModule(
   moduleId: string,
-  articles: ResourceArticle[],
+  blogs: BlogPost[],
   limit = 3,
-): ResourceArticle[] {
-  const linked = resolveModuleArticles(articles).get(moduleId) ?? [];
+): BlogPost[] {
+  const linked = resolveModuleBlogs(blogs).get(moduleId) ?? [];
   if (linked.length >= limit) return linked.slice(0, limit);
 
   const cats = getModuleCategoryFallback(moduleId);
-  const extras = articles.filter(
-    (a) => !a.articleData?.moduleId && cats.includes(a.category),
-  );
-  const seen = new Set(linked.map((a) => a.slug));
+  const extras = blogs.filter((b) => !b.moduleId && cats.includes(b.category));
+  const seen = new Set(linked.map((b) => b.slug));
   const merged = [...linked];
-  for (const a of extras) {
-    if (seen.has(a.slug)) continue;
-    merged.push(a);
+  for (const b of extras) {
+    if (seen.has(b.slug)) continue;
+    merged.push(b);
     if (merged.length >= limit) break;
   }
   return merged.slice(0, limit);
@@ -224,25 +207,28 @@ export function getFeaturedArticlesForModule(
 
 export function getFirstUnreadSlug(
   moduleId: string,
-  articles: ResourceArticle[],
+  blogs: BlogPost[],
   completed: Set<string>,
 ): string | null {
   const module = getModuleById(moduleId);
   if (!module) return null;
-  const topics = buildModuleTopics(module, articles);
-  const first = topics.find(
-    (t) => t.slug && !isTopicDoneInSet(t, moduleId, completed),
-  );
+  const topics = buildModuleTopics(module, blogs);
+  const first = topics.find((t) => t.slug && !isTopicDoneInSet(t, moduleId, completed));
   return first?.slug ?? topics.find((t) => t.slug)?.slug ?? null;
 }
 
 export function getFirstUnreadTopic(
   moduleId: string,
-  articles: ResourceArticle[],
+  blogs: BlogPost[],
   completed: Set<string>,
 ): ModuleTopicEntry | null {
   const module = getModuleById(moduleId);
   if (!module) return null;
-  const topics = buildModuleTopics(module, articles);
+  const topics = buildModuleTopics(module, blogs);
   return topics.find((t) => t.hasContent && !isTopicDoneInSet(t, moduleId, completed)) ?? null;
+}
+
+export function blogRequiresUnlock(blog: BlogPost, unlocked: boolean): boolean {
+  if (!blog.moduleId) return false;
+  return moduleRequiresUnlock(blog.moduleId, unlocked);
 }

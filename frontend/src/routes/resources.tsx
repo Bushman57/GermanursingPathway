@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { useResourcesQuery } from "@/lib/queries/resources";
+import { useBlogsQuery } from "@/lib/queries/blogs";
 import { useTranslation } from "react-i18next";
 import { metaFromKeys } from "@/lib/pageMeta";
 import {
@@ -41,7 +41,7 @@ export const Route = createFileRoute("/resources")({
 function ResourcesPage() {
   const { payment: returnReference } = Route.useSearch();
   const navigate = useNavigate({ from: "/resources" });
-  const { data: articles = [], isLoading } = useResourcesQuery();
+  const { data: blogs = [], isLoading } = useBlogsQuery();
   const { completed } = useLearningProgress();
   const { unlocked, isLoading: accessLoading, isAuthenticated, amountKes, refetch } =
     useLearningAccess();
@@ -59,11 +59,11 @@ function ResourcesPage() {
   const openSignIn = () => setUnlockOpen(true);
 
   const continueTarget = useMemo(
-    () => getContinueTarget(completed, articles),
-    [completed, articles],
+    () => getContinueTarget(completed, blogs),
+    [completed, blogs],
   );
 
-  const storyArticle = articles.find((a) => a.slug === "candidate-story-nairobi-to-berlin");
+  const storyBlog = blogs.find((b) => b.slug === "candidate-story-nairobi-to-berlin");
 
   const filteredModules = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -139,7 +139,7 @@ function ResourcesPage() {
               {t("resourcesPage.statTopics")}
             </div>
             <div className="px-4 py-2 rounded-full bg-white/10 text-primary-foreground/90 backdrop-blur">
-              <span className="font-semibold text-warm">{articles.length}</span>{" "}
+              <span className="font-semibold text-warm">{blogs.length}</span>{" "}
               {t("resourcesPage.statArticles")}
             </div>
           </div>
@@ -189,7 +189,7 @@ function ResourcesPage() {
         <div className="max-w-6xl mx-auto px-4 py-3 overflow-x-auto">
           <div className="flex gap-2 min-w-max">
             {learningModules.map((m) => {
-              const progress = getModuleProgress(m.id, articles, completed);
+              const progress = getModuleProgress(m.id, blogs, completed);
               const isActive = expandedId === m.id;
               return (
                 <button
@@ -239,14 +239,14 @@ function ResourcesPage() {
                 key={module.id}
                 module={module}
                 moduleIndex={moduleIndex >= 0 ? moduleIndex : idx}
-                articles={articles}
+                blogs={blogs}
                 isLoading={isLoading}
                 isDe={isDe}
                 expanded={!locked && expandedId === module.id}
                 onToggle={() =>
                   setExpandedId((prev) => (prev === module.id ? null : module.id))
                 }
-                progress={getModuleProgress(module.id, articles, completed)}
+                progress={getModuleProgress(module.id, blogs, completed)}
                 locked={locked}
                 isAuthenticated={isAuthenticated}
                 amountKes={amountKes}
@@ -268,10 +268,10 @@ function ResourcesPage() {
             {t("resourcesPage.storiesHeading")}
           </h2>
           <p className="mt-2 text-muted-foreground">{t("resourcesPage.storiesSubtitle")}</p>
-          {storyArticle && (
+          {storyBlog && (
             <div className="mt-8">
               <Button variant="outline" asChild>
-                <Link to="/resources/$slug" params={{ slug: storyArticle.slug }}>
+                <Link to="/blog/$slug" params={{ slug: storyBlog.slug }}>
                   {t("resourcesPage.readStory")}
                   <ArrowRight />
                 </Link>

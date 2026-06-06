@@ -12,6 +12,10 @@ export const queryKeys = {
     list: ["resources", "list"] as const,
     detail: (slug: string) => ["resources", "detail", slug] as const,
   },
+  blogs: {
+    list: ["blogs", "list"] as const,
+    detail: (slug: string) => ["blogs", "detail", slug] as const,
+  },
   partners: {
     list: ["partners", "list"] as const,
   },

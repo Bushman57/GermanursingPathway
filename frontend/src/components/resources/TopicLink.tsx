@@ -19,7 +19,7 @@ export function TopicLink({ topic, moduleId, returnTo, className, children }: Pr
 
   if (topic.slug) {
     return (
-      <Link to="/resources/$slug" params={{ slug: topic.slug }} className={className}>
+      <Link to="/blog/$slug" params={{ slug: topic.slug }} className={className}>
         {children}
       </Link>
     );

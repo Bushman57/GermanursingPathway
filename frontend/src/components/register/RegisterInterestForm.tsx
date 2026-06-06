@@ -52,7 +52,7 @@ function Field({
 }
 
 type Props = {
-  source: "register" | "scholarships";
+  source: string;
   compact?: boolean;
 };
 
@@ -60,6 +60,7 @@ export function RegisterInterestForm({ source, compact }: Props) {
   const { t, i18n } = useTranslation();
   const ns = source === "scholarships" ? "scholarshipsPage" : undefined;
   const gateKey = source === "scholarships" ? "gate" : undefined;
+  const isBlog = source.startsWith("blog:");
 
   const [step, setStep] = useState<1 | 2>(1);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -167,9 +168,9 @@ export function RegisterInterestForm({ source, compact }: Props) {
   }
 
   const title =
-    gateKey && ns ? t(`${gateKey}.formTitle`, { ns }) : t("register.title");
+    gateKey && ns ? t(`${gateKey}.formTitle`, { ns }) : isBlog ? t("blogPage.sidebarTitle", { ns: "common" }) : t("register.title");
   const subtitle =
-    gateKey && ns ? t(`${gateKey}.formSubtitle`, { ns }) : t("register.subtitle");
+    gateKey && ns ? t(`${gateKey}.formSubtitle`, { ns }) : isBlog ? t("blogPage.sidebarSubtitle", { ns: "common" }) : t("register.subtitle");
 
   return (
     <div className={compact ? "" : "max-w-lg mx-auto px-4 sm:px-6"}>

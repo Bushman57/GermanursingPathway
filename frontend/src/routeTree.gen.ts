@@ -20,17 +20,22 @@ import { Route as EligibilityRouteImport } from './routes/eligibility'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ScholarshipsSlugRouteImport } from './routes/scholarships.$slug'
 import { Route as ResourcesSlugRouteImport } from './routes/resources.$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminScholarshipsIndexRouteImport } from './routes/admin/scholarships/index'
 import { Route as AdminResourcesIndexRouteImport } from './routes/admin/resources/index'
+import { Route as AdminBlogsIndexRouteImport } from './routes/admin/blogs/index'
 import { Route as ResourcesModuleModuleIdRouteImport } from './routes/resources.module.$moduleId'
 import { Route as AdminScholarshipsNewRouteImport } from './routes/admin/scholarships/new'
 import { Route as AdminResourcesNewRouteImport } from './routes/admin/resources/new'
+import { Route as AdminBlogsNewRouteImport } from './routes/admin/blogs/new'
 import { Route as AdminScholarshipsSlugEditRouteImport } from './routes/admin/scholarships/$slug.edit'
 import { Route as AdminResourcesSlugEditRouteImport } from './routes/admin/resources/$slug.edit'
+import { Route as AdminBlogsSlugEditRouteImport } from './routes/admin/blogs/$slug.edit'
 
 const ScholarshipsRoute = ScholarshipsRouteImport.update({
   id: '/scholarships',
@@ -87,6 +92,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -102,6 +112,11 @@ const ResourcesSlugRoute = ResourcesSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => ResourcesRoute,
 } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -115,6 +130,11 @@ const AdminScholarshipsIndexRoute = AdminScholarshipsIndexRouteImport.update({
 const AdminResourcesIndexRoute = AdminResourcesIndexRouteImport.update({
   id: '/resources/',
   path: '/resources/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBlogsIndexRoute = AdminBlogsIndexRouteImport.update({
+  id: '/blogs/',
+  path: '/blogs/',
   getParentRoute: () => AdminRoute,
 } as any)
 const ResourcesModuleModuleIdRoute = ResourcesModuleModuleIdRouteImport.update({
@@ -132,6 +152,11 @@ const AdminResourcesNewRoute = AdminResourcesNewRouteImport.update({
   path: '/resources/new',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminBlogsNewRoute = AdminBlogsNewRouteImport.update({
+  id: '/blogs/new',
+  path: '/blogs/new',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminScholarshipsSlugEditRoute =
   AdminScholarshipsSlugEditRouteImport.update({
     id: '/scholarships/$slug/edit',
@@ -141,6 +166,11 @@ const AdminScholarshipsSlugEditRoute =
 const AdminResourcesSlugEditRoute = AdminResourcesSlugEditRouteImport.update({
   id: '/resources/$slug/edit',
   path: '/resources/$slug/edit',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBlogsSlugEditRoute = AdminBlogsSlugEditRouteImport.update({
+  id: '/blogs/$slug/edit',
+  path: '/blogs/$slug/edit',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -157,14 +187,19 @@ export interface FileRoutesByFullPath {
   '/resources': typeof ResourcesRouteWithChildren
   '/scholarships': typeof ScholarshipsRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/resources/$slug': typeof ResourcesSlugRoute
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/blog/': typeof BlogIndexRoute
+  '/admin/blogs/new': typeof AdminBlogsNewRoute
   '/admin/resources/new': typeof AdminResourcesNewRoute
   '/admin/scholarships/new': typeof AdminScholarshipsNewRoute
   '/resources/module/$moduleId': typeof ResourcesModuleModuleIdRoute
+  '/admin/blogs/': typeof AdminBlogsIndexRoute
   '/admin/resources/': typeof AdminResourcesIndexRoute
   '/admin/scholarships/': typeof AdminScholarshipsIndexRoute
+  '/admin/blogs/$slug/edit': typeof AdminBlogsSlugEditRoute
   '/admin/resources/$slug/edit': typeof AdminResourcesSlugEditRoute
   '/admin/scholarships/$slug/edit': typeof AdminScholarshipsSlugEditRoute
 }
@@ -180,14 +215,19 @@ export interface FileRoutesByTo {
   '/resources': typeof ResourcesRouteWithChildren
   '/scholarships': typeof ScholarshipsRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/resources/$slug': typeof ResourcesSlugRoute
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
   '/admin': typeof AdminIndexRoute
+  '/blog': typeof BlogIndexRoute
+  '/admin/blogs/new': typeof AdminBlogsNewRoute
   '/admin/resources/new': typeof AdminResourcesNewRoute
   '/admin/scholarships/new': typeof AdminScholarshipsNewRoute
   '/resources/module/$moduleId': typeof ResourcesModuleModuleIdRoute
+  '/admin/blogs': typeof AdminBlogsIndexRoute
   '/admin/resources': typeof AdminResourcesIndexRoute
   '/admin/scholarships': typeof AdminScholarshipsIndexRoute
+  '/admin/blogs/$slug/edit': typeof AdminBlogsSlugEditRoute
   '/admin/resources/$slug/edit': typeof AdminResourcesSlugEditRoute
   '/admin/scholarships/$slug/edit': typeof AdminScholarshipsSlugEditRoute
 }
@@ -205,14 +245,19 @@ export interface FileRoutesById {
   '/resources': typeof ResourcesRouteWithChildren
   '/scholarships': typeof ScholarshipsRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/resources/$slug': typeof ResourcesSlugRoute
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/blog/': typeof BlogIndexRoute
+  '/admin/blogs/new': typeof AdminBlogsNewRoute
   '/admin/resources/new': typeof AdminResourcesNewRoute
   '/admin/scholarships/new': typeof AdminScholarshipsNewRoute
   '/resources/module/$moduleId': typeof ResourcesModuleModuleIdRoute
+  '/admin/blogs/': typeof AdminBlogsIndexRoute
   '/admin/resources/': typeof AdminResourcesIndexRoute
   '/admin/scholarships/': typeof AdminScholarshipsIndexRoute
+  '/admin/blogs/$slug/edit': typeof AdminBlogsSlugEditRoute
   '/admin/resources/$slug/edit': typeof AdminResourcesSlugEditRoute
   '/admin/scholarships/$slug/edit': typeof AdminScholarshipsSlugEditRoute
 }
@@ -231,14 +276,19 @@ export interface FileRouteTypes {
     | '/resources'
     | '/scholarships'
     | '/admin/login'
+    | '/blog/$slug'
     | '/resources/$slug'
     | '/scholarships/$slug'
     | '/admin/'
+    | '/blog/'
+    | '/admin/blogs/new'
     | '/admin/resources/new'
     | '/admin/scholarships/new'
     | '/resources/module/$moduleId'
+    | '/admin/blogs/'
     | '/admin/resources/'
     | '/admin/scholarships/'
+    | '/admin/blogs/$slug/edit'
     | '/admin/resources/$slug/edit'
     | '/admin/scholarships/$slug/edit'
   fileRoutesByTo: FileRoutesByTo
@@ -254,14 +304,19 @@ export interface FileRouteTypes {
     | '/resources'
     | '/scholarships'
     | '/admin/login'
+    | '/blog/$slug'
     | '/resources/$slug'
     | '/scholarships/$slug'
     | '/admin'
+    | '/blog'
+    | '/admin/blogs/new'
     | '/admin/resources/new'
     | '/admin/scholarships/new'
     | '/resources/module/$moduleId'
+    | '/admin/blogs'
     | '/admin/resources'
     | '/admin/scholarships'
+    | '/admin/blogs/$slug/edit'
     | '/admin/resources/$slug/edit'
     | '/admin/scholarships/$slug/edit'
   id:
@@ -278,14 +333,19 @@ export interface FileRouteTypes {
     | '/resources'
     | '/scholarships'
     | '/admin/login'
+    | '/blog/$slug'
     | '/resources/$slug'
     | '/scholarships/$slug'
     | '/admin/'
+    | '/blog/'
+    | '/admin/blogs/new'
     | '/admin/resources/new'
     | '/admin/scholarships/new'
     | '/resources/module/$moduleId'
+    | '/admin/blogs/'
     | '/admin/resources/'
     | '/admin/scholarships/'
+    | '/admin/blogs/$slug/edit'
     | '/admin/resources/$slug/edit'
     | '/admin/scholarships/$slug/edit'
   fileRoutesById: FileRoutesById
@@ -302,6 +362,8 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   ResourcesRoute: typeof ResourcesRouteWithChildren
   ScholarshipsRoute: typeof ScholarshipsRouteWithChildren
+  BlogSlugRoute: typeof BlogSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -383,6 +445,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -404,6 +473,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResourcesSlugRouteImport
       parentRoute: typeof ResourcesRoute
     }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/login'
@@ -423,6 +499,13 @@ declare module '@tanstack/react-router' {
       path: '/resources'
       fullPath: '/admin/resources/'
       preLoaderRoute: typeof AdminResourcesIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/blogs/': {
+      id: '/admin/blogs/'
+      path: '/blogs'
+      fullPath: '/admin/blogs/'
+      preLoaderRoute: typeof AdminBlogsIndexRouteImport
       parentRoute: typeof AdminRoute
     }
     '/resources/module/$moduleId': {
@@ -446,6 +529,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminResourcesNewRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/blogs/new': {
+      id: '/admin/blogs/new'
+      path: '/blogs/new'
+      fullPath: '/admin/blogs/new'
+      preLoaderRoute: typeof AdminBlogsNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/scholarships/$slug/edit': {
       id: '/admin/scholarships/$slug/edit'
       path: '/scholarships/$slug/edit'
@@ -460,16 +550,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminResourcesSlugEditRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/blogs/$slug/edit': {
+      id: '/admin/blogs/$slug/edit'
+      path: '/blogs/$slug/edit'
+      fullPath: '/admin/blogs/$slug/edit'
+      preLoaderRoute: typeof AdminBlogsSlugEditRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminBlogsNewRoute: typeof AdminBlogsNewRoute
   AdminResourcesNewRoute: typeof AdminResourcesNewRoute
   AdminScholarshipsNewRoute: typeof AdminScholarshipsNewRoute
+  AdminBlogsIndexRoute: typeof AdminBlogsIndexRoute
   AdminResourcesIndexRoute: typeof AdminResourcesIndexRoute
   AdminScholarshipsIndexRoute: typeof AdminScholarshipsIndexRoute
+  AdminBlogsSlugEditRoute: typeof AdminBlogsSlugEditRoute
   AdminResourcesSlugEditRoute: typeof AdminResourcesSlugEditRoute
   AdminScholarshipsSlugEditRoute: typeof AdminScholarshipsSlugEditRoute
 }
@@ -477,10 +577,13 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminBlogsNewRoute: AdminBlogsNewRoute,
   AdminResourcesNewRoute: AdminResourcesNewRoute,
   AdminScholarshipsNewRoute: AdminScholarshipsNewRoute,
+  AdminBlogsIndexRoute: AdminBlogsIndexRoute,
   AdminResourcesIndexRoute: AdminResourcesIndexRoute,
   AdminScholarshipsIndexRoute: AdminScholarshipsIndexRoute,
+  AdminBlogsSlugEditRoute: AdminBlogsSlugEditRoute,
   AdminResourcesSlugEditRoute: AdminResourcesSlugEditRoute,
   AdminScholarshipsSlugEditRoute: AdminScholarshipsSlugEditRoute,
 }
@@ -525,6 +628,8 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   ResourcesRoute: ResourcesRouteWithChildren,
   ScholarshipsRoute: ScholarshipsRouteWithChildren,
+  BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

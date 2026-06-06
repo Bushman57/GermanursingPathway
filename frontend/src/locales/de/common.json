@@ -135,6 +135,10 @@
       "title": "Ressourcen — German Nursing Pathway",
       "description": "Leitfäden zu Sprache, Visum, Ausbildung und Leben in Deutschland."
     },
+    "blog": {
+      "title": "Blog — German Nursing Pathway",
+      "description": "Ausführliche Artikel zum Pflegeweg nach Deutschland — Sprache, Visa, Jobs und Erfahrungsberichte."
+    },
     "about": {
       "title": "Über uns — German Nursing Pathway",
       "description": "Mission, Leistungen und ethischer Ansatz zur Gesundheitsmigration Kenia–Deutschland."
@@ -207,6 +211,20 @@
     "articleLocked": "Dieser Artikel gehört zum Premium-Lernzentrum. Alle Module für KES {{amount}} freischalten.",
     "learningReturnLabel": "Lektionsleitfaden — zurück zum Lernzentrum, wenn Sie fertig sind.",
     "learningReturnCta": "Lektionen fortsetzen"
+  },
+  "blogPage": {
+    "breadcrumbHome": "Startseite",
+    "breadcrumbBlog": "Blog",
+    "title": "Lernzentrum Blog",
+    "subtitle": "Praktische Leitfäden zu Sprache, Visa, Anerkennung und Leben in Deutschland — für kenianische Gesundheitsfachkräfte.",
+    "empty": "Noch keine Blog-Beiträge. Schauen Sie bald wieder vorbei.",
+    "share": "Teilen",
+    "linkCopied": "Link in die Zwischenablage kopiert",
+    "byAuthor": "Von {{author}}",
+    "bodyFallback": "Dieser Leitfaden ist Teil des German Nursing Pathway Blogs. {{excerpt}} Registrieren Sie Ihr Interesse für persönliche Unterstützung.",
+    "sidebarTitle": "Starten Sie Ihre Reise",
+    "sidebarSubtitle": "Registrieren Sie Ihr Interesse — unser Team meldet sich mit klaren nächsten Schritten.",
+    "externalLink": "Vollständigen Artikel lesen"
   },
   "errors": {
     "404": {
