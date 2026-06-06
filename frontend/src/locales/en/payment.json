@@ -29,7 +29,7 @@
   "failed": "Payment was not completed.",
   "cancelled": "Checkout was closed before payment completed.",
   "learningHubTitle": "Unlock Learning Hub",
-  "learningHubDescriptionWithAmount": "Pay <strong>{{amount}}</strong> once to unlock modules 2–11 — all premium guides, topics, and articles.",
+  "learningHubDescriptionWithAmount": "One-time <strong>{{amount}}</strong> unlocks modules 2–11.",
   "learningHubDescriptionGeneric": "Pay once to unlock modules 2–11 in the Learning Hub.",
   "learningHubSignInPrompt": "Sign in with your portal email before paying.",
   "learningHubPayButton": "Unlock for {{amount}}",

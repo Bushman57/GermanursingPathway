@@ -173,6 +173,31 @@ class Payment(Base):
     )
 
 
+class BlogPost(Base):
+    __tablename__ = "blog_posts"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    slug: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    title_en: Mapped[str] = mapped_column(String(300), nullable=False)
+    title_de: Mapped[str | None] = mapped_column(String(300), nullable=True)
+    excerpt_en: Mapped[str] = mapped_column(Text, nullable=False)
+    excerpt_de: Mapped[str | None] = mapped_column(Text, nullable=True)
+    body_en: Mapped[str | None] = mapped_column(Text, nullable=True)
+    body_de: Mapped[str | None] = mapped_column(Text, nullable=True)
+    module_id: Mapped[str | None] = mapped_column(String(60), nullable=True, index=True)
+    topic_index: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    category: Mapped[str] = mapped_column(String(40), nullable=False)
+    author: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    read_minutes: Mapped[int] = mapped_column(Integer, default=5, nullable=False)
+    featured_image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    external_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    is_published: Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+
+
 class ResourceArticle(Base):
     __tablename__ = "resource_articles"
 

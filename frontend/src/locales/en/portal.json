@@ -1,6 +1,6 @@
 {
   "title": "Student Portal",
-  "subtitle": "Sign in with a one-time code sent to your registered email.",
+  "subtitle": "Enter your email. We'll send a 6-digit code.",
   "signOut": "Sign out",
   "signedOut": "You have been signed out.",
   "welcome": "Welcome back, {{name}}",
@@ -12,7 +12,7 @@
   },
   "scholarships": {
     "title": "Scholarships",
-    "subtitle": "Browse programs available to registered students. Use the scholarship assistant (chat button) for personalized guidance.",
+    "subtitle": "Programs matched to registered candidates.",
     "browseAll": "Open full scholarships page",
     "loading": "Loading scholarships…",
     "empty": "No scholarships available right now.",
@@ -83,7 +83,7 @@
   },
   "profile": {
     "title": "Your profile",
-    "subtitle": "Add a photo and keep your contact details up to date.",
+    "subtitle": "Photo and contact details.",
     "email": "Email address",
     "memberBadge": "Registered candidate",
     "changePhoto": "Change profile photo",
@@ -98,7 +98,7 @@
   "settings": {
     "title": "Profile & preferences",
     "notificationsTitle": "Notifications",
-    "notificationsSubtitle": "Choose what we remind you about in the portal.",
+    "notificationsSubtitle": "Email reminders in the portal.",
     "fullName": "Full name",
     "phone": "Phone",
     "germanLevel": "German level",
@@ -115,7 +115,7 @@
     "sendCode": "Send sign-in code",
     "sending": "Sending…",
     "codeSentTo": "Enter the 6-digit code sent to",
-    "codeSentConfirm": "A sign-in code has been sent to your email.",
+    "codeSentConfirm": "Code sent. Check your inbox (and spam).",
     "codeSentToast": "Sign-in code sent",
     "signedIn": "Signed in",
     "verify": "Verify and sign in",

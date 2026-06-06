@@ -70,13 +70,14 @@
   "offeredBy": "Offered by",
   "gate": {
     "badge": "Members only",
-    "formTitle": "Register to view scholarships",
-    "formSubtitle": "Tell us about your background — we'll email you a sign-in code when you're ready to browse.",
-    "successTitle": "You're registered",
-    "successBody": "Sign in to the student portal with the one-time code we'll send to your email.",
-    "signInCta": "Sign in to view scholarships"
+    "formTitle": "Register to browse scholarships",
+    "formSubtitle": "Free account · takes 2 minutes",
+    "successTitle": "You're in",
+    "successBody": "Sign in to the portal to browse programs.",
+    "signInCta": "Go to portal"
   },
-  "signInPrompt": "Already registered? Sign in on the student portal to browse scholarships and use the scholarship assistant.",
+  "signInPrompt": "Already registered?",
+  "signInLink": "Sign in",
   "detail": {
     "back": "Back to scholarships",
     "notFoundTitle": "Scholarship not found",

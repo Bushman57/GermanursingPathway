@@ -13,9 +13,10 @@ import { Loader2, Mail, Lock } from "lucide-react";
 
 type Props = {
   onSignedIn: (session: PortalSession) => void;
+  compact?: boolean;
 };
 
-export function PortalOtpLogin({ onSignedIn }: Props) {
+export function PortalOtpLogin({ onSignedIn, compact = false }: Props) {
   const { t } = useTranslation("portal");
   const [step, setStep] = useState<"email" | "code">("email");
   const [email, setEmail] = useState("");
@@ -90,19 +91,25 @@ export function PortalOtpLogin({ onSignedIn }: Props) {
   };
 
   return (
-    <div className="max-w-md mx-auto">
-      <div className="text-center mb-8">
-        <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-          <Lock className="w-7 h-7 text-primary" />
+    <div className={compact ? "w-full" : "max-w-md mx-auto"}>
+      {!compact && (
+        <div className="text-center mb-8">
+          <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+            <Lock className="w-7 h-7 text-primary" />
+          </div>
+          <h1 className="font-heading text-3xl font-bold text-foreground">{t("title")}</h1>
+          <p className="mt-2 text-sm text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <h1 className="font-heading text-3xl font-bold text-foreground">{t("title")}</h1>
-        <p className="mt-2 text-sm text-muted-foreground">{t("subtitle")}</p>
-      </div>
+      )}
 
       {step === "email" ? (
         <form
           onSubmit={sendCode}
-          className="bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-5 shadow-sm"
+          className={
+            compact
+              ? "space-y-4"
+              : "bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-5 shadow-sm"
+          }
         >
           <div>
             <label className="block text-sm font-medium mb-1.5">{t("otp.emailLabel")}</label>
@@ -114,7 +121,6 @@ export function PortalOtpLogin({ onSignedIn }: Props) {
               placeholder={t("otp.emailPlaceholder")}
               autoComplete="email"
             />
-            <p className="text-xs text-muted-foreground mt-1.5">{t("otp.registeredEmailHint")}</p>
           </div>
           {error && (
             <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-lg">
@@ -129,14 +135,14 @@ export function PortalOtpLogin({ onSignedIn }: Props) {
               )}
             </p>
           )}
-          <Button type="submit" variant="warm" size="lg" className="w-full py-6" disabled={loading}>
+          <Button type="submit" variant="warm" size="lg" className="w-full" disabled={loading}>
             {loading ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" /> {t("otp.sending")}
+                <Loader2 className="w-4 h-4 animate-spin" /> {t("otp.sending")}
               </>
             ) : (
               <>
-                <Mail className="w-4 h-4 mr-2" /> {t("otp.sendCode")}
+                <Mail className="w-4 h-4" /> {t("otp.sendCode")}
               </>
             )}
           </Button>
@@ -150,7 +156,11 @@ export function PortalOtpLogin({ onSignedIn }: Props) {
       ) : (
         <form
           onSubmit={verify}
-          className="bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-5 shadow-sm"
+          className={
+            compact
+              ? "space-y-4"
+              : "bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-5 shadow-sm"
+          }
         >
           {info && (
             <p className="text-sm text-muted-foreground bg-muted/50 px-3 py-2 rounded-lg">{info}</p>
@@ -170,10 +180,10 @@ export function PortalOtpLogin({ onSignedIn }: Props) {
           {error && (
             <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-lg">{error}</p>
           )}
-          <Button type="submit" variant="warm" size="lg" className="w-full py-6" disabled={loading}>
+          <Button type="submit" variant="warm" size="lg" className="w-full" disabled={loading}>
             {loading ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" /> {t("otp.verifying")}
+                <Loader2 className="w-4 h-4 animate-spin" /> {t("otp.verifying")}
               </>
             ) : (
               t("otp.verify")

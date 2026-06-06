@@ -17,7 +17,7 @@ export type LearningTopic = {
   title: string;
   slug?: string; // optional link to a resource article
   video?: string; // YouTube URL or embed src
-  /** In-app route (e.g. `/onboarding-process` or `/` with hash) */
+  /** In-app route (e.g. `/onboarding-process` or `/` with hash) or external article URL */
   href?: string;
   hash?: string;
 };
@@ -44,7 +44,10 @@ export const learningModules: LearningModule[] = [
       { title: "Overview of the Germany nursing pathway", href: "/", hash: "program-overview" },
       { title: "Step-by-step roadmap (Kenya → Germany)", href: "/onboarding-process" },
       { title: "Who qualifies to apply (eligibility criteria)", href: "/", hash: "eligibility" },
-      { title: "Differences between Ausbildung vs direct employment" },
+      {
+        title: "Differences between Ausbildung vs direct employment",
+        href: "https://europecareers.in/ausbildung-vs-direct-nursing-jobs-in-germany-which-is-better/",
+      },
     ],
   },
   {

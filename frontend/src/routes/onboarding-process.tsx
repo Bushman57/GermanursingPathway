@@ -188,13 +188,13 @@ function OnboardingProcess() {
           </div>
 
           <div className="mt-16 flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="warm" size="lg" className="px-10 py-6 text-base" asChild>
+            <Button variant="warm" size="cta" asChild>
               <Link to="/register">
                 {t("registerCta")}
-                <ArrowRight className="w-4 h-4 ml-1" />
+                <ArrowRight className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </Button>
-            <WhatsAppLink variant="outline" size="lg" className="px-10 py-6 text-base" label={tc("nav.whatsapp")} />
+            <WhatsAppLink variant="outline" size="cta" label={tc("nav.whatsapp")} />
           </div>
         </div>
       </div>

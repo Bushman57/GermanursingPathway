@@ -31,7 +31,7 @@
   },
   "register": {
     "title": "Register Your Interest",
-    "subtitle": "Tell us about yourself — our team will follow up with next steps.",
+    "subtitle": "Share a few details so we can support your application.",
     "fullName": "Full Name",
     "email": "Email",
     "phone": "Phone (optional)",
@@ -97,7 +97,14 @@
   },
   "home": {
     "testimonialsTitle": "Stories from the pathway",
-    "recentScholarships": "Explore scholarships"
+    "recentScholarships": "Explore scholarships",
+    "blog": {
+      "title": "Learning Hub Guides",
+      "subtitle": "Practical articles on language, visas, recognition, and life in Germany — written for Kenyan healthcare professionals.",
+      "readMore": "Read more",
+      "viewMore": "View more guides",
+      "lockedHint": "Unlock to read"
+    }
   },
   "meta": {
     "home": {
@@ -134,7 +141,7 @@
     },
     "portal": {
       "title": "Student Portal — German Nursing Pathway",
-      "description": "Sign in with email OTP to browse scholarships and track your application journey."
+      "description": "Browse scholarships and track your application."
     }
   },
   "partnersPage": {
@@ -190,15 +197,15 @@
     "markComplete": "Mark complete",
     "markIncomplete": "Mark incomplete",
     "moduleLocked": "Premium",
-    "moduleLockedHint": "Sign in and unlock modules 2–11 to access this content.",
-    "signInToUnlock": "Sign in to unlock",
+    "moduleLockedHint": "Sign in to unlock modules 2–11.",
+    "signInToUnlock": "Sign in",
     "unlockAllModules": "Unlock all modules — KES {{amount}}",
     "unlockBannerTitle": "Unlock modules 2–11 for KES {{amount}}",
-    "unlockBannerBody": "Module 1 is free. One payment unlocks the full Learning Hub curriculum.",
-    "premiumPaywallTitle": "This module is part of the premium Learning Hub",
-    "premiumPaywallBody": "Unlock modules 2–11 with a one-time payment of KES {{amount}}.",
+    "unlockBannerBody": "Module 1 is free. Unlock the rest with one payment.",
+    "premiumPaywallTitle": "Premium module",
+    "premiumPaywallBody": "Unlock all modules for KES {{amount}}.",
     "articleLocked": "This article is part of the premium Learning Hub. Unlock all modules for KES {{amount}}.",
-    "learningReturnLabel": "You're viewing a lesson guide — return to the Learning Hub when you're ready.",
+    "learningReturnLabel": "Lesson guide — return to Learning Hub when done.",
     "learningReturnCta": "Continue lessons"
   },
   "errors": {

@@ -134,7 +134,7 @@ function ModulePage() {
                   <Button variant="warm" asChild>
                     <Link to="/resources/$slug" params={{ slug: startTopic.slug }}>
                       {t("resourcesPage.startModule")}
-                      <ArrowRight className="w-4 h-4 ml-1.5" />
+                      <ArrowRight />
                     </Link>
                   </Button>
                 ) : startTopic.href ? (
@@ -145,7 +145,7 @@ function ModulePage() {
                       rel="noopener noreferrer"
                     >
                       {t("resourcesPage.startModule")}
-                      <ArrowRight className="w-4 h-4 ml-1.5" />
+                      <ArrowRight />
                     </a>
                   </Button>
                 ) : null}

@@ -1,6 +1,6 @@
 {
   "title": "Studierendenportal",
-  "subtitle": "Melden Sie sich mit einem Einmalcode an, den wir an Ihre registrierte E-Mail senden.",
+  "subtitle": "E-Mail eingeben. Wir senden einen 6-stelligen Code.",
   "signOut": "Abmelden",
   "signedOut": "Sie wurden abgemeldet.",
   "welcome": "Willkommen zurück, {{name}}",
@@ -12,7 +12,7 @@
   },
   "scholarships": {
     "title": "Stipendien",
-    "subtitle": "Programme für registrierte Interessenten. Nutzen Sie den Stipendien-Assistenten (Chat-Symbol) für persönliche Beratung.",
+    "subtitle": "Programme für registrierte Kandidaten.",
     "browseAll": "Vollständige Stipendienseite öffnen",
     "loading": "Stipendien werden geladen…",
     "empty": "Derzeit keine Stipendien verfügbar.",
@@ -83,7 +83,7 @@
   },
   "profile": {
     "title": "Ihr Profil",
-    "subtitle": "Fügen Sie ein Foto hinzu und halten Sie Ihre Kontaktdaten aktuell.",
+    "subtitle": "Foto und Kontaktdaten.",
     "email": "E-Mail-Adresse",
     "memberBadge": "Registrierter Kandidat",
     "changePhoto": "Profilfoto ändern",
@@ -98,7 +98,7 @@
   "settings": {
     "title": "Profil & Einstellungen",
     "notificationsTitle": "Benachrichtigungen",
-    "notificationsSubtitle": "Wählen Sie, woran wir Sie im Portal erinnern.",
+    "notificationsSubtitle": "E-Mail-Erinnerungen im Portal.",
     "fullName": "Vollständiger Name",
     "phone": "Telefon",
     "germanLevel": "Deutschniveau",
@@ -115,7 +115,7 @@
     "sendCode": "Anmeldecode senden",
     "sending": "Wird gesendet…",
     "codeSentTo": "Geben Sie den 6-stelligen Code ein für",
-    "codeSentConfirm": "Ein Anmeldecode wurde an Ihre E-Mail gesendet.",
+    "codeSentConfirm": "Code gesendet. Posteingang prüfen (auch Spam).",
     "codeSentToast": "Anmeldecode gesendet",
     "signedIn": "Angemeldet",
     "verify": "Bestätigen und anmelden",

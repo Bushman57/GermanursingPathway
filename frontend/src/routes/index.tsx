@@ -8,6 +8,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
 import { HomeSocialProof } from "@/components/home/HomeSocialProof";
+import { HomeBlogSection } from "@/components/home/HomeBlogSection";
 import { WhatsAppLink } from "@/components/WhatsAppButton";
 import { TAGLINE_SECONDARY } from "@/lib/constants";
 import { parseLearningSearch } from "@/lib/learningSearchParams";
@@ -161,18 +162,13 @@ function Index() {
             {tc("hero.description")}
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="warm" size="lg" className="text-base px-10 py-6" asChild>
+            <Button variant="warm" size="cta" asChild>
               <Link to="/register">
                 {tc("hero.register")}
-                <ArrowRight className="w-4 h-4 ml-1" />
+                <ArrowRight className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </Button>
-            <WhatsAppLink
-              label={tc("hero.whatsapp")}
-              variant="hero-outline"
-              size="lg"
-              className="text-base px-10 py-6"
-            />
+            <WhatsAppLink label={tc("hero.whatsapp")} variant="hero-outline" size="cta" />
           </div>
           <Button variant="link" className="mt-4 text-primary-foreground/80 hover:text-primary-foreground" asChild>
             <Link to="/eligibility">{tc("hero.readiness")}</Link>
@@ -255,10 +251,10 @@ function Index() {
                       </li>
                     ))}
                   </ul>
-                  <Button variant="warm" className="w-full mt-6 group-hover:shadow-lg transition-shadow" asChild>
+                  <Button variant="warm" className="w-full mt-6 group" asChild>
                     <Link to="/eligibility">
                       {t("programTypes.applyNow")}
-                      <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="group-hover:translate-x-0.5 transition-transform" />
                     </Link>
                   </Button>
                 </div>
@@ -267,6 +263,11 @@ function Index() {
           </div>
         </div>
       </section>
+
+      <HomeBlogSection
+        returnReference={returnReference}
+        onReturnHandled={clearPaymentReturn}
+      />
 
       {/* Investment Breakdown — Table like GHIC */}
       <section className="py-20 hero-gradient">
@@ -362,10 +363,10 @@ function Index() {
                 {t("eligibility.disclaimer")}
               </p>
 
-              <Button variant="warm" size="lg" className="mt-8 px-8 py-6 text-base" asChild>
+              <Button variant="warm" size="cta" className="mt-8" asChild>
                 <Link to="/eligibility">
                   {t("eligibility.cta")}
-                  <ArrowRight className="w-4 h-4 ml-1" />
+                  <ArrowRight className="group-hover:translate-x-0.5 transition-transform" />
                 </Link>
               </Button>
             </div>
@@ -414,13 +415,13 @@ function Index() {
             {t("cta.subtitle")}
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="warm" size="lg" className="px-10 py-6 text-base" asChild>
+            <Button variant="warm" size="cta" asChild>
               <Link to="/register">
                 {tc("hero.register")}
-                <ArrowRight className="w-4 h-4 ml-1" />
+                <ArrowRight className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </Button>
-            <WhatsAppLink label={tc("hero.whatsapp")} size="lg" className="px-10 py-6 text-base" />
+            <WhatsAppLink label={tc("hero.whatsapp")} size="cta" />
           </div>
           <p className="mt-6 text-muted-foreground text-sm">{t("cta.contact")}</p>
         </div>

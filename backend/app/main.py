@@ -10,6 +10,7 @@ from app.db.session import init_db
 from app.routers import (
     admin_content,
     auth,
+    blogs,
     chat,
     eligibility,
     leads,
@@ -81,6 +82,7 @@ app.include_router(leads.router)
 app.include_router(payments_router)
 app.include_router(scholarships.router)
 app.include_router(resources.router)
+app.include_router(blogs.router)
 app.include_router(admin_content.router)
 
 
