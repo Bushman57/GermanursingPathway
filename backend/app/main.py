@@ -44,6 +44,14 @@ def on_startup() -> None:
         log.warning(
             "PORTAL_COOKIE_SAMESITE=none requires PORTAL_COOKIE_SECURE=true for browsers to accept the session cookie"
         )
+    log.info("CORS allow_origins: %s", settings.cors_origin_list)
+    if settings.cors_origin_regex.strip():
+        log.info("CORS allow_origin_regex: %s", settings.cors_origin_regex.strip())
+    elif not any(o.startswith("https://") and "localhost" not in o for o in settings.cors_origin_list):
+        log.warning(
+            "CORS: no production HTTPS origins configured — set CORS_ORIGINS on the API host "
+            "(e.g. https://germanursingpathway.com,https://www.germanursingpathway.com)"
+        )
 
 
 @app.exception_handler(HTTPException)
