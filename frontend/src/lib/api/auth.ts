@@ -61,12 +61,22 @@ export async function logoutPortal(): Promise<void> {
 
 export type PortalProfile = { email: string; fullName: string };
 
+export class PortalUnavailableError extends Error {
+  constructor() {
+    super("Portal temporarily unavailable — try again shortly.");
+    this.name = "PortalUnavailableError";
+  }
+}
+
 type MeResponse =
   | { authenticated: false }
   | { authenticated: true; email: string; fullName: string };
 
 export async function fetchMe(): Promise<PortalProfile | null> {
   const res = await fetch(`${authBase()}/me`, fetchOpts);
+  if (res.status === 503 || res.status === 500) {
+    throw new PortalUnavailableError();
+  }
   if (!res.ok) throw new Error(await parseApiError(res));
   const data = await parseJsonResponse<MeResponse>(res);
   if (!data.authenticated) return null;

@@ -1,6 +1,8 @@
 # Portal OTP + gated scholarships — manual E2E checklist
 
-Prerequisites: `DATABASE_URL`, `JWT_SECRET`, and `alembic upgrade head` applied (`0007` otp_challenges). For email delivery configure **SMTP** (`SMTP_HOST`, `SMTP_USER`, `SMTP_PASSWORD`) or optionally `RESEND_API_KEY`. Without either, OTP codes are logged on the backend console.
+Prerequisites: `DATABASE_URL`, `JWT_SECRET`, and `alembic upgrade head` applied through revision **`20260605_0014`** (includes `0007` otp_challenges, lead notification prefs, learning hub unlock, blog_posts). For email delivery configure **SMTP** (`SMTP_HOST`, `SMTP_USER`, `SMTP_PASSWORD`) or optionally `RESEND_API_KEY`. Without either, OTP codes are logged on the backend console.
+
+**Production (Render):** Build runs `alembic upgrade head`. After deploy, confirm `GET /health` returns `"dbRevision": "20260605_0014"`. If `/api/auth/me` returns **503** or the portal shows “temporarily unavailable”, trigger a **Manual Deploy** on Render and check logs for migration errors (`UndefinedColumn`, missing `otp_challenges`, etc.).
 
 OTP emails are sent as **HTML + plain text** (Paystack-style card). Set `PUBLIC_SITE_URL` so the logo loads from `/email/logo.png` (file in `frontend/public/email/logo.png`). Without `PUBLIC_SITE_URL`, the logo is embedded inline from `backend/app/static/email/logo.png`.
 
@@ -16,7 +18,7 @@ Restart uvicorn after changing `backend/.env` (settings are loaded at process st
 
 ## Guest (not signed in)
 
-- [ ] `GET /api/auth/me` returns **200** `{"authenticated":false}` (not an error — you are not signed in yet).
+- [ ] `GET /api/auth/me` returns **200** `{"authenticated":false}` (not 503/500 — if you see those, run migrations on the API host).
 - [ ] Open `/scholarships` — hero + intro visible; register gate shown; **no** `GET /api/scholarships` in Network tab.
 - [ ] Submit register form on `/scholarships` — `POST /api/leads` succeeds; still no scholarship list.
 - [ ] Open `/scholarships/{slug}` directly — redirected to `/scholarships` (no detail fetch).

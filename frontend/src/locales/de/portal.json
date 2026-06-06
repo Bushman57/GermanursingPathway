@@ -3,6 +3,7 @@
   "subtitle": "E-Mail eingeben. Wir senden einen 6-stelligen Code.",
   "signOut": "Abmelden",
   "signedOut": "Sie wurden abgemeldet.",
+  "serviceUnavailable": "Portal vorübergehend nicht erreichbar — bitte später erneut versuchen.",
   "welcome": "Willkommen zurück, {{name}}",
   "tabs": {
     "overview": "Übersicht",

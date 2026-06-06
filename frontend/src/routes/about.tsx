@@ -12,7 +12,7 @@ import {
   Eye, BadgeCheck, HandCoins, Handshake, LifeBuoy, UserCheck,
   ClipboardList, GraduationCap, MessageCircle, BookOpen, Video,
   FileStack, Languages, Stamp, Mic, Plane, Package, MapPin,
-  CheckCircle2, Phone, ArrowRight,
+  CheckCircle2, ArrowRight,
 } from "lucide-react";
 import imageHero from "@/assets/image_hero.webp";
 import heroBridge from "@/assets/hero-bridge.webp";
@@ -78,7 +78,7 @@ function About() {
         </div>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <span className="inline-block text-xs font-semibold uppercase tracking-[0.2em] text-warm bg-warm/10 px-3 py-1 rounded-full mb-6">
-            About Us
+            {t("heroBadge")}
           </span>
           <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
             {t("title")}
@@ -436,16 +436,16 @@ function About() {
             {t("cta.subtitle")}
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="warm" size="lg" asChild>
-              <Link to="/register">
-                <Phone className="w-4 h-4 mr-2" />
-                {t("cta.primary")}
-              </Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild className="bg-background/10 backdrop-blur border-primary-foreground/30 text-primary-foreground hover:bg-background hover:text-foreground">
+            <WhatsAppLink label={t("cta.primary")} variant="warm" size="cta" />
+            <Button
+              variant="outline"
+              size="cta"
+              className="group bg-background/10 backdrop-blur border-primary-foreground/30 text-primary-foreground hover:bg-background hover:text-foreground"
+              asChild
+            >
               <Link to="/eligibility">
                 {t("cta.secondary")}
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </Button>
           </div>

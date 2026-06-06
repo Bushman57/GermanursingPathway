@@ -1,5 +1,6 @@
 {
   "title": "About German Nursing Pathway",
+  "heroBadge": "About Us",
   "intro": "At German Nursing Pathway, we help ambitious nurses take their first step toward a career in Germany. From eligibility checks and language training to visa guidance and post-arrival integration, we walk every step with you — making the process stress-free and building the skills and confidence you need to succeed in the German healthcare system.",
   "empowering": {
     "title": "Empowering Nursing Careers in",
@@ -122,7 +123,7 @@
     "title": "Start Your Nursing Career in",
     "titleAccent": "Germany Today",
     "subtitle": "Ready to take the first step toward your dream nursing career abroad? Get in touch and let's map out your pathway.",
-    "primary": "Book Free Consultation",
+    "primary": "Join WhatsApp Community",
     "secondary": "Check Your Eligibility"
   }
 }
