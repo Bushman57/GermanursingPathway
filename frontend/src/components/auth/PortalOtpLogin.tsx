@@ -38,11 +38,22 @@ export function PortalOtpLogin({ onSignedIn }: Props) {
     setLoading(true);
     try {
       const res = await requestOtp(email);
+      if (res.sent === false) {
+        const msg =
+          res.reason === "not_registered"
+            ? t("otp.errors.notRegistered")
+            : res.reason === "rate_limited"
+              ? t("otp.errors.rateLimited")
+              : res.message;
+        setError(msg);
+        toast.error(msg);
+        return;
+      }
       const devHint =
         import.meta.env.DEV && !import.meta.env.VITE_API_URL
           ? ` ${t("otp.devConsoleHint")}`
           : "";
-      setInfo(`${res.message}${devHint}`);
+      setInfo(`${t("otp.codeSentConfirm")}${devHint}`);
       setStep("code");
       toast.success(t("otp.codeSentToast"));
     } catch (err) {
@@ -106,7 +117,17 @@ export function PortalOtpLogin({ onSignedIn }: Props) {
             <p className="text-xs text-muted-foreground mt-1.5">{t("otp.registeredEmailHint")}</p>
           </div>
           {error && (
-            <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-lg">{error}</p>
+            <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-lg">
+              {error}
+              {error === t("otp.errors.notRegistered") && (
+                <>
+                  {" "}
+                  <Link to="/register" className="font-medium text-warm hover:underline">
+                    {t("otp.registerLink")}
+                  </Link>
+                </>
+              )}
+            </p>
           )}
           <Button type="submit" variant="warm" size="lg" className="w-full py-6" disabled={loading}>
             {loading ? (

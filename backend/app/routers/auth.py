@@ -19,9 +19,11 @@ from app.services.user_service import ensure_user_and_candidate, get_latest_lead
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
-GENERIC_OTP_MESSAGE = (
-    "If this email is registered, you will receive a sign-in code shortly."
+GENERIC_OTP_MESSAGE = "A sign-in code has been sent to your email."
+NOT_REGISTERED_OTP_MESSAGE = (
+    "No account found for this email. Register your interest first, then sign in with the same address."
 )
+RATE_LIMIT_OTP_MESSAGE = "Too many code requests. Please wait an hour and try again."
 
 
 def require_db() -> Generator[Session, None, None]:
@@ -97,10 +99,25 @@ def request_otp(
 
     ip_hash = _client_ip_hash(request, settings.jwt_secret)
     try:
-        create_otp_challenge(db, str(body.email), ip_hash=ip_hash, settings=settings)
+        outcome = create_otp_challenge(db, str(body.email), ip_hash=ip_hash, settings=settings)
     except RuntimeError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
-    return {"message": GENERIC_OTP_MESSAGE}
+
+    if outcome.sent:
+        return {"sent": True, "message": GENERIC_OTP_MESSAGE}
+    if outcome.reason == "not_registered":
+        return {
+            "sent": False,
+            "reason": "not_registered",
+            "message": NOT_REGISTERED_OTP_MESSAGE,
+        }
+    if outcome.reason == "rate_limited":
+        return {
+            "sent": False,
+            "reason": "rate_limited",
+            "message": RATE_LIMIT_OTP_MESSAGE,
+        }
+    return {"sent": False, "message": GENERIC_OTP_MESSAGE}
 
 
 @router.post("/otp/verify")

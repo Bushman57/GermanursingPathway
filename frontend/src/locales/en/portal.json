@@ -115,7 +115,8 @@
     "sendCode": "Send sign-in code",
     "sending": "Sending…",
     "codeSentTo": "Enter the 6-digit code sent to",
-    "codeSentToast": "If this email is registered, a code will arrive shortly.",
+    "codeSentConfirm": "A sign-in code has been sent to your email.",
+    "codeSentToast": "Sign-in code sent",
     "signedIn": "Signed in",
     "verify": "Verify and sign in",
     "verifying": "Verifying…",
@@ -127,6 +128,8 @@
       "emailRequired": "Enter your email to continue.",
       "codeRequired": "Enter the full 6-digit code.",
       "invalidCode": "Invalid or expired code. Try again or request a new code.",
+      "notRegistered": "No account found for this email. Register your interest first, then sign in with the same address.",
+      "rateLimited": "Too many code requests. Please wait an hour and try again.",
       "generic": "Something went wrong. Please try again."
     }
   }
