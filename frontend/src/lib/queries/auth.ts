@@ -7,5 +7,6 @@ export function useAuthMeQuery() {
     queryKey: queryKeys.auth.me,
     queryFn: fetchMe,
     staleTime: 1000 * 60 * 2,
+    retry: false,
   });
 }

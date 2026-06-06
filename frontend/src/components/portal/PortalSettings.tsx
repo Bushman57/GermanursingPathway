@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Bell, Settings, UserRound } from "lucide-react";
+import { Bell, Loader2, Settings, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { PortalProfileAvatar } from "@/components/portal/PortalProfileAvatar";
@@ -10,7 +10,7 @@ import { toast } from "sonner";
 
 export function PortalSettings({ email }: { email: string }) {
   const { t } = useTranslation("portal");
-  const { data: profile } = usePortalProfileQuery();
+  const { data: profile, isError: profileError, isLoading: profileLoading } = usePortalProfileQuery();
   const update = useUpdatePortalProfileMutation();
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
@@ -50,6 +50,19 @@ export function PortalSettings({ email }: { email: string }) {
 
   return (
     <div className="space-y-6">
+      {profileError && (
+        <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3">
+          {t("settings.loadError", {
+            defaultValue: "Could not load your profile. Sign out and sign in again with the same email as your registration.",
+          })}
+        </p>
+      )}
+      {profileLoading && !profile && (
+        <p className="text-sm text-muted-foreground flex items-center gap-2">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          {t("settings.loading", { defaultValue: "Loading profile…" })}
+        </p>
+      )}
       <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
         <div className="border-b border-border bg-muted/30 px-6 py-4">
           <h2 className="font-heading text-lg font-semibold flex items-center gap-2">

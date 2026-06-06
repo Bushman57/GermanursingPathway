@@ -12,6 +12,9 @@ function staleApiMessage(status: number): string | null {
       "Redeploy the latest backend on Render, then try again."
     );
   }
+  if (status === 500) {
+    return "Portal sign-in is temporarily unavailable on the server. Redeploy the latest backend, then try again.";
+  }
   if (status === 405) {
     return "This API build is outdated. Redeploy the latest backend on Render.";
   }
@@ -74,6 +77,7 @@ type MeResponse =
 
 export async function fetchMe(): Promise<PortalProfile | null> {
   const res = await fetch(`${authBase()}/me`, fetchOpts);
+  if (res.status === 401) return null;
   if (res.status === 503 || res.status === 500) {
     throw new PortalUnavailableError();
   }

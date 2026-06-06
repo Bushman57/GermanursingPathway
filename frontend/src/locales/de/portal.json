@@ -27,6 +27,7 @@
   "journey": {
     "title": "Bewerbungsreise",
     "loading": "Reise wird geladen…",
+    "loadError": "Ihre Reise konnte nicht geladen werden. Bitte Seite aktualisieren.",
     "eligibilitySummary": "Eignungswertung: {{score}} % ({{status}})",
     "completeEligibility": "Eignungsprüfung abschließen",
     "percent": "{{progress}} % abgeschlossen",
@@ -107,6 +108,8 @@
     "notifyDocuments": "Erinnerungen zu Dokumenten",
     "save": "Speichern",
     "saved": "Profil aktualisiert",
+    "loading": "Profil wird geladen…",
+    "loadError": "Profil konnte nicht geladen werden. Abmelden und mit derselben E-Mail wie bei der Registrierung erneut anmelden.",
     "error": "Profil konnte nicht gespeichert werden"
   },
   "otp": {
@@ -131,6 +134,7 @@
       "invalidCode": "Ungültiger oder abgelaufener Code. Erneut versuchen oder neuen Code anfordern.",
       "notRegistered": "Kein Konto für diese E-Mail. Registrieren Sie zuerst Ihr Interesse und melden Sie sich dann mit derselben Adresse an.",
       "rateLimited": "Zu viele Code-Anfragen. Bitte warten Sie eine Stunde und versuchen Sie es erneut.",
+      "sessionNotSaved": "Code akzeptiert, aber Ihre Sitzung konnte nicht gespeichert werden. Erlauben Sie Cookies für diese Website und versuchen Sie es erneut.",
       "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
     }
   }

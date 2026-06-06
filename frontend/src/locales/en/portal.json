@@ -27,6 +27,7 @@
   "journey": {
     "title": "Application journey",
     "loading": "Loading journey…",
+    "loadError": "Could not load your journey. Try refreshing the page.",
     "eligibilitySummary": "Eligibility score: {{score}}% ({{status}})",
     "completeEligibility": "Complete eligibility review",
     "percent": "{{progress}}% complete",
@@ -107,6 +108,8 @@
     "notifyDocuments": "Document request reminders",
     "save": "Save changes",
     "saved": "Profile updated",
+    "loading": "Loading profile…",
+    "loadError": "Could not load your profile. Sign out and sign in again with the same email as your registration.",
     "error": "Could not save profile"
   },
   "otp": {
@@ -131,6 +134,7 @@
       "invalidCode": "Invalid or expired code. Try again or request a new code.",
       "notRegistered": "No account found for this email. Register your interest first, then sign in with the same address.",
       "rateLimited": "Too many code requests. Please wait an hour and try again.",
+      "sessionNotSaved": "Code accepted, but your session could not be saved. Allow cookies for this site and try again.",
       "generic": "Something went wrong. Please try again."
     }
   }
