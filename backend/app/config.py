@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     gemini_model: str = "gemini-2.0-flash"
     cors_origins: str = "http://localhost:8080,http://127.0.0.1:8080"
+    # Optional regex for preview deploys, e.g. https://.*\.vercel\.app
+    cors_origin_regex: str = ""
     prompt_reload: bool = True
     database_url: str = ""
     admin_api_secret: str = ""
