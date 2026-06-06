@@ -15,6 +15,16 @@ from app.services.otp_email import send_otp_email
 PORTAL_JWT_AUD = "portal"
 logger = logging.getLogger(__name__)
 
+OtpRequestReason = str  # "not_registered" | "rate_limited"
+
+
+class OtpRequestResult:
+    __slots__ = ("sent", "reason")
+
+    def __init__(self, *, sent: bool, reason: OtpRequestReason | None = None) -> None:
+        self.sent = sent
+        self.reason = reason
+
 
 def normalize_email(email: str) -> str:
     return email.strip().lower()
@@ -48,8 +58,8 @@ def create_otp_challenge(
     *,
     ip_hash: str | None = None,
     settings: Settings | None = None,
-) -> str | None:
-    """Create challenge and send email. Returns plaintext code if sent, else None."""
+) -> OtpRequestResult:
+    """Create challenge and send email when the address is registered."""
     settings = settings or get_settings()
     normalized = normalize_email(email)
     if not lead_exists(db, normalized):
@@ -57,11 +67,11 @@ def create_otp_challenge(
             "OTP not sent for %s — no matching registration. User must register first with this exact email.",
             normalized,
         )
-        return None
+        return OtpRequestResult(sent=False, reason="not_registered")
 
     if recent_request_count(db, normalized, settings) >= settings.otp_requests_per_hour:
         logger.warning("OTP rate limit reached for %s", normalized)
-        return None
+        return OtpRequestResult(sent=False, reason="rate_limited")
 
     code = f"{secrets.randbelow(1_000_000):06d}"
     now = datetime.now(timezone.utc)
@@ -79,7 +89,7 @@ def create_otp_challenge(
         db.rollback()
         raise
     db.commit()
-    return code
+    return OtpRequestResult(sent=True)
 
 
 def verify_otp_code(

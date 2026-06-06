@@ -115,7 +115,8 @@
     "sendCode": "Anmeldecode senden",
     "sending": "Wird gesendet…",
     "codeSentTo": "Geben Sie den 6-stelligen Code ein für",
-    "codeSentToast": "Wenn diese E-Mail registriert ist, erhalten Sie in Kürze einen Code.",
+    "codeSentConfirm": "Ein Anmeldecode wurde an Ihre E-Mail gesendet.",
+    "codeSentToast": "Anmeldecode gesendet",
     "signedIn": "Angemeldet",
     "verify": "Bestätigen und anmelden",
     "verifying": "Wird geprüft…",
@@ -127,6 +128,8 @@
       "emailRequired": "Bitte geben Sie Ihre E-Mail ein.",
       "codeRequired": "Bitte geben Sie den vollständigen 6-stelligen Code ein.",
       "invalidCode": "Ungültiger oder abgelaufener Code. Erneut versuchen oder neuen Code anfordern.",
+      "notRegistered": "Kein Konto für diese E-Mail. Registrieren Sie zuerst Ihr Interesse und melden Sie sich dann mit derselben Adresse an.",
+      "rateLimited": "Zu viele Code-Anfragen. Bitte warten Sie eine Stunde und versuchen Sie es erneut.",
       "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
     }
   }

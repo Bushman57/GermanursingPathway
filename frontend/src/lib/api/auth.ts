@@ -20,7 +20,13 @@ function staleApiMessage(status: number): string | null {
 
 const fetchOpts: RequestInit = { credentials: "include" };
 
-export async function requestOtp(email: string): Promise<{ message: string }> {
+export type OtpRequestResponse = {
+  sent?: boolean;
+  message: string;
+  reason?: "not_registered" | "rate_limited";
+};
+
+export async function requestOtp(email: string): Promise<OtpRequestResponse> {
   const res = await fetch(`${authBase()}/otp/request`, {
     ...fetchOpts,
     method: "POST",
@@ -30,7 +36,7 @@ export async function requestOtp(email: string): Promise<{ message: string }> {
   if (!res.ok) {
     throw new Error(staleApiMessage(res.status) ?? (await parseApiError(res)));
   }
-  return parseJsonResponse<{ message: string }>(res);
+  return parseJsonResponse<OtpRequestResponse>(res);
 }
 
 export async function verifyOtp(email: string, code: string): Promise<{
