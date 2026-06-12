@@ -15,11 +15,21 @@ class PaymentConfigResponse(BaseModel):
 class InitializePaymentCreate(BaseModel):
     email: EmailStr
     phone: str = Field(default="", max_length=20)
-    purpose: Literal["program_fee", "learning_hub"] = "program_fee"
+    purpose: Literal[
+        "program_fee",
+        "learning_hub",
+        "subscription_essential",
+        "subscription_plus",
+        "subscription_premium",
+    ] = "program_fee"
 
 
 class LearningHubPaymentCreate(BaseModel):
     email: EmailStr
+
+
+class SubscriptionPaymentCreate(BaseModel):
+    tier: Literal["essential", "plus", "premium"]
 
 
 class InitializePaymentResponse(BaseModel):

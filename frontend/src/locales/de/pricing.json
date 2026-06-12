@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "title": "Preise — German Nursing Pathway",
+    "subtitle": "Wählen Sie den Plan, der zu Ihrer Phase auf dem Weg nach Deutschland passt."
+  },
+  "freeTrial": {
+    "title": "Vor dem Abo testen",
+    "body": "3 kostenlose KI-Gespräche zum Pfad und Einführungsmodule — ohne Karte."
+  },
+  "mostPopular": "Am beliebtesten",
+  "perTerm": "/ 3 Monate",
+  "seeBenefits": "Leistungen anzeigen",
+  "hideBenefits": "Leistungen ausblenden",
+  "upgradeButton": "Upgrade — {{amount}} KES / 3 Monate",
+  "inheritsEssential": "Alle Vorteile von Essential und mehr.",
+  "inheritsPlus": "Alle Vorteile von Plus und mehr.",
+  "shortDescription": {
+    "essential": "Pfad-KI, Ressourcen & Einführungskurse",
+    "plus": "Stipendien-KI & verifizierte Programme",
+    "premium": "Alles in Plus plus CV-Überarbeitung"
+  },
+  "cta": {
+    "essential": "Essential wählen",
+    "plus": "Plus wählen",
+    "premium": "Premium wählen"
+  },
+  "features": {
+    "pathwayAi": "Allgemeiner Pfad-KI-Assistent (unbegrenzt)",
+    "resources": "Vollständige Guides & Ressourcen",
+    "introClasses": "Kostenlose Einführungsmodule",
+    "inheritsEssential": "Alles in Essential",
+    "scholarshipAi": "Stipendien-Matching KI-Assistent",
+    "verifiedPrograms": "Zugang zu verifizierten Stipendienprogrammen",
+    "inheritsPlus": "Alles in Plus",
+    "cvRevamp": "Professionelle CV-/Lebenslauf-Überarbeitung"
+  },
+  "checkout": {
+    "signInTitle": "Anmelden, um fortzufahren",
+    "signInBody": "Verwenden Sie dieselbe E-Mail wie bei der Registrierung.",
+    "processing": "Sicherer Checkout wird geöffnet…"
+  },
+  "success": "Abo aktiv — vielen Dank!",
+  "upgradeRequired": "Upgrade erforderlich",
+  "upgradePlusBody": "Plus schaltet verifizierte Stipendienprogramme und Stipendien-KI frei.",
+  "upgradeEssentialBody": "Essential schaltet unbegrenzten Pfad-Chat und volle Ressourcen frei.",
+  "viewPlans": "Pläne ansehen"
+}

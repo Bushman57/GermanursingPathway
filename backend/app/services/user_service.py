@@ -201,13 +201,19 @@ def unlock_learning_hub(db: Session, email: str) -> Lead:
 
 
 def learning_access_dict(db: Session, email: str, *, settings: Settings) -> dict:
+    from app.services.subscription_service import get_active_subscription, has_min_tier
+
     lead = get_latest_lead(db, email)
     unlocked_at = lead.learning_hub_unlocked_at if lead else None
+    sub = get_active_subscription(db, email)
+    essential_plus = has_min_tier(db, email, "essential")
     return {
-        "unlocked": unlocked_at is not None,
+        "unlocked": essential_plus or unlocked_at is not None,
         "freeModuleId": settings.learning_hub_free_module_id,
         "amountKes": settings.learning_hub_amount_kes,
         "unlockedAt": unlocked_at.isoformat() if unlocked_at else None,
+        "subscriptionTier": sub.tier if sub else None,
+        "subscriptionExpiresAt": sub.expires_at.isoformat() if sub else None,
     }
 
 

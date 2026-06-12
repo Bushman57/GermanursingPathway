@@ -1,5 +1,12 @@
 import { apiRoot, parseApiError, parseJsonResponse, requireApiRoot } from "@/lib/api/apiBase";
-import type { InitializePaymentResult, PaymentConfig, PaymentPurpose, PaymentStatus } from "./types";
+import type {
+  InitializePaymentResult,
+  PaymentConfig,
+  PaymentPurpose,
+  PaymentStatus,
+  SubscriptionTier,
+} from "./types";
+import { purposeForTier } from "@/features/pricing/pricingPlanConfig";
 
 function paymentsBase(): string {
   const root = import.meta.env.PROD ? requireApiRoot() : apiRoot();
@@ -35,6 +42,26 @@ export async function initializePayment(
     throw new Error(await parseApiError(res));
   }
   return parseJsonResponse<InitializePaymentResult>(res);
+}
+
+export async function initializeSubscriptionPayment(
+  tier: SubscriptionTier,
+): Promise<InitializePaymentResult> {
+  const purpose = purposeForTier(tier);
+  const res = await fetch(`${paymentsBase()}/initialize/subscription`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tier }),
+  });
+  if (!res.ok) throw new Error(await parseApiError(res));
+  return parseJsonResponse<InitializePaymentResult>(res);
+}
+
+export async function fetchSubscriptionPaymentConfig(
+  tier: SubscriptionTier,
+): Promise<PaymentConfig> {
+  return fetchPaymentConfig({ purpose: purposeForTier(tier) });
 }
 
 export async function initializeLearningHubPayment(email: string): Promise<InitializePaymentResult> {

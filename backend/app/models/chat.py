@@ -14,6 +14,7 @@ class ChatRequest(BaseModel):
     scholarshipSlug: str | None = None
     attachmentNames: list[str] | None = None
     locale: str = "en"
+    sessionId: str | None = Field(default=None, max_length=64)
 
 
 class ChatResponse(BaseModel):

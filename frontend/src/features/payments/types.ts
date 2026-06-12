@@ -27,6 +27,13 @@ export type PaymentStatus = {
   message?: string | null;
 };
 
-export type PaymentPurpose = "program_fee" | "learning_hub";
+export type SubscriptionTier = "essential" | "plus" | "premium";
+
+export type PaymentPurpose =
+  | "program_fee"
+  | "learning_hub"
+  | "subscription_essential"
+  | "subscription_plus"
+  | "subscription_premium";
 
 export type PaymentStep = "idle" | "loading" | "waiting" | "success" | "error";

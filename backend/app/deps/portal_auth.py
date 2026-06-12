@@ -1,9 +1,14 @@
+from collections.abc import Generator
+
 from fastapi import Depends, HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 import jwt
+from sqlalchemy.orm import Session
 
 from app.config import Settings, get_settings
+from app.db.session import get_db
 from app.services.otp_service import decode_portal_token
+from app.services.subscription_service import has_min_tier
 
 _bearer = HTTPBearer(auto_error=False)
 
@@ -69,4 +74,29 @@ def require_portal_user(
             raise HTTPException(status_code=401, detail="Invalid or expired session")
         raise HTTPException(status_code=401, detail="Sign in required")
 
+    return user
+
+
+def _portal_db() -> Generator[Session, None, None]:
+    if not get_settings().database_url:
+        raise HTTPException(
+            status_code=503,
+            detail="Database is not configured. Set DATABASE_URL in backend/.env",
+        )
+    yield from get_db()
+
+
+def require_plus_subscription(
+    user: PortalUser = Depends(require_portal_user),
+    db: Session = Depends(_portal_db),
+) -> PortalUser:
+    if not has_min_tier(db, user.email, "plus"):
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "error": "Plus subscription required to access verified scholarship programs.",
+                "upgradeTier": "plus",
+                "pricingUrl": "/pricing",
+            },
+        )
     return user

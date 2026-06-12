@@ -10,7 +10,9 @@ import {
 } from "@/lib/scholarshipFieldOptions";
 import { metaFromScholarshipsPage } from "@/lib/pageMeta";
 import { Award, Search } from "lucide-react";
+import { SubscriptionUpgradePanel } from "@/components/pricing/SubscriptionUpgradePanel";
 import { ScholarshipRegisterGate } from "@/components/scholarships/ScholarshipRegisterGate";
+import { SubscriptionRequiredError } from "@/lib/api/scholarships";
 import { ScholarshipsGridSkeleton } from "@/components/scholarships/ScholarshipsGridSkeleton";
 import { ScholarshipCard } from "@/components/scholarships/ScholarshipCard";
 import { ScholarshipCompareBar } from "@/components/scholarships/ScholarshipCompareBar";
@@ -272,7 +274,7 @@ function AuthenticatedScholarshipsListing({ email }: { email: string }) {
   const compare = useScholarshipCompare();
 
   const apiFilters = searchToApiFilters(search);
-  const { data: scholarships = [], isLoading } = useScholarshipsQuery(apiFilters);
+  const { data: scholarships = [], isLoading, error } = useScholarshipsQuery(apiFilters);
 
   const patchSearch = (patch: Partial<ScholarshipsSearch>) => {
     navigate({
@@ -292,6 +294,18 @@ function AuthenticatedScholarshipsListing({ email }: { email: string }) {
 
   if (isLoading) {
     return <ScholarshipsShell listing={<ScholarshipsListingSkeleton />} />;
+  }
+
+  if (error instanceof SubscriptionRequiredError) {
+    return (
+      <ScholarshipsShell
+        listing={
+          <div className="py-16 px-4">
+            <SubscriptionUpgradePanel tier="plus" message={error.message} />
+          </div>
+        }
+      />
+    );
   }
 
   return (

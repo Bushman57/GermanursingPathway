@@ -110,7 +110,13 @@
     "saved": "Profil aktualisiert",
     "loading": "Profil wird geladen…",
     "loadError": "Profil konnte nicht geladen werden. Abmelden und mit derselben E-Mail wie bei der Registrierung erneut anmelden.",
-    "error": "Profil konnte nicht gespeichert werden"
+    "error": "Profil konnte nicht gespeichert werden",
+    "cvRevampTitle": "CV-/Lebenslauf-Überarbeitung",
+    "cvRevampBody": "Beschreiben Sie Ihren Fokus (Zielrolle, Sprache, Lücken). Unser Team meldet sich.",
+    "cvRevampPlaceholder": "z. B. BSc Pflege, Ziel Ausbildung in Bayern…",
+    "cvRevampSubmit": "CV-Überarbeitung anfragen",
+    "cvRevampLocked": "Premium beinhaltet eine professionelle CV-/Lebenslauf-Überarbeitung.",
+    "cvRevampUpgrade": "Auf Premium upgraden"
   },
   "otp": {
     "emailLabel": "E-Mail",
@@ -132,6 +138,9 @@
     "resendWait": "Erneut senden in {{seconds}}s",
     "resendSent": "Neue Anmelde-E-Mail gesendet",
     "magicLinkSigningIn": "Anmeldung läuft…",
+    "magicLinkConfirmTitle": "Im Studierendenportal anmelden",
+    "magicLinkConfirmBody": "Tippen Sie auf die Schaltfläche unten, um die Anmeldung abzuschließen.",
+    "magicLinkConfirm": "Im Portal anmelden",
     "magicLinkSuccess": "Erfolgreich angemeldet",
     "magicLinkInvalid": "Dieser Anmeldelink ist ungültig oder abgelaufen.",
     "magicLinkInvalidHint": "Gehen Sie zum Portal und fordern Sie eine neue Anmelde-E-Mail an, oder geben Sie den Code aus Ihrer letzten E-Mail ein.",

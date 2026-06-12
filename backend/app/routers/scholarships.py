@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session, joinedload
 from app.config import get_settings
 from app.db.models import Scholarship
 from app.db.session import get_db
-from app.deps.portal_auth import PortalUser, require_portal_user
+from app.deps.portal_auth import PortalUser, require_plus_subscription
 from app.services.scholarship_mapper import row_to_public
 from app.services.scholarship_query import scholarship_list_query
 
@@ -24,7 +24,7 @@ def require_db() -> Generator[Session, None, None]:
 
 @router.get("")
 def list_scholarships(
-    _user: PortalUser = Depends(require_portal_user),
+    _user: PortalUser = Depends(require_plus_subscription),
     db: Session = Depends(require_db),
     application_status: str | None = Query(None, alias="application_status"),
     program_type: str | None = Query(None, alias="program_type"),
@@ -45,7 +45,7 @@ def list_scholarships(
 @router.get("/{slug}")
 def get_scholarship(
     slug: str,
-    _user: PortalUser = Depends(require_portal_user),
+    _user: PortalUser = Depends(require_plus_subscription),
     db: Session = Depends(require_db),
 ) -> dict:
     row = (

@@ -3,6 +3,7 @@
     "home": "Startseite",
     "onboardingProcess": "Onboarding-Prozess",
     "scholarships": "Stipendien",
+    "pricing": "Preise",
     "partners": "Partner",
     "resources": "Ressourcen",
     "about": "Über uns",
@@ -52,7 +53,7 @@
     "signInPortal": "Im Portal anmelden",
     "whatsappPrompt": "Treten Sie unserer WhatsApp-Community bei, während Sie warten.",
     "selectQualification": "Qualifikation wählen",
-    "selectTimeline": "Wählen Sie, wann Sie starten möchten",
+    "selectTimeline": "Verfügbare Einsätze",
     "errors": {
       "step1Required": "Bitte geben Sie Name und E-Mail ein, um fortzufahren.",
       "step2Required": "Bitte füllen Sie die Pflichtfelder unten aus.",

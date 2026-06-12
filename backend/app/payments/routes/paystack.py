@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.config import Settings, get_settings
 from app.db.models import Payment
-from app.payments.constants import PAYMENT_PURPOSE_LEARNING_HUB, TERMINAL_STATUSES
+from app.payments.constants import PAYMENT_PURPOSE_LEARNING_HUB, SUBSCRIPTION_PURPOSES, TERMINAL_STATUSES
 from app.payments.deps import optional_db
 from app.payments.entitlement import grant_entitlement
 from app.services.paystack_service import parse_webhook_event, verify_webhook_signature
@@ -66,7 +66,9 @@ def paystack_browser_callback(
     path = "/"
     if ref and get_settings().database_url:
         payment = db.query(Payment).filter(Payment.invoice_number == ref).first()
-        if payment and payment.purpose == PAYMENT_PURPOSE_LEARNING_HUB:
+        if payment and payment.purpose in SUBSCRIPTION_PURPOSES:
+            path = f"/pricing?payment={ref}"
+        elif payment and payment.purpose == PAYMENT_PURPOSE_LEARNING_HUB:
             path = f"/resources?payment={ref}"
         else:
             path = f"/?payment={ref}"

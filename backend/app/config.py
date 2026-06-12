@@ -49,6 +49,12 @@ class Settings(BaseSettings):
     learning_hub_amount_kes: int = 3000
     learning_hub_free_module_id: str = "getting-started"
 
+    subscription_essential_kes: int = 300
+    subscription_plus_kes: int = 500
+    subscription_premium_kes: int = 700
+    subscription_term_days: int = 90
+    pathway_chat_free_trial_turns: int = 3
+
     @property
     def cors_origin_list(self) -> list[str]:
         seen: set[str] = set()
@@ -108,6 +114,30 @@ class Settings(BaseSettings):
             and self.paystack_callback_base_url.strip()
             and self.learning_hub_amount_kes > 0
         )
+
+    @property
+    def subscription_payments_configured(self) -> bool:
+        return bool(
+            self.paystack_secret_key.strip()
+            and self.paystack_public_key.strip()
+            and self.paystack_callback_base_url.strip()
+            and self.subscription_essential_kes > 0
+            and self.subscription_plus_kes > 0
+            and self.subscription_premium_kes > 0
+        )
+
+    def subscription_amount_kes(self, tier: str) -> int:
+        mapping = {
+            "essential": self.subscription_essential_kes,
+            "plus": self.subscription_plus_kes,
+            "premium": self.subscription_premium_kes,
+        }
+        if tier not in mapping:
+            raise ValueError(f"Unknown tier: {tier}")
+        return mapping[tier]
+
+    def subscription_amount_subunits(self, tier: str) -> int:
+        return self.subscription_amount_kes(tier) * 100
 
 
 @lru_cache

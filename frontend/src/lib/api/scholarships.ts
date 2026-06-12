@@ -1,5 +1,15 @@
 import type { Scholarship, ScholarshipSummary } from "@/lib/scholarships";
-import { apiRoot, parseApiError } from "@/lib/api/apiBase";
+import { apiRoot, parseApiError, parseJsonResponse } from "@/lib/api/apiBase";
+
+export class SubscriptionRequiredError extends Error {
+  upgradeTier: string;
+
+  constructor(message: string, upgradeTier: string) {
+    super(message);
+    this.name = "SubscriptionRequiredError";
+    this.upgradeTier = upgradeTier;
+  }
+}
 
 function scholarshipsBase(): string {
   const root = apiRoot();
@@ -27,14 +37,34 @@ export async function fetchScholarships(
   const res = await fetch(`${scholarshipsBase()}${qs ? `?${qs}` : ""}`, {
     credentials: "include",
   });
+  if (res.status === 403) {
+    const data = await parseJsonResponse<{
+      error?: string;
+      upgradeTier?: string;
+    }>(res);
+    throw new SubscriptionRequiredError(
+      data.error ?? "Plus subscription required.",
+      data.upgradeTier ?? "plus",
+    );
+  }
   if (!res.ok) throw new Error(await parseApiError(res));
-  return (await res.json()) as ScholarshipSummary[];
+  return parseJsonResponse<ScholarshipSummary[]>(res);
 }
 
 export async function fetchScholarshipBySlug(slug: string): Promise<Scholarship> {
   const res = await fetch(`${scholarshipsBase()}/${encodeURIComponent(slug)}`, {
     credentials: "include",
   });
+  if (res.status === 403) {
+    const data = await parseJsonResponse<{
+      error?: string;
+      upgradeTier?: string;
+    }>(res);
+    throw new SubscriptionRequiredError(
+      data.error ?? "Plus subscription required.",
+      data.upgradeTier ?? "plus",
+    );
+  }
   if (!res.ok) throw new Error(await parseApiError(res));
-  return (await res.json()) as Scholarship;
+  return parseJsonResponse<Scholarship>(res);
 }

@@ -110,7 +110,13 @@
     "saved": "Profile updated",
     "loading": "Loading profile…",
     "loadError": "Could not load your profile. Sign out and sign in again with the same email as your registration.",
-    "error": "Could not save profile"
+    "error": "Could not save profile",
+    "cvRevampTitle": "CV / resume revamp",
+    "cvRevampBody": "Tell us what to focus on (target role, language, gaps). Our team will reach out.",
+    "cvRevampPlaceholder": "e.g. BSc Nursing, targeting Ausbildung programs in Bavaria…",
+    "cvRevampSubmit": "Request CV revamp",
+    "cvRevampLocked": "Premium includes a professional CV / resume revamp.",
+    "cvRevampUpgrade": "Upgrade to Premium"
   },
   "otp": {
     "emailLabel": "Email",
@@ -132,6 +138,9 @@
     "resendWait": "Resend in {{seconds}}s",
     "resendSent": "New sign-in email sent",
     "magicLinkSigningIn": "Signing you in…",
+    "magicLinkConfirmTitle": "Sign in to your Student Portal",
+    "magicLinkConfirmBody": "Tap the button below to finish signing in.",
+    "magicLinkConfirm": "Sign in to portal",
     "magicLinkSuccess": "Signed in successfully",
     "magicLinkInvalid": "This sign-in link is invalid or has expired.",
     "magicLinkInvalidHint": "Go to the portal and request a new sign-in email, or enter the code from your latest email.",
