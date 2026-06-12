@@ -1,11 +1,16 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { OtpCodeStep } from "@/components/auth/OtpCodeStep";
 import { requestOtp, verifyOtp, fetchMe } from "@/lib/api/auth";
 import type { PortalSession } from "@/lib/portalAuth";
 import { loadPostRegisterContext } from "@/lib/postRegister";
+import {
+  clearOtpPendingState,
+  loadOtpPendingState,
+  saveOtpPendingState,
+} from "@/lib/otpSession";
 import { queryClient } from "@/lib/queryClient";
 import { queryKeys } from "@/lib/queries/keys";
 import { trackEvent } from "@/lib/analytics";
@@ -14,10 +19,13 @@ import { Loader2, Mail, Lock } from "lucide-react";
 
 type Props = {
   onSignedIn: (session: PortalSession) => void;
+  variant?: "page" | "compact";
+  /** @deprecated use variant="compact" */
   compact?: boolean;
 };
 
-export function PortalOtpLogin({ onSignedIn, compact = false }: Props) {
+export function PortalOtpLogin({ onSignedIn, variant, compact = false }: Props) {
+  const resolvedVariant = variant ?? (compact ? "compact" : "page");
   const { t } = useTranslation("portal");
   const [step, setStep] = useState<"email" | "code">("email");
   const [email, setEmail] = useState("");
@@ -29,13 +37,19 @@ export function PortalOtpLogin({ onSignedIn, compact = false }: Props) {
   useEffect(() => {
     const ctx = loadPostRegisterContext();
     if (ctx?.email) setEmail(ctx.email);
+
+    const pending = loadOtpPendingState();
+    if (pending?.email) {
+      setEmail(pending.email);
+      setStep("code");
+    }
   }, []);
 
   const inputClass =
     "w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30";
 
-  const sendCode = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const sendCode = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     setError("");
     setInfo("");
     if (!email.trim()) {
@@ -56,12 +70,15 @@ export function PortalOtpLogin({ onSignedIn, compact = false }: Props) {
         toast.error(msg);
         return;
       }
-      const devHint =
-        import.meta.env.DEV && !import.meta.env.VITE_API_URL
-          ? ` ${t("otp.devConsoleHint")}`
-          : "";
-      setInfo(`${t("otp.codeSentConfirm")}${devHint}`);
+      saveOtpPendingState(email);
       setStep("code");
+      setCode("");
+      setInfo("");
+      if (import.meta.env.DEV && !import.meta.env.VITE_API_URL) {
+        console.info(
+          "[GNP dev] Sign-in email not configured locally — check the backend terminal for the 6-digit code.",
+        );
+      }
       toast.success(t("otp.codeSentToast"));
     } catch (err) {
       const msg = err instanceof Error ? err.message : t("otp.errors.generic");
@@ -72,8 +89,7 @@ export function PortalOtpLogin({ onSignedIn, compact = false }: Props) {
     }
   };
 
-  const verify = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const verify = useCallback(async () => {
     setError("");
     if (code.length !== 6) {
       setError(t("otp.errors.codeRequired"));
@@ -86,27 +102,61 @@ export function PortalOtpLogin({ onSignedIn, compact = false }: Props) {
       queryClient.setQueryData(queryKeys.auth.me, session);
       const me = await fetchMe();
       if (!me) {
-        throw new Error(
-          t("otp.errors.sessionNotSaved", {
-            defaultValue:
-              "Code accepted, but your session could not be saved. Allow cookies for this site and try again.",
-          }),
-        );
+        throw new Error(t("otp.errors.sessionNotSaved"));
       }
       queryClient.setQueryData(queryKeys.auth.me, me);
+      clearOtpPendingState();
       trackEvent("otp_verify");
-      toast.success(t("otp.signedIn", { defaultValue: "Signed in" }));
+      toast.success(t("otp.signedIn"));
       onSignedIn(me);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("otp.errors.invalidCode"));
     } finally {
       setLoading(false);
     }
+  }, [code, email, onSignedIn, t]);
+
+  const handleResend = useCallback(async () => {
+    setError("");
+    setInfo("");
+    setLoading(true);
+    try {
+      const res = await requestOtp(email);
+      if (res.sent === false) {
+        const msg =
+          res.reason === "rate_limited"
+            ? t("otp.errors.rateLimited")
+            : res.message;
+        setError(msg);
+        toast.error(msg);
+        return;
+      }
+      saveOtpPendingState(email);
+      setCode("");
+      setInfo("");
+      toast.success(t("otp.resendSent"));
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : t("otp.errors.generic");
+      setError(msg);
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  }, [email, t]);
+
+  const handleChangeEmail = () => {
+    setStep("email");
+    setCode("");
+    setError("");
+    setInfo("");
+    clearOtpPendingState();
   };
 
+  const isCompact = resolvedVariant === "compact";
+
   return (
-    <div className={compact ? "w-full" : "max-w-md mx-auto"}>
-      {!compact && (
+    <div className={isCompact ? "w-full" : "max-w-md mx-auto"}>
+      {!isCompact && (
         <div className="text-center mb-8">
           <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
             <Lock className="w-7 h-7 text-primary" />
@@ -120,7 +170,7 @@ export function PortalOtpLogin({ onSignedIn, compact = false }: Props) {
         <form
           onSubmit={sendCode}
           className={
-            compact
+            isCompact
               ? "space-y-4"
               : "bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-5 shadow-sm"
           }
@@ -169,51 +219,28 @@ export function PortalOtpLogin({ onSignedIn, compact = false }: Props) {
         </form>
       ) : (
         <form
-          onSubmit={verify}
+          onSubmit={(e) => {
+            e.preventDefault();
+            void verify();
+          }}
           className={
-            compact
+            isCompact
               ? "space-y-4"
               : "bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-5 shadow-sm"
           }
         >
-          {info && (
-            <p className="text-sm text-muted-foreground bg-muted/50 px-3 py-2 rounded-lg">{info}</p>
-          )}
-          <p className="text-sm text-muted-foreground">
-            {t("otp.codeSentTo")} <strong className="text-foreground">{email}</strong>
-          </p>
-          <div className="flex justify-center">
-            <InputOTP maxLength={6} value={code} onChange={setCode}>
-              <InputOTPGroup>
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <InputOTPSlot key={i} index={i} />
-                ))}
-              </InputOTPGroup>
-            </InputOTP>
-          </div>
-          {error && (
-            <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-lg">{error}</p>
-          )}
-          <Button type="submit" variant="warm" size="lg" className="w-full" disabled={loading}>
-            {loading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" /> {t("otp.verifying")}
-              </>
-            ) : (
-              t("otp.verify")
-            )}
-          </Button>
-          <button
-            type="button"
-            className="w-full text-xs text-muted-foreground hover:text-foreground"
-            onClick={() => {
-              setStep("email");
-              setCode("");
-              setError("");
-            }}
-          >
-            {t("otp.changeEmail")}
-          </button>
+          <OtpCodeStep
+            email={email}
+            code={code}
+            onCodeChange={setCode}
+            loading={loading}
+            error={error}
+            info={info}
+            variant={resolvedVariant}
+            onVerify={() => void verify()}
+            onResend={handleResend}
+            onChangeEmail={handleChangeEmail}
+          />
         </form>
       )}
     </div>

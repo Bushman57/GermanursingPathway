@@ -1,8 +1,10 @@
 import hashlib
+import hmac
 import logging
 import secrets
 import uuid
 from datetime import datetime, timedelta, timezone
+from urllib.parse import urlparse
 
 import jwt
 from sqlalchemy import func
@@ -32,6 +34,26 @@ def normalize_email(email: str) -> str:
 
 def hash_otp_code(code: str, secret: str) -> str:
     return hashlib.sha256(f"{secret}:{code}".encode()).hexdigest()
+
+
+def build_magic_link_token(challenge_id: uuid.UUID, settings: Settings) -> str:
+    msg = str(challenge_id)
+    sig = hmac.new(settings.jwt_secret.encode(), msg.encode(), hashlib.sha256).hexdigest()[:32]
+    return f"{msg}.{sig}"
+
+
+def build_magic_link_url(challenge_id: uuid.UUID, settings: Settings) -> str:
+    base = settings.public_site_url.strip().rstrip("/") or "http://localhost:8080"
+    token = build_magic_link_token(challenge_id, settings)
+    return f"{base}/portal/auth/verify?token={token}"
+
+
+def autofill_domain(settings: Settings) -> str:
+    raw = settings.public_site_url.strip()
+    if not raw:
+        return "germanursingpathway.com"
+    host = urlparse(raw).netloc or raw
+    return host.removeprefix("www.")
 
 
 def lead_exists(db: Session, email: str) -> bool:
@@ -83,8 +105,15 @@ def create_otp_challenge(
         ip_hash=ip_hash,
     )
     db.add(challenge)
+    db.flush()
     try:
-        send_otp_email(to_email=normalized, code=code, settings=settings)
+        send_otp_email(
+            to_email=normalized,
+            code=code,
+            magic_link_url=build_magic_link_url(challenge.id, settings),
+            autofill_domain=autofill_domain(settings),
+            settings=settings,
+        )
     except Exception:
         db.rollback()
         raise
@@ -131,6 +160,42 @@ def verify_otp_code(
         latest.attempts += 1
         db.commit()
     return False
+
+
+def verify_magic_link(
+    db: Session,
+    token: str,
+    *,
+    settings: Settings | None = None,
+) -> str | None:
+    settings = settings or get_settings()
+    parts = token.strip().split(".", 1)
+    if len(parts) != 2:
+        return None
+    challenge_id_raw, sig = parts
+    try:
+        challenge_id = uuid.UUID(challenge_id_raw)
+    except ValueError:
+        return None
+
+    expected_sig = hmac.new(
+        settings.jwt_secret.encode(),
+        challenge_id_raw.encode(),
+        hashlib.sha256,
+    ).hexdigest()[:32]
+    if not secrets.compare_digest(sig, expected_sig):
+        return None
+
+    now = datetime.now(timezone.utc)
+    challenge = db.get(OtpChallenge, challenge_id)
+    if challenge is None:
+        return None
+    if challenge.consumed_at is not None or challenge.expires_at <= now:
+        return None
+
+    challenge.consumed_at = now
+    db.commit()
+    return normalize_email(challenge.email)
 
 
 def issue_portal_token(email: str, settings: Settings | None = None) -> str:

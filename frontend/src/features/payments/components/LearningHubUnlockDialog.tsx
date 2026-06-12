@@ -139,8 +139,15 @@ export function LearningHubUnlockDialog({
     config != null ? formatAmount(config.amount_kes, config.currency_label) : null;
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange} modal={false}>
-      <DialogContent className="sm:max-w-md" overlayClassName="hidden">
+    <Dialog
+      open={open}
+      onOpenChange={handleOpenChange}
+      modal={!!me || step !== "idle"}
+    >
+      <DialogContent
+        className="sm:max-w-md"
+        overlayClassName={!me ? undefined : "hidden"}
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Lock className="w-5 h-5 text-warm" />
@@ -161,9 +168,13 @@ export function LearningHubUnlockDialog({
         </DialogHeader>
 
         {!me ? (
-          <div className="py-2">
+          <div className="py-2 space-y-4">
+            <div className="rounded-xl border border-border bg-muted/30 px-4 py-3">
+              <p className="font-medium text-sm text-foreground">{t("learningHubSignInTitle")}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("learningHubSignInPrompt")}</p>
+            </div>
             <PortalOtpLogin
-              compact
+              variant="compact"
               onSignedIn={() => {
                 void queryClient.invalidateQueries({ queryKey: queryKeys.auth.me });
                 void queryClient.invalidateQueries({ queryKey: queryKeys.portal.learningAccess });

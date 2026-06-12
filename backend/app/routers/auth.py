@@ -15,6 +15,7 @@ from app.services.otp_service import (
     issue_portal_token,
     latest_lead_profile,
     normalize_email,
+    verify_magic_link,
     verify_otp_code,
 )
 from app.services.user_service import ensure_user_and_candidate, get_latest_lead
@@ -52,6 +53,10 @@ class OtpRequestResponse(BaseModel):
 class OtpVerifyBody(BaseModel):
     email: EmailStr
     code: str = Field(min_length=6, max_length=6, pattern=r"^\d{6}$")
+
+
+class MagicLinkVerifyBody(BaseModel):
+    token: str = Field(min_length=10, max_length=200)
 
 
 def _client_ip_hash(request: Request, secret: str) -> str | None:
@@ -92,6 +97,30 @@ def _clear_session_cookie(response: Response, settings: Settings) -> None:
         secure=secure,
         samesite=samesite,
     )
+
+
+def _complete_portal_sign_in(
+    email: str,
+    db: Session,
+    response: Response,
+    settings: Settings,
+) -> dict[str, str]:
+    profile = latest_lead_profile(db, email)
+    if profile is None:
+        raise HTTPException(status_code=403, detail="No registration found for this email")
+
+    lead = get_latest_lead(db, email)
+    if lead is not None:
+        try:
+            ensure_user_and_candidate(db, lead)
+            db.commit()
+        except Exception:
+            logger.exception("Could not sync user/candidate for %s — sign-in continues", email)
+            db.rollback()
+
+    token = issue_portal_token(email, settings=settings)
+    _set_session_cookie(response, token, settings)
+    return {"message": "Signed in", "email": email, "fullName": profile["fullName"]}
 
 
 @router.post("/otp/request", response_model=OtpRequestResponse)
@@ -147,22 +176,27 @@ def verify_otp(
     if not verify_otp_code(db, email, body.code, settings=settings):
         raise HTTPException(status_code=401, detail="Invalid or expired code")
 
-    profile = latest_lead_profile(db, email)
-    if profile is None:
-        raise HTTPException(status_code=403, detail="No registration found for this email")
+    return _complete_portal_sign_in(email, db, response, settings)
 
-    lead = get_latest_lead(db, email)
-    if lead is not None:
-        try:
-            ensure_user_and_candidate(db, lead)
-            db.commit()
-        except Exception:
-            logger.exception("Could not sync user/candidate for %s — sign-in continues", email)
-            db.rollback()
 
-    token = issue_portal_token(email, settings=settings)
-    _set_session_cookie(response, token, settings)
-    return {"message": "Signed in", "email": email, "fullName": profile["fullName"]}
+@router.post("/magic-link/verify")
+def verify_magic_link_route(
+    body: MagicLinkVerifyBody,
+    response: Response,
+    db: Session = Depends(require_db),
+    settings: Settings = Depends(get_settings),
+) -> dict[str, str]:
+    if not settings.portal_auth_configured:
+        raise HTTPException(
+            status_code=503,
+            detail="Portal auth is not configured. Set JWT_SECRET in backend/.env",
+        )
+
+    email = verify_magic_link(db, body.token, settings=settings)
+    if email is None:
+        raise HTTPException(status_code=401, detail="Invalid or expired sign-in link")
+
+    return _complete_portal_sign_in(email, db, response, settings)
 
 
 @router.post("/logout")

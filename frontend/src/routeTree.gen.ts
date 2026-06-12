@@ -30,6 +30,7 @@ import { Route as AdminScholarshipsIndexRouteImport } from './routes/admin/schol
 import { Route as AdminResourcesIndexRouteImport } from './routes/admin/resources/index'
 import { Route as AdminBlogsIndexRouteImport } from './routes/admin/blogs/index'
 import { Route as ResourcesModuleModuleIdRouteImport } from './routes/resources.module.$moduleId'
+import { Route as PortalAuthVerifyRouteImport } from './routes/portal.auth.verify'
 import { Route as AdminScholarshipsNewRouteImport } from './routes/admin/scholarships/new'
 import { Route as AdminResourcesNewRouteImport } from './routes/admin/resources/new'
 import { Route as AdminBlogsNewRouteImport } from './routes/admin/blogs/new'
@@ -142,6 +143,11 @@ const ResourcesModuleModuleIdRoute = ResourcesModuleModuleIdRouteImport.update({
   path: '/module/$moduleId',
   getParentRoute: () => ResourcesRoute,
 } as any)
+const PortalAuthVerifyRoute = PortalAuthVerifyRouteImport.update({
+  id: '/auth/verify',
+  path: '/auth/verify',
+  getParentRoute: () => PortalRoute,
+} as any)
 const AdminScholarshipsNewRoute = AdminScholarshipsNewRouteImport.update({
   id: '/scholarships/new',
   path: '/scholarships/new',
@@ -182,7 +188,7 @@ export interface FileRoutesByFullPath {
   '/how-it-works': typeof HowItWorksRoute
   '/onboarding-process': typeof OnboardingProcessRoute
   '/partners': typeof PartnersRoute
-  '/portal': typeof PortalRoute
+  '/portal': typeof PortalRouteWithChildren
   '/register': typeof RegisterRoute
   '/resources': typeof ResourcesRouteWithChildren
   '/scholarships': typeof ScholarshipsRouteWithChildren
@@ -195,6 +201,7 @@ export interface FileRoutesByFullPath {
   '/admin/blogs/new': typeof AdminBlogsNewRoute
   '/admin/resources/new': typeof AdminResourcesNewRoute
   '/admin/scholarships/new': typeof AdminScholarshipsNewRoute
+  '/portal/auth/verify': typeof PortalAuthVerifyRoute
   '/resources/module/$moduleId': typeof ResourcesModuleModuleIdRoute
   '/admin/blogs/': typeof AdminBlogsIndexRoute
   '/admin/resources/': typeof AdminResourcesIndexRoute
@@ -210,7 +217,7 @@ export interface FileRoutesByTo {
   '/how-it-works': typeof HowItWorksRoute
   '/onboarding-process': typeof OnboardingProcessRoute
   '/partners': typeof PartnersRoute
-  '/portal': typeof PortalRoute
+  '/portal': typeof PortalRouteWithChildren
   '/register': typeof RegisterRoute
   '/resources': typeof ResourcesRouteWithChildren
   '/scholarships': typeof ScholarshipsRouteWithChildren
@@ -223,6 +230,7 @@ export interface FileRoutesByTo {
   '/admin/blogs/new': typeof AdminBlogsNewRoute
   '/admin/resources/new': typeof AdminResourcesNewRoute
   '/admin/scholarships/new': typeof AdminScholarshipsNewRoute
+  '/portal/auth/verify': typeof PortalAuthVerifyRoute
   '/resources/module/$moduleId': typeof ResourcesModuleModuleIdRoute
   '/admin/blogs': typeof AdminBlogsIndexRoute
   '/admin/resources': typeof AdminResourcesIndexRoute
@@ -240,7 +248,7 @@ export interface FileRoutesById {
   '/how-it-works': typeof HowItWorksRoute
   '/onboarding-process': typeof OnboardingProcessRoute
   '/partners': typeof PartnersRoute
-  '/portal': typeof PortalRoute
+  '/portal': typeof PortalRouteWithChildren
   '/register': typeof RegisterRoute
   '/resources': typeof ResourcesRouteWithChildren
   '/scholarships': typeof ScholarshipsRouteWithChildren
@@ -253,6 +261,7 @@ export interface FileRoutesById {
   '/admin/blogs/new': typeof AdminBlogsNewRoute
   '/admin/resources/new': typeof AdminResourcesNewRoute
   '/admin/scholarships/new': typeof AdminScholarshipsNewRoute
+  '/portal/auth/verify': typeof PortalAuthVerifyRoute
   '/resources/module/$moduleId': typeof ResourcesModuleModuleIdRoute
   '/admin/blogs/': typeof AdminBlogsIndexRoute
   '/admin/resources/': typeof AdminResourcesIndexRoute
@@ -284,6 +293,7 @@ export interface FileRouteTypes {
     | '/admin/blogs/new'
     | '/admin/resources/new'
     | '/admin/scholarships/new'
+    | '/portal/auth/verify'
     | '/resources/module/$moduleId'
     | '/admin/blogs/'
     | '/admin/resources/'
@@ -312,6 +322,7 @@ export interface FileRouteTypes {
     | '/admin/blogs/new'
     | '/admin/resources/new'
     | '/admin/scholarships/new'
+    | '/portal/auth/verify'
     | '/resources/module/$moduleId'
     | '/admin/blogs'
     | '/admin/resources'
@@ -341,6 +352,7 @@ export interface FileRouteTypes {
     | '/admin/blogs/new'
     | '/admin/resources/new'
     | '/admin/scholarships/new'
+    | '/portal/auth/verify'
     | '/resources/module/$moduleId'
     | '/admin/blogs/'
     | '/admin/resources/'
@@ -358,7 +370,7 @@ export interface RootRouteChildren {
   HowItWorksRoute: typeof HowItWorksRoute
   OnboardingProcessRoute: typeof OnboardingProcessRoute
   PartnersRoute: typeof PartnersRoute
-  PortalRoute: typeof PortalRoute
+  PortalRoute: typeof PortalRouteWithChildren
   RegisterRoute: typeof RegisterRoute
   ResourcesRoute: typeof ResourcesRouteWithChildren
   ScholarshipsRoute: typeof ScholarshipsRouteWithChildren
@@ -515,6 +527,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResourcesModuleModuleIdRouteImport
       parentRoute: typeof ResourcesRoute
     }
+    '/portal/auth/verify': {
+      id: '/portal/auth/verify'
+      path: '/auth/verify'
+      fullPath: '/portal/auth/verify'
+      preLoaderRoute: typeof PortalAuthVerifyRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/admin/scholarships/new': {
       id: '/admin/scholarships/new'
       path: '/scholarships/new'
@@ -590,6 +609,17 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface PortalRouteChildren {
+  PortalAuthVerifyRoute: typeof PortalAuthVerifyRoute
+}
+
+const PortalRouteChildren: PortalRouteChildren = {
+  PortalAuthVerifyRoute: PortalAuthVerifyRoute,
+}
+
+const PortalRouteWithChildren =
+  PortalRoute._addFileChildren(PortalRouteChildren)
+
 interface ResourcesRouteChildren {
   ResourcesSlugRoute: typeof ResourcesSlugRoute
   ResourcesModuleModuleIdRoute: typeof ResourcesModuleModuleIdRoute
@@ -624,7 +654,7 @@ const rootRouteChildren: RootRouteChildren = {
   HowItWorksRoute: HowItWorksRoute,
   OnboardingProcessRoute: OnboardingProcessRoute,
   PartnersRoute: PartnersRoute,
-  PortalRoute: PortalRoute,
+  PortalRoute: PortalRouteWithChildren,
   RegisterRoute: RegisterRoute,
   ResourcesRoute: ResourcesRouteWithChildren,
   ScholarshipsRoute: ScholarshipsRouteWithChildren,
