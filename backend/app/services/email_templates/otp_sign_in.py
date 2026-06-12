@@ -45,10 +45,13 @@ def _logo_img_tag(settings: Settings) -> str:
 def render_otp_sign_in_email(
     *,
     code: str,
+    magic_link_url: str,
+    autofill_domain: str,
     settings: Settings,
     support_email: str | None = None,
 ) -> tuple[str, str]:
     safe_code = escape(code.strip())
+    safe_link = escape(magic_link_url, quote=True)
     expire = settings.otp_expire_minutes
     support_raw = support_email or resolve_support_email(settings)
     support = escape(support_raw)
@@ -84,14 +87,34 @@ def render_otp_sign_in_email(
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:0 32px 8px 32px;">
+                  <td style="padding:0 32px 16px 32px;">
                     <p style="margin:0;font-size:14px;line-height:1.6;color:#6b7280;">
-                      Please use the one-time sign-in code below:
+                      Tap the button below to sign in on your phone — no code to type.
                     </p>
                   </td>
                 </tr>
                 <tr>
-                  <td align="center" style="padding:16px 32px 8px 32px;">
+                  <td align="center" style="padding:0 32px 24px 32px;">
+                    <a href="{safe_link}"
+                       style="display:inline-block;background-color:#2d7a4f;color:#ffffff;font-size:16px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:8px;min-height:44px;line-height:1.2;">
+                      Sign in to Student Portal
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 32px;">
+                    <hr style="border:none;border-top:1px solid #e8e8e8;margin:0;" />
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:20px 32px 8px 32px;">
+                    <p style="margin:0;font-size:14px;line-height:1.6;color:#6b7280;">
+                      Or enter this code on your phone:
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" style="padding:12px 32px 8px 32px;">
                     <p style="margin:0;font-size:36px;font-weight:700;letter-spacing:8px;color:#1a1a1a;line-height:1.2;">
                       {safe_code}
                     </p>
@@ -100,7 +123,7 @@ def render_otp_sign_in_email(
                 <tr>
                   <td style="padding:0 32px 24px 32px;">
                     <p style="margin:0;font-size:13px;line-height:1.5;color:#6b7280;">
-                      The code expires in {expire} minutes.
+                      The link and code expire in {expire} minutes.
                     </p>
                   </td>
                 </tr>
@@ -138,8 +161,10 @@ def render_otp_sign_in_email(
 
     text = (
         f"Sign in to your Student Portal — {_BRAND_NAME}\n\n"
-        f"Your one-time sign-in code is: {code.strip()}\n\n"
-        f"The code expires in {expire} minutes.\n\n"
+        f"Tap this link to sign in:\n{magic_link_url}\n\n"
+        f"Or enter this code on your phone:\n{code.strip()}\n\n"
+        f"@{autofill_domain} #{code.strip()}\n\n"
+        f"The link and code expire in {expire} minutes.\n\n"
         f"If you did not request this code, contact us at {support_raw}.\n\n"
         f"Thank you.\n"
     )

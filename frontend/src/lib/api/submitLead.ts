@@ -3,7 +3,7 @@ import { parseApiError, parseJsonResponse } from "@/lib/api/apiBase";
 export type LeadPayload = {
   full_name: string;
   email: string;
-  phone?: string;
+  phone: string;
   nursing_qualification: string;
   german_level: string;
   timeline: string;

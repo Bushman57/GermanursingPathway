@@ -32,6 +32,7 @@
   "learningHubDescriptionWithAmount": "Einmalig <strong>{{amount}}</strong> schaltet Module 2–11 frei.",
   "learningHubDescriptionGeneric": "Einmal zahlen, um Module 2–11 im Lernzentrum freizuschalten.",
   "learningHubSignInPrompt": "Melden Sie sich mit Ihrer Portal-E-Mail an, bevor Sie bezahlen.",
+  "learningHubSignInTitle": "Anmelden, um fortzufahren",
   "learningHubPayButton": "Freischalten für {{amount}}",
   "learningHubPayNow": "Jetzt freischalten",
   "learningHubSuccessTitle": "Lernzentrum freigeschaltet",

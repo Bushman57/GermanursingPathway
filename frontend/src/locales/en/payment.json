@@ -32,6 +32,7 @@
   "learningHubDescriptionWithAmount": "One-time <strong>{{amount}}</strong> unlocks modules 2–11.",
   "learningHubDescriptionGeneric": "Pay once to unlock modules 2–11 in the Learning Hub.",
   "learningHubSignInPrompt": "Sign in with your portal email before paying.",
+  "learningHubSignInTitle": "Sign in to continue",
   "learningHubPayButton": "Unlock for {{amount}}",
   "learningHubPayNow": "Unlock now",
   "learningHubSuccessTitle": "Learning Hub unlocked",

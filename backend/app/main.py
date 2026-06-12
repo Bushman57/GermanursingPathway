@@ -68,10 +68,20 @@ async def validation_exception_handler(_request: Request, exc: RequestValidation
     if errors:
         first = errors[0]
         loc = first.get("loc", ())
+        field = loc[-1] if loc else None
         if "payment_id" in loc and first.get("type") == "uuid_parsing":
             message = "Invalid payment ID. Use GET /api/payments/status/{uuid} to poll status."
         elif msg := first.get("msg"):
             message = str(msg)
+        if message.startswith("String should have at least"):
+            fallbacks = {
+                "phone": "Please enter a valid phone number so we can reach you.",
+                "timeline": "Please select when you plan to start.",
+                "german_level": "Minimum German level is A1. Please select A1 or higher.",
+                "full_name": "Please enter your full name.",
+            }
+            if field in fallbacks:
+                message = fallbacks[field]
     return JSONResponse(status_code=422, content={"error": message})
 
 

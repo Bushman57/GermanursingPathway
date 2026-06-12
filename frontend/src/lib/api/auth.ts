@@ -57,6 +57,21 @@ export async function verifyOtp(email: string, code: string): Promise<{
   return parseJsonResponse<{ message: string; email: string; fullName: string }>(res);
 }
 
+export async function verifyMagicLink(token: string): Promise<{
+  message: string;
+  email: string;
+  fullName: string;
+}> {
+  const res = await fetch(`${authBase()}/magic-link/verify`, {
+    ...fetchOpts,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token: token.trim() }),
+  });
+  if (!res.ok) throw new Error(await parseApiError(res));
+  return parseJsonResponse<{ message: string; email: string; fullName: string }>(res);
+}
+
 export async function logoutPortal(): Promise<void> {
   const res = await fetch(`${authBase()}/logout`, { ...fetchOpts, method: "POST" });
   if (!res.ok) throw new Error(await parseApiError(res));

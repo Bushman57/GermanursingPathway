@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { WhatsAppLink } from "@/components/WhatsAppButton";
 import { submitLead } from "@/lib/api/submitLead";
+import { mapRegisterError } from "@/lib/api/mapRegisterError";
 import { loadEligibilityPrefill, clearEligibilityPrefill } from "@/lib/eligibilityPrefill";
 import { savePostRegisterContext } from "@/lib/postRegister";
 import { trackEvent } from "@/lib/analytics";
@@ -11,6 +12,7 @@ import { registerWhatsAppMessage, whatsappUrlWithMessage } from "@/lib/whatsappC
 import { toast } from "sonner";
 import {
   AlertCircle,
+  AlertTriangle,
   Calendar,
   CheckCircle,
   Languages,
@@ -25,17 +27,24 @@ import {
 const inputClass =
   "w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-warm/30 focus:border-warm transition";
 
+const inputErrorClass =
+  "border-destructive focus:ring-destructive/30 focus:border-destructive";
+
+const VALID_TIMELINES = new Set(["3m", "6m", "2026", "2027", "exploring"]);
+
 function Field({
   label,
   icon: Icon,
   required,
   children,
   hint,
+  error,
 }: {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   required?: boolean;
   hint?: string;
+  error?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -46,7 +55,11 @@ function Field({
         {required && <span className="text-warm" aria-hidden>*</span>}
       </label>
       {children}
-      {hint && <p className="text-xs text-muted-foreground mt-1">{hint}</p>}
+      {error ? (
+        <p className="text-xs text-destructive mt-1">{error}</p>
+      ) : (
+        hint && <p className="text-xs text-muted-foreground mt-1">{hint}</p>
+      )}
     </div>
   );
 }
@@ -54,6 +67,17 @@ function Field({
 type Props = {
   source: string;
   compact?: boolean;
+};
+
+type FormFeedback = {
+  type: "error" | "warning";
+  message: string;
+};
+
+type Step2FieldErrors = {
+  phone?: string;
+  timeline?: string;
+  german_level?: string;
 };
 
 export function RegisterInterestForm({ source, compact }: Props) {
@@ -64,12 +88,13 @@ export function RegisterInterestForm({ source, compact }: Props) {
 
   const [step, setStep] = useState<1 | 2>(1);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [error, setError] = useState("");
+  const [feedback, setFeedback] = useState<FormFeedback | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Step2FieldErrors>({});
   const [form, setForm] = useState({
     full_name: "",
     email: "",
     phone: "",
-    german_level: "",
+    german_level: "a1",
     timeline: "",
     message: "",
   });
@@ -88,28 +113,93 @@ export function RegisterInterestForm({ source, compact }: Props) {
 
   const update = (field: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+    if (feedback) setFeedback(null);
+    if (fieldErrors[field as keyof Step2FieldErrors]) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[field as keyof Step2FieldErrors];
+        return next;
+      });
+    }
+  };
+
+  const validateStep2 = (): { feedback: FormFeedback; fields: Step2FieldErrors } | null => {
+    const fields: Step2FieldErrors = {};
+
+    if (form.german_level === "none") {
+      fields.german_level = t("register.warnings.germanLevelMinA1");
+      return {
+        feedback: { type: "warning", message: t("register.warnings.germanLevelMinA1") },
+        fields,
+      };
+    }
+
+    if (form.phone.trim().length < 6) {
+      fields.phone = t("register.errors.phoneRequired");
+    }
+
+    if (!form.timeline.trim() || !VALID_TIMELINES.has(form.timeline)) {
+      fields.timeline = t("register.errors.timelineRequired");
+    }
+
+    if (fields.phone && fields.timeline) {
+      return {
+        feedback: { type: "error", message: t("register.errors.step2Required") },
+        fields,
+      };
+    }
+    if (fields.phone) {
+      return {
+        feedback: { type: "error", message: fields.phone },
+        fields,
+      };
+    }
+    if (fields.timeline) {
+      return {
+        feedback: { type: "error", message: fields.timeline },
+        fields,
+      };
+    }
+
+    return null;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (step === 1) {
       if (!form.full_name.trim() || !form.email.trim()) {
-        setError(t("register.step1Required", { defaultValue: "Enter your name and email." }));
+        setFeedback({ type: "error", message: t("register.errors.step1Required") });
         return;
       }
-      setError("");
+      setFeedback(null);
+      setFieldErrors({});
       setStep(2);
       return;
     }
+
+    const validation = validateStep2();
+    if (validation) {
+      setStatus("idle");
+      setFeedback(validation.feedback);
+      setFieldErrors(validation.fields);
+      if (validation.feedback.type === "warning") {
+        toast.warning(validation.feedback.message);
+      } else {
+        toast.error(validation.feedback.message);
+      }
+      return;
+    }
+
     setStatus("loading");
-    setError("");
+    setFeedback(null);
+    setFieldErrors({});
     try {
       const prefill = loadEligibilityPrefill();
       await submitLead({
         ...form,
+        phone: form.phone.trim(),
         nursing_qualification: prefill?.nursing_qualification ?? "unspecified",
-        phone: form.phone || undefined,
-        message: form.message || undefined,
+        message: form.message.trim() || undefined,
         source,
         locale: i18n.language.startsWith("de") ? "de" : "en",
         eligibility_check_id: prefill?.eligibility_check_id,
@@ -117,11 +207,12 @@ export function RegisterInterestForm({ source, compact }: Props) {
       trackEvent("register_submit", { source });
       savePostRegisterContext({ email: form.email, full_name: form.full_name });
       clearEligibilityPrefill();
-      toast.success(t("register.successToast", { defaultValue: "Registration received" }));
+      toast.success(t("register.successToast"));
       setStatus("success");
     } catch (err) {
       setStatus("error");
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      const raw = err instanceof Error ? err.message : t("register.errors.generic");
+      setFeedback({ type: "error", message: mapRegisterError(raw, t) });
     }
   };
 
@@ -215,32 +306,42 @@ export function RegisterInterestForm({ source, compact }: Props) {
         </Field>
 
         {step === 1 && (
-          <p className="text-xs text-muted-foreground text-center">
-            {t("register.stepIndicator", { defaultValue: "Step 1 of 2 — basics" })}
-          </p>
+          <p className="text-xs text-muted-foreground text-center">{t("register.stepIndicator")}</p>
         )}
 
         {step === 2 && (
           <>
-        <p className="text-xs text-muted-foreground text-center">
-          {t("register.stepIndicator2", { defaultValue: "Step 2 of 2 — your background" })}
-        </p>
-        <Field label={t("register.phone")} icon={Phone}>
+        <p className="text-xs text-muted-foreground text-center">{t("register.stepIndicator2")}</p>
+        <Field
+          label={t("register.phone")}
+          icon={Phone}
+          required
+          hint={t("register.phoneHint")}
+          error={fieldErrors.phone}
+        >
           <input
+            required
             type="tel"
-            className={inputClass}
+            className={`${inputClass}${fieldErrors.phone ? ` ${inputErrorClass}` : ""}`}
             value={form.phone}
             onChange={(e) => update("phone", e.target.value)}
             autoComplete="tel"
+            aria-invalid={Boolean(fieldErrors.phone)}
           />
         </Field>
         <div className="grid sm:grid-cols-2 gap-5">
-          <Field label={t("register.germanLevel")} icon={Languages} required>
+          <Field
+            label={t("register.germanLevel")}
+            icon={Languages}
+            required
+            error={fieldErrors.german_level}
+          >
             <select
               required
-              className={inputClass}
+              className={`${inputClass}${fieldErrors.german_level ? ` ${inputErrorClass}` : ""}`}
               value={form.german_level}
               onChange={(e) => update("german_level", e.target.value)}
+              aria-invalid={Boolean(fieldErrors.german_level)}
             >
               <option value="none">{t("register.germanLevels.none")}</option>
               <option value="a1">{t("register.germanLevels.a1")}</option>
@@ -249,14 +350,17 @@ export function RegisterInterestForm({ source, compact }: Props) {
               <option value="b2">{t("register.germanLevels.b2")}</option>
             </select>
           </Field>
-          <Field label={t("register.timeline")} icon={Calendar} required>
+          <Field label={t("register.timeline")} icon={Calendar} required error={fieldErrors.timeline}>
             <select
               required
-              className={inputClass}
+              className={`${inputClass}${fieldErrors.timeline ? ` ${inputErrorClass}` : ""}`}
               value={form.timeline}
               onChange={(e) => update("timeline", e.target.value)}
+              aria-invalid={Boolean(fieldErrors.timeline)}
             >
-              <option value="">{t("register.selectTimeline")}</option>
+              <option value="" disabled hidden>
+                {t("register.selectTimeline")}
+              </option>
               <option value="3m">{t("register.timelines.3m")}</option>
               <option value="6m">{t("register.timelines.6m")}</option>
               <option value="2026">{t("register.timelines.2026")}</option>
@@ -280,10 +384,20 @@ export function RegisterInterestForm({ source, compact }: Props) {
           </>
         )}
 
-        {status === "error" && (
-          <div className="flex items-start gap-2 text-sm text-destructive bg-destructive/10 p-3 rounded-lg">
-            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-            {error}
+        {feedback && (
+          <div
+            className={`flex items-start gap-2 text-sm p-3 rounded-lg ${
+              feedback.type === "warning"
+                ? "text-amber-900 dark:text-amber-100 bg-amber-500/15 border border-amber-500/30"
+                : "text-destructive bg-destructive/10"
+            }`}
+          >
+            {feedback.type === "warning" ? (
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
+            ) : (
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+            )}
+            {feedback.message}
           </div>
         )}
 
@@ -297,19 +411,19 @@ export function RegisterInterestForm({ source, compact }: Props) {
           {status === "loading" ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              {t("register.submitting", { defaultValue: "Submitting…" })}
+              {t("register.submitting")}
             </>
+          ) : step === 1 ? (
+            t("register.continue")
           ) : (
-            step === 1
-              ? t("register.continue", { defaultValue: "Continue" })
-              : t("register.submit")
+            t("register.submit")
           )}
         </Button>
 
         <p className="text-center text-xs text-muted-foreground">
-          {t("register.alreadyRegistered", { defaultValue: "Already registered?" })}{" "}
+          {t("register.alreadyRegistered")}{" "}
           <Link to="/portal" className="text-warm font-medium hover:underline">
-            {t("register.signInPortal", { defaultValue: "Sign in to your portal" })}
+            {t("register.signInPortal")}
           </Link>
         </p>
       </form>

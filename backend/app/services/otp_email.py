@@ -7,10 +7,22 @@ from app.services.email_transport import send_html_email
 logger = logging.getLogger(__name__)
 
 
-def send_otp_email(*, to_email: str, code: str, settings: Settings | None = None) -> None:
+def send_otp_email(
+    *,
+    to_email: str,
+    code: str,
+    magic_link_url: str,
+    autofill_domain: str,
+    settings: Settings | None = None,
+) -> None:
     settings = settings or get_settings()
     subject = "Your German Nursing Pathway sign-in code"
-    html, text = render_otp_sign_in_email(code=code, settings=settings)
+    html, text = render_otp_sign_in_email(
+        code=code,
+        magic_link_url=magic_link_url,
+        autofill_domain=autofill_domain,
+        settings=settings,
+    )
 
     if not settings.otp_email_configured:
         logger.error(
