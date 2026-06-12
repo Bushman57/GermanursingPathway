@@ -10,10 +10,11 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from app.config import get_settings
-from app.db.models import PortalDocument
+from app.db.models import CvRevampRequest, PortalDocument
 from app.db.session import get_db
 from app.deps.portal_auth import PortalUser, require_portal_user
 from app.services.otp_service import latest_lead_profile, normalize_email
+from app.services.subscription_service import has_min_tier, subscription_status_dict
 from app.services.user_service import (
     compute_portal_journey,
     eligibility_to_dict,
@@ -63,6 +64,10 @@ class ProfileUpdateBody(BaseModel):
 
 class SavedScholarshipBody(BaseModel):
     saved: bool = True
+
+
+class CvRevampBody(BaseModel):
+    notes: str | None = Field(default=None, max_length=2000)
 
 
 def _email_dir(email: str) -> Path:
@@ -129,6 +134,44 @@ def get_learning_access(
 ) -> dict:
     settings = get_settings()
     return learning_access_dict(db, user.email, settings=settings)
+
+
+@router.get("/subscription")
+def get_subscription(
+    user: PortalUser = Depends(require_portal_user),
+    db: Session = Depends(require_db),
+) -> dict:
+    settings = get_settings()
+    return subscription_status_dict(db, user.email, settings=settings)
+
+
+@router.post("/cv-revamp")
+def submit_cv_revamp(
+    body: CvRevampBody,
+    user: PortalUser = Depends(require_portal_user),
+    db: Session = Depends(require_db),
+) -> dict[str, str]:
+    if not has_min_tier(db, user.email, "premium"):
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "error": "Premium subscription required for CV / resume revamp.",
+                "upgradeTier": "premium",
+                "pricingUrl": "/pricing",
+            },
+        )
+    profile = latest_lead_profile(db, user.email)
+    full_name = profile["fullName"] if profile else user.email.split("@")[0]
+    req = CvRevampRequest(
+        id=uuid.uuid4(),
+        email=normalize_email(user.email),
+        full_name=full_name,
+        notes=body.notes,
+        status="submitted",
+    )
+    db.add(req)
+    db.commit()
+    return {"message": "CV revamp request submitted. Our team will contact you shortly."}
 
 
 @router.patch("/profile")

@@ -9,7 +9,9 @@ from app.payments.schemas import (
     InitializePaymentCreate,
     InitializePaymentResponse,
     LearningHubPaymentCreate,
+    SubscriptionPaymentCreate,
 )
+from app.services.subscription_service import purpose_for_tier
 from app.payments.service import create_payment
 from app.services.phone_utils import PhoneValidationError, normalize_kenya_mpesa_phone
 
@@ -29,6 +31,11 @@ def initialize_payment(
         raise HTTPException(
             status_code=403,
             detail="Learning Hub payments require POST /api/payments/initialize/learning-hub with portal sign-in",
+        )
+    if purpose.startswith("subscription_"):
+        raise HTTPException(
+            status_code=403,
+            detail="Subscription payments require POST /api/payments/initialize/subscription with portal sign-in",
         )
 
     email = str(body.email).strip().lower()
@@ -67,6 +74,29 @@ def initialize_learning_hub_payment(
     if str(body.email).strip().lower() != email:
         raise HTTPException(status_code=403, detail="Email must match signed-in portal account")
 
+    amount_kes, amount_subunits = amount_for_purpose(settings, purpose)
+    return create_payment(
+        db,
+        settings,
+        email=email,
+        phone_number="",
+        purpose=purpose,
+        amount_kes=amount_kes,
+        amount_subunits=amount_subunits,
+    )
+
+
+@router.post("/initialize/subscription", response_model=InitializePaymentResponse)
+def initialize_subscription_payment(
+    body: SubscriptionPaymentCreate,
+    db: Session = Depends(optional_db),
+    settings: Settings = Depends(get_settings),
+    portal_user: PortalUser = Depends(require_portal_user),
+) -> InitializePaymentResponse:
+    purpose = purpose_for_tier(body.tier)
+    require_payment_config(purpose, settings)
+
+    email = portal_user.email
     amount_kes, amount_subunits = amount_for_purpose(settings, purpose)
     return create_payment(
         db,

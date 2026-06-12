@@ -110,7 +110,13 @@
     "saved": "Profil aktualisiert",
     "loading": "Profil wird geladen…",
     "loadError": "Profil konnte nicht geladen werden. Abmelden und mit derselben E-Mail wie bei der Registrierung erneut anmelden.",
-    "error": "Profil konnte nicht gespeichert werden"
+    "error": "Profil konnte nicht gespeichert werden",
+    "cvRevampTitle": "CV-/Lebenslauf-Überarbeitung",
+    "cvRevampBody": "Beschreiben Sie Ihren Fokus (Zielrolle, Sprache, Lücken). Unser Team meldet sich.",
+    "cvRevampPlaceholder": "z. B. BSc Pflege, Ziel Ausbildung in Bayern…",
+    "cvRevampSubmit": "CV-Überarbeitung anfragen",
+    "cvRevampLocked": "Premium beinhaltet eine professionelle CV-/Lebenslauf-Überarbeitung.",
+    "cvRevampUpgrade": "Auf Premium upgraden"
   },
   "otp": {
     "emailLabel": "E-Mail",

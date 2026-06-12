@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "title": "Pricing — German Nursing Pathway",
+    "subtitle": "Choose the plan that fits your stage on the pathway to Germany."
+  },
+  "freeTrial": {
+    "title": "Try before you subscribe",
+    "body": "3 free pathway AI conversations and intro learning modules — no card required."
+  },
+  "mostPopular": "Most popular",
+  "perTerm": "/ 3 months",
+  "seeBenefits": "See benefits",
+  "hideBenefits": "Hide benefits",
+  "upgradeButton": "Upgrade — {{amount}} KES / 3 months",
+  "inheritsEssential": "All the benefits of Essential and more.",
+  "inheritsPlus": "All the benefits of Plus and more.",
+  "shortDescription": {
+    "essential": "Pathway AI, resources & intro classes",
+    "plus": "Scholarship matching AI & verified programs",
+    "premium": "Everything in Plus plus CV revamp"
+  },
+  "cta": {
+    "essential": "Get Essential",
+    "plus": "Get Plus",
+    "premium": "Get Premium"
+  },
+  "features": {
+    "pathwayAi": "General pathway AI assistant (unlimited)",
+    "resources": "Full guides & resources library",
+    "introClasses": "Free intro learning modules",
+    "inheritsEssential": "Everything in Essential",
+    "scholarshipAi": "Scholarship matching AI assistant",
+    "verifiedPrograms": "Access to verified scholarship programs",
+    "inheritsPlus": "Everything in Plus",
+    "cvRevamp": "Professional CV / resume revamp"
+  },
+  "checkout": {
+    "signInTitle": "Sign in to continue",
+    "signInBody": "Use the same email you used when you registered your interest.",
+    "processing": "Opening secure checkout…"
+  },
+  "success": "Subscription active — thank you!",
+  "upgradeRequired": "Upgrade required",
+  "upgradePlusBody": "A Plus plan unlocks verified scholarship programs and scholarship matching AI.",
+  "upgradeEssentialBody": "An Essential plan unlocks unlimited pathway chat and full resources.",
+  "viewPlans": "View plans"
+}

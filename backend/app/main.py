@@ -57,6 +57,8 @@ def on_startup() -> None:
 @app.exception_handler(HTTPException)
 async def http_exception_handler(_request: Request, exc: HTTPException) -> JSONResponse:
     detail = exc.detail
+    if isinstance(detail, dict):
+        return JSONResponse(status_code=exc.status_code, content=detail)
     message = detail if isinstance(detail, str) else str(detail)
     return JSONResponse(status_code=exc.status_code, content={"error": message})
 

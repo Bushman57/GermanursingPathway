@@ -25,5 +25,6 @@ export const queryKeys = {
     notifications: ["portal", "notifications"] as const,
     journey: ["portal", "journey"] as const,
     learningAccess: ["portal", "learning-access"] as const,
+    subscription: ["portal", "subscription"] as const,
   },
 };

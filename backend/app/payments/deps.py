@@ -5,7 +5,10 @@ from sqlalchemy.orm import Session
 
 from app.config import Settings, get_settings
 from app.db.session import get_db
-from app.payments.constants import PAYMENT_PURPOSE_LEARNING_HUB
+from app.payments.constants import (
+    PAYMENT_PURPOSE_LEARNING_HUB,
+    SUBSCRIPTION_PURPOSES,
+)
 
 
 def optional_db() -> Generator[Session, None, None]:
@@ -18,6 +21,16 @@ def optional_db() -> Generator[Session, None, None]:
 
 
 def require_payment_config(purpose: str, settings: Settings) -> None:
+    if purpose in SUBSCRIPTION_PURPOSES:
+        if not settings.subscription_payments_configured:
+            raise HTTPException(
+                status_code=503,
+                detail=(
+                    "Subscription payments are not configured. Set PAYSTACK keys and "
+                    "SUBSCRIPTION_*_KES amounts in backend/.env"
+                ),
+            )
+        return
     if purpose == PAYMENT_PURPOSE_LEARNING_HUB:
         if not settings.learning_hub_payments_configured:
             raise HTTPException(
@@ -40,6 +53,14 @@ def require_payment_config(purpose: str, settings: Settings) -> None:
 
 
 def amount_for_purpose(settings: Settings, purpose: str) -> tuple[int, int]:
+    if purpose in SUBSCRIPTION_PURPOSES:
+        from app.services.subscription_service import tier_from_payment_purpose
+
+        tier = tier_from_payment_purpose(purpose)
+        if tier is None:
+            raise ValueError(f"Unknown subscription purpose: {purpose}")
+        kes = settings.subscription_amount_kes(tier)
+        return kes, settings.subscription_amount_subunits(tier)
     if purpose == PAYMENT_PURPOSE_LEARNING_HUB:
         return settings.learning_hub_amount_kes, settings.learning_hub_amount_subunits
     return settings.payment_amount_kes, settings.payment_amount_subunits

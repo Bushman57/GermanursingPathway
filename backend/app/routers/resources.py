@@ -8,6 +8,7 @@ from app.db.models import ResourceArticle
 from app.db.session import get_db
 from app.deps.portal_auth import PortalUser, optional_portal_user
 from app.services.resource_mapper import row_to_public
+from app.services.subscription_service import has_min_tier
 from app.services.user_service import has_learning_hub_access
 
 router = APIRouter(prefix="/api/resources", tags=["resources"])
@@ -34,7 +35,7 @@ def _is_premium_article(article: ResourceArticle, settings: Settings) -> bool:
 def _can_read_premium(db: Session, user: PortalUser | None, settings: Settings) -> bool:
     if user is None:
         return False
-    return has_learning_hub_access(db, user.email)
+    return has_min_tier(db, user.email, "essential") or has_learning_hub_access(db, user.email)
 
 
 @router.get("")

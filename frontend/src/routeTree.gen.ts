@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ScholarshipsRouteImport } from './routes/scholarships'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as PartnersRouteImport } from './routes/partners'
 import { Route as OnboardingProcessRouteImport } from './routes/onboarding-process'
@@ -51,6 +52,11 @@ const ResourcesRoute = ResourcesRouteImport.update({
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortalRoute = PortalRouteImport.update({
@@ -189,6 +195,7 @@ export interface FileRoutesByFullPath {
   '/onboarding-process': typeof OnboardingProcessRoute
   '/partners': typeof PartnersRoute
   '/portal': typeof PortalRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
   '/resources': typeof ResourcesRouteWithChildren
   '/scholarships': typeof ScholarshipsRouteWithChildren
@@ -218,6 +225,7 @@ export interface FileRoutesByTo {
   '/onboarding-process': typeof OnboardingProcessRoute
   '/partners': typeof PartnersRoute
   '/portal': typeof PortalRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
   '/resources': typeof ResourcesRouteWithChildren
   '/scholarships': typeof ScholarshipsRouteWithChildren
@@ -249,6 +257,7 @@ export interface FileRoutesById {
   '/onboarding-process': typeof OnboardingProcessRoute
   '/partners': typeof PartnersRoute
   '/portal': typeof PortalRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
   '/resources': typeof ResourcesRouteWithChildren
   '/scholarships': typeof ScholarshipsRouteWithChildren
@@ -281,6 +290,7 @@ export interface FileRouteTypes {
     | '/onboarding-process'
     | '/partners'
     | '/portal'
+    | '/pricing'
     | '/register'
     | '/resources'
     | '/scholarships'
@@ -310,6 +320,7 @@ export interface FileRouteTypes {
     | '/onboarding-process'
     | '/partners'
     | '/portal'
+    | '/pricing'
     | '/register'
     | '/resources'
     | '/scholarships'
@@ -340,6 +351,7 @@ export interface FileRouteTypes {
     | '/onboarding-process'
     | '/partners'
     | '/portal'
+    | '/pricing'
     | '/register'
     | '/resources'
     | '/scholarships'
@@ -371,6 +383,7 @@ export interface RootRouteChildren {
   OnboardingProcessRoute: typeof OnboardingProcessRoute
   PartnersRoute: typeof PartnersRoute
   PortalRoute: typeof PortalRouteWithChildren
+  PricingRoute: typeof PricingRoute
   RegisterRoute: typeof RegisterRoute
   ResourcesRoute: typeof ResourcesRouteWithChildren
   ScholarshipsRoute: typeof ScholarshipsRouteWithChildren
@@ -399,6 +412,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portal': {
@@ -655,6 +675,7 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingProcessRoute: OnboardingProcessRoute,
   PartnersRoute: PartnersRoute,
   PortalRoute: PortalRouteWithChildren,
+  PricingRoute: PricingRoute,
   RegisterRoute: RegisterRoute,
   ResourcesRoute: ResourcesRouteWithChildren,
   ScholarshipsRoute: ScholarshipsRouteWithChildren,

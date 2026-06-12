@@ -39,5 +39,6 @@
   "learningHubSuccessBody": "You now have full access to modules 2–11. Expand any module and continue learning.",
   "learningHubPaymentConfirmed": "Learning Hub unlocked successfully.",
   "learningHubDone": "Start learning",
-  "learningHubPayHint": "You'll be redirected to Paystack's secure page to pay with M-Pesa or card."
+  "learningHubPayHint": "You'll be redirected to Paystack's secure page to pay with M-Pesa or card.",
+  "viewSubscriptionPlans": "View Essential / Plus / Premium plans"
 }

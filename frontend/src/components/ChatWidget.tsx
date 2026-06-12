@@ -4,7 +4,8 @@ import { MessageCircle, X, Plus, Send, Paperclip, Trash2, FileText, Bot, User, A
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
-import { fetchChatReply, type ChatMode } from "@/lib/chat/fetchChatReply";
+import { getChatSessionId } from "@/lib/chat/chatSession";
+import { ChatUpgradeError, fetchChatReply, type ChatMode } from "@/lib/chat/fetchChatReply";
 import { fetchScholarshipBySlug } from "@/lib/api/scholarships";
 import { scholarshipText, type Scholarship } from "@/lib/scholarships";
 
@@ -131,6 +132,7 @@ export function ChatWidget({
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [upgradeHint, setUpgradeHint] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -211,6 +213,7 @@ export function ChatWidget({
     setPendingFiles([]);
     setIsTyping(true);
     setError(null);
+    setUpgradeHint(null);
 
     try {
       const replyText = await fetchChatReply({
@@ -219,11 +222,17 @@ export function ChatWidget({
         scholarshipSlug,
         attachmentNames: attachments.map((a) => a.name),
         locale: i18n.language.startsWith("de") ? "de" : "en",
+        sessionId: getChatSessionId(),
       });
       const reply: Message = { id: uid(), role: "assistant", content: replyText, createdAt: Date.now() };
       setThreads((prev) => prev.map((t) => (t.id === activeId ? { ...t, messages: [...t.messages, reply] } : t)));
     } catch (e) {
-      setError(e instanceof Error ? e.message : t("ui.errorGeneric"));
+      if (e instanceof ChatUpgradeError) {
+        setError(e.message);
+        setUpgradeHint(e.pricingUrl);
+      } else {
+        setError(e instanceof Error ? e.message : t("ui.errorGeneric"));
+      }
     } finally {
       setIsTyping(false);
     }
@@ -377,7 +386,19 @@ export function ChatWidget({
                 <div className="flex-1 min-w-0">
                   <p className="text-destructive font-medium">Couldn&apos;t get a reply</p>
                   <p className="text-muted-foreground text-xs mt-1">{error}</p>
-                  <button type="button" onClick={() => setError(null)} className="text-xs text-warm mt-2 hover:underline">
+                  {upgradeHint && (
+                    <Link to="/pricing" className="text-xs text-warm mt-2 inline-block font-medium hover:underline">
+                      View plans
+                    </Link>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setError(null);
+                      setUpgradeHint(null);
+                    }}
+                    className="text-xs text-muted-foreground mt-2 ml-3 hover:underline"
+                  >
                     Dismiss
                   </button>
                 </div>

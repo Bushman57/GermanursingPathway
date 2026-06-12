@@ -3,6 +3,7 @@
     "home": "Home",
     "onboardingProcess": "Onboarding Process",
     "scholarships": "Scholarships",
+    "pricing": "Pricing",
     "partners": "Partners",
     "resources": "Resources",
     "about": "About",
@@ -52,7 +53,7 @@
     "signInPortal": "Sign in to your portal",
     "whatsappPrompt": "Join our WhatsApp community for updates while you wait.",
     "selectQualification": "Select qualification",
-    "selectTimeline": "Choose when you plan to start",
+    "selectTimeline": "Available intake",
     "errors": {
       "step1Required": "Enter your name and email to continue.",
       "step2Required": "Please complete the required fields below.",

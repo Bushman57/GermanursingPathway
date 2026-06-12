@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { Bell, Loader2, Settings, UserRound } from "lucide-react";
+import { Bell, FileText, Loader2, Settings, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { PortalProfileAvatar } from "@/components/portal/PortalProfileAvatar";
+import { submitCvRevampRequest } from "@/lib/api/subscription";
 import { usePortalProfileQuery, useUpdatePortalProfileMutation } from "@/lib/queries/portal";
+import { useSubscriptionQuery } from "@/lib/queries/subscription";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -12,6 +15,9 @@ export function PortalSettings({ email }: { email: string }) {
   const { t } = useTranslation("portal");
   const { data: profile, isError: profileError, isLoading: profileLoading } = usePortalProfileQuery();
   const update = useUpdatePortalProfileMutation();
+  const { data: subscription } = useSubscriptionQuery();
+  const [cvNotes, setCvNotes] = useState("");
+  const [cvSubmitting, setCvSubmitting] = useState(false);
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [germanLevel, setGermanLevel] = useState("none");
@@ -162,6 +168,49 @@ export function PortalSettings({ email }: { email: string }) {
             </span>
           </label>
         </div>
+      </section>
+
+      <section className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-4">
+        <h2 className="font-heading text-lg font-semibold flex items-center gap-2">
+          <FileText className="w-5 h-5 text-warm" />
+          {t("settings.cvRevampTitle")}
+        </h2>
+        {subscription?.features.cvRevamp ? (
+          <>
+            <p className="text-sm text-muted-foreground">{t("settings.cvRevampBody")}</p>
+            <textarea
+              className={`${inputClass} min-h-[100px]`}
+              value={cvNotes}
+              onChange={(e) => setCvNotes(e.target.value)}
+              placeholder={t("settings.cvRevampPlaceholder")}
+            />
+            <Button
+              variant="warm"
+              disabled={cvSubmitting}
+              onClick={async () => {
+                setCvSubmitting(true);
+                try {
+                  const res = await submitCvRevampRequest(cvNotes);
+                  toast.success(res.message);
+                  setCvNotes("");
+                } catch (err) {
+                  toast.error(err instanceof Error ? err.message : t("settings.error"));
+                } finally {
+                  setCvSubmitting(false);
+                }
+              }}
+            >
+              {cvSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : t("settings.cvRevampSubmit")}
+            </Button>
+          </>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            {t("settings.cvRevampLocked")}{" "}
+            <Link to="/pricing" className="text-warm font-medium hover:underline">
+              {t("settings.cvRevampUpgrade")}
+            </Link>
+          </p>
+        )}
       </section>
 
       <div className="flex justify-end">

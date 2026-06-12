@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { Trans, useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { AlertCircle, CheckCircle, Loader2, Lock } from "lucide-react";
@@ -249,6 +250,11 @@ export function LearningHubUnlockDialog({
                 )}
               </Button>
               <p className="text-xs text-muted-foreground text-center">{t("learningHubPayHint")}</p>
+              <p className="text-xs text-center">
+                <Link to="/pricing" className="text-warm font-medium hover:underline">
+                  {t("viewSubscriptionPlans", { defaultValue: "View Essential / Plus / Premium plans" })}
+                </Link>
+              </p>
             </form>
           </>
         )}

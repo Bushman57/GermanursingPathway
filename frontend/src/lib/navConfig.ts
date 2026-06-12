@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   BookOpen,
   Building2,
+  CreditCard,
   GraduationCap,
   Home,
   Info,
@@ -12,6 +13,7 @@ export type NavLinkKey =
   | "home"
   | "onboardingProcess"
   | "scholarships"
+  | "pricing"
   | "partners"
   | "resources"
   | "about";
@@ -19,7 +21,7 @@ export type NavLinkKey =
 export type NavGroup = "explore";
 
 export type NavLinkConfig = {
-  to: "/" | "/onboarding-process" | "/scholarships" | "/partners" | "/resources" | "/about";
+  to: "/" | "/onboarding-process" | "/scholarships" | "/pricing" | "/partners" | "/resources" | "/about";
   key: NavLinkKey;
   icon: LucideIcon;
   group: NavGroup;
@@ -36,6 +38,7 @@ export const exploreNavLinks: NavLinkConfig[] = [
     group: "explore",
     hintKey: "scholarships",
   },
+  { to: "/pricing", key: "pricing", icon: CreditCard, group: "explore" },
   { to: "/partners", key: "partners", icon: Building2, group: "explore" },
   { to: "/resources", key: "resources", icon: BookOpen, group: "explore" },
   { to: "/about", key: "about", icon: Info, group: "explore" },

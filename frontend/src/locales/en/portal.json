@@ -110,7 +110,13 @@
     "saved": "Profile updated",
     "loading": "Loading profile…",
     "loadError": "Could not load your profile. Sign out and sign in again with the same email as your registration.",
-    "error": "Could not save profile"
+    "error": "Could not save profile",
+    "cvRevampTitle": "CV / resume revamp",
+    "cvRevampBody": "Tell us what to focus on (target role, language, gaps). Our team will reach out.",
+    "cvRevampPlaceholder": "e.g. BSc Nursing, targeting Ausbildung programs in Bavaria…",
+    "cvRevampSubmit": "Request CV revamp",
+    "cvRevampLocked": "Premium includes a professional CV / resume revamp.",
+    "cvRevampUpgrade": "Upgrade to Premium"
   },
   "otp": {
     "emailLabel": "Email",
