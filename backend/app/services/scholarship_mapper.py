@@ -211,6 +211,41 @@ def _apply_column_fields(data: dict[str, Any], scholarship: Scholarship) -> None
         data["degreeLevel"] = scholarship.degree_level
 
 
+_TAG_PROGRAM_TYPES: dict[str, frozenset[str]] = {
+    "nursing": frozenset({"nursing_scholarship"}),
+    "ausbildung": frozenset({"ausbildung", "vocational_training"}),
+    "caregiver": frozenset({"caregiver_pathway"}),
+    "internship": frozenset({"internship"}),
+    "vocational_training": frozenset({"vocational_training"}),
+}
+
+
+def _effective_tags(data: dict[str, Any], scholarship: Scholarship) -> list[str]:
+    raw = data.get("tags")
+    if isinstance(raw, list):
+        tags = [str(t) for t in raw if isinstance(t, str) and t.strip()]
+        if tags:
+            return tags
+
+    inferred: list[str] = []
+    host = str(data.get("hostCountry") or "").lower()
+    if "germany" in host or "deutschland" in host:
+        inferred.append("germany")
+    if "eu" in host and "eu_opportunity" not in inferred:
+        inferred.append("eu_opportunity")
+
+    program_type = scholarship.program_type or str(data.get("programType") or "")
+    for tag, program_types in _TAG_PROGRAM_TYPES.items():
+        if program_type in program_types and tag not in inferred:
+            inferred.append(tag)
+
+    funding = str(data.get("funding") or scholarship.funding or "")
+    if funding == "fully_funded" and "fully_funded" not in inferred:
+        inferred.append("fully_funded")
+
+    return inferred
+
+
 _SUMMARY_EXTRA_KEYS = (
     "tags",
     "applicationStatus",
@@ -257,6 +292,7 @@ def row_to_public(scholarship: Scholarship, *, include_detail: bool = True) -> d
             if key in pd and pd[key] and key not in data:
                 data[key] = pd[key]
         _apply_column_fields(data, scholarship)
+        data["tags"] = _effective_tags(data, scholarship)
         return data
 
     data = {

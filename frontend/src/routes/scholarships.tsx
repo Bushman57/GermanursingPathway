@@ -165,7 +165,7 @@ function AuthenticatedScholarshipsListing({ email }: { email: string }) {
   };
 
   const filtered = filterScholarshipsClient(scholarships, search, lang);
-  const verifiedPicks = scholarships.filter((s) => s.verified).slice(0, 3);
+  const verifiedPicks = filtered.filter((s) => s.verified).slice(0, 3);
 
   const clearFilters = () => navigate({ search: defaultScholarshipsSearch, replace: true });
 
