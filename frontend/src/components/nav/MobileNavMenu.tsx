@@ -13,6 +13,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { exploreNavLinks } from "@/lib/navConfig";
+import { useSubscriptionsEnabled } from "@/lib/queries/siteConfig";
 import { isNavActive } from "@/lib/navUtils";
 import { prefetchScholarships } from "@/lib/queries/scholarships";
 import { cn } from "@/lib/utils";
@@ -25,6 +26,10 @@ type MobileNavMenuProps = {
 export function MobileNavMenu({ open, onOpenChange }: MobileNavMenuProps) {
   const { t } = useTranslation();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const subscriptionsEnabled = useSubscriptionsEnabled();
+  const navLinks = subscriptionsEnabled
+    ? exploreNavLinks
+    : exploreNavLinks.filter((link) => link.to !== "/pricing");
 
   const close = () => onOpenChange(false);
 
@@ -49,7 +54,7 @@ export function MobileNavMenu({ open, onOpenChange }: MobileNavMenuProps) {
             {t("nav.sections.explore")}
           </p>
           <ul className="space-y-1">
-            {exploreNavLinks.map((link) => {
+            {navLinks.map((link) => {
               const active = isNavActive(pathname, link.to);
               const Icon = link.icon;
               const hint = link.hintKey ? t(`nav.hints.${link.hintKey}`, { defaultValue: "" }) : "";

@@ -26,3 +26,6 @@ services:
         sync: false
       - key: PUBLIC_SITE_URL
         sync: false
+      # Set false to disable subscription paywalls and checkout while feature is in development
+      - key: SUBSCRIPTIONS_ENABLED
+        sync: false

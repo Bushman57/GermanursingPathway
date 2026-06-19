@@ -93,6 +93,11 @@ def initialize_subscription_payment(
     settings: Settings = Depends(get_settings),
     portal_user: PortalUser = Depends(require_portal_user),
 ) -> InitializePaymentResponse:
+    if not settings.subscriptions_enabled:
+        raise HTTPException(
+            status_code=503,
+            detail="Subscriptions are disabled. Set SUBSCRIPTIONS_ENABLED=true to enable checkout.",
+        )
     purpose = purpose_for_tier(body.tier)
     require_payment_config(purpose, settings)
 

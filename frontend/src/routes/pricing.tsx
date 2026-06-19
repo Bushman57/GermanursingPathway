@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -10,6 +10,7 @@ import type { PaymentStep } from "@/features/payments/types";
 import { queryClient } from "@/lib/queryClient";
 import { queryKeys } from "@/lib/queries/keys";
 import { metaHead } from "@/lib/pageMeta";
+import { useSubscriptionsEnabled } from "@/lib/queries/siteConfig";
 
 function parsePaymentSearch(raw: Record<string, unknown>) {
   return {
@@ -29,6 +30,7 @@ export const Route = createFileRoute("/pricing")({
 
 function PricingPage() {
   const { t } = useTranslation("pricing");
+  const subscriptionsEnabled = useSubscriptionsEnabled();
   const { payment: returnReference } = Route.useSearch();
   const navigate = useNavigate();
   const [step, setStep] = useState<PaymentStep>("idle");
@@ -50,6 +52,14 @@ function PricingPage() {
     },
     setStep,
   });
+
+  useEffect(() => {
+    if (!subscriptionsEnabled) {
+      void navigate({ to: "/", replace: true });
+    }
+  }, [subscriptionsEnabled, navigate]);
+
+  if (!subscriptionsEnabled) return null;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

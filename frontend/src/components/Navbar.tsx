@@ -9,6 +9,7 @@ import { WhatsAppLink } from "@/components/WhatsAppButton";
 import { openCommandMenu } from "@/components/layout/GlobalShell";
 import { MobileNavMenu } from "@/components/nav/MobileNavMenu";
 import { exploreNavLinks } from "@/lib/navConfig";
+import { useSubscriptionsEnabled } from "@/lib/queries/siteConfig";
 import { isNavActive } from "@/lib/navUtils";
 import { prefetchScholarships } from "@/lib/queries/scholarships";
 import { cn } from "@/lib/utils";
@@ -18,6 +19,10 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { t } = useTranslation();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const subscriptionsEnabled = useSubscriptionsEnabled();
+  const navLinks = subscriptionsEnabled
+    ? exploreNavLinks
+    : exploreNavLinks.filter((link) => link.to !== "/pricing");
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
@@ -26,7 +31,7 @@ export function Navbar() {
           <BrandLogo imageClassName="h-10 sm:h-11" />
 
           <div className="hidden xl:flex items-center gap-5">
-            {exploreNavLinks.map((link) => {
+            {navLinks.map((link) => {
               const active = isNavActive(pathname, link.to);
               return (
                 <Link

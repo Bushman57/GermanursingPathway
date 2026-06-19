@@ -49,6 +49,7 @@ class Settings(BaseSettings):
     learning_hub_amount_kes: int = 3000
     learning_hub_free_module_id: str = "getting-started"
 
+    subscriptions_enabled: bool = True
     subscription_essential_kes: int = 300
     subscription_plus_kes: int = 500
     subscription_premium_kes: int = 700

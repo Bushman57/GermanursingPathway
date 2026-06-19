@@ -8,6 +8,7 @@ import { getChatSessionId } from "@/lib/chat/chatSession";
 import { ChatUpgradeError, fetchChatReply, type ChatMode } from "@/lib/chat/fetchChatReply";
 import { fetchScholarshipBySlug } from "@/lib/api/scholarships";
 import { scholarshipText, type Scholarship } from "@/lib/scholarships";
+import { useSubscriptionsEnabled } from "@/lib/queries/siteConfig";
 
 type Attachment = { name: string; size: number; type: string };
 type Message = {
@@ -92,6 +93,7 @@ export function ChatWidget({
   disclaimer,
 }: ChatWidgetProps) {
   const { t, i18n } = useTranslation("chat");
+  const subscriptionsEnabled = useSubscriptionsEnabled();
   const [program, setProgram] = useState<Scholarship | undefined>();
 
   useEffect(() => {
@@ -229,7 +231,7 @@ export function ChatWidget({
     } catch (e) {
       if (e instanceof ChatUpgradeError) {
         setError(e.message);
-        setUpgradeHint(e.pricingUrl);
+        setUpgradeHint(subscriptionsEnabled ? e.pricingUrl : null);
       } else {
         setError(e instanceof Error ? e.message : t("ui.errorGeneric"));
       }
@@ -386,7 +388,7 @@ export function ChatWidget({
                 <div className="flex-1 min-w-0">
                   <p className="text-destructive font-medium">Couldn&apos;t get a reply</p>
                   <p className="text-muted-foreground text-xs mt-1">{error}</p>
-                  {upgradeHint && (
+                  {upgradeHint && subscriptionsEnabled && (
                     <Link to="/pricing" className="text-xs text-warm mt-2 inline-block font-medium hover:underline">
                       View plans
                     </Link>

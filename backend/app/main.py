@@ -20,6 +20,7 @@ from app.routers import (
     portal,
     resources,
     scholarships,
+    site_config,
 )
 from app.payments import router as payments_router
 
@@ -43,6 +44,10 @@ def on_startup() -> None:
     if settings.portal_cookie_samesite.lower() == "none" and not settings.portal_cookie_secure:
         log.warning(
             "PORTAL_COOKIE_SAMESITE=none requires PORTAL_COOKIE_SECURE=true for browsers to accept the session cookie"
+        )
+    if not settings.subscriptions_enabled:
+        log.warning(
+            "Subscriptions disabled — paywalls bypassed and subscription checkout blocked (SUBSCRIPTIONS_ENABLED=false)"
         )
     log.info("CORS allow_origins: %s", settings.cors_origin_list)
     if settings.cors_origin_regex.strip():
@@ -128,6 +133,7 @@ app.include_router(scholarships.router)
 app.include_router(resources.router)
 app.include_router(blogs.router)
 app.include_router(admin_content.router)
+app.include_router(site_config.router)
 
 
 @app.get("/health")

@@ -47,7 +47,7 @@ async def post_chat(
                 },
             )
     elif body.mode == "scholarship":
-        allowed, upgrade_tier = can_use_scholarship_chat(db, email)
+        allowed, upgrade_tier = can_use_scholarship_chat(db, email, settings=settings)
         if not allowed:
             raise HTTPException(
                 status_code=402,
