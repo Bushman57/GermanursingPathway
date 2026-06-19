@@ -2,14 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/Navbar";
 import { Badge } from "@/components/ui/badge";
-import {
-  APPLICATION_STATUS_OPTIONS,
-  GERMAN_LEVEL_OPTIONS,
-  INTAKE_MONTH_OPTIONS,
-  SCHOLARSHIP_TAGS_OPTIONS,
-} from "@/lib/scholarshipFieldOptions";
 import { metaFromScholarshipsPage } from "@/lib/pageMeta";
-import { Award, Search } from "lucide-react";
+import { Award } from "lucide-react";
 import { SubscriptionUpgradePanel } from "@/components/pricing/SubscriptionUpgradePanel";
 import { useSubscriptionsEnabled } from "@/lib/queries/siteConfig";
 import { ScholarshipRegisterGate } from "@/components/scholarships/ScholarshipRegisterGate";
@@ -18,6 +12,7 @@ import { ScholarshipsGridSkeleton } from "@/components/scholarships/Scholarships
 import { ScholarshipCard } from "@/components/scholarships/ScholarshipCard";
 import { ScholarshipCompareBar } from "@/components/scholarships/ScholarshipCompareBar";
 import { ScholarshipEmptyState } from "@/components/scholarships/ScholarshipEmptyState";
+import { ScholarshipFilters } from "@/components/scholarships/ScholarshipFilters";
 import { useAuthMeQuery } from "@/lib/queries/auth";
 import { useScholarshipsQuery } from "@/lib/queries/scholarships";
 import {
@@ -34,7 +29,6 @@ const universitiesImage = `${import.meta.env.BASE_URL}images/german-universities
 function parseSearch(raw: Record<string, unknown>): ScholarshipsSearch {
   return {
     q: typeof raw.q === "string" ? raw.q : "",
-    program: typeof raw.program === "string" ? raw.program : "All",
     status: typeof raw.status === "string" ? raw.status : "",
     german: typeof raw.german === "string" ? raw.german : "",
     tag: typeof raw.tag === "string" ? raw.tag : "",
@@ -99,125 +93,6 @@ function ScholarshipsShell({ listing }: { listing: ReactNode }) {
 
       {listing}
     </div>
-  );
-}
-
-function ScholarshipFilters({
-  search,
-  onChange,
-}: {
-  search: ScholarshipsSearch;
-  onChange: (patch: Partial<ScholarshipsSearch>) => void;
-}) {
-  const { t } = useTranslation("scholarshipsPage");
-  const programFilters = [
-    { id: "All", label: t("filters.all") },
-    { id: "verified", label: t("filters.verified") },
-    { id: "nursing_scholarship", label: t("filters.nursing") },
-    { id: "ausbildung", label: t("filters.ausbildung") },
-    { id: "caregiver_pathway", label: t("filters.caregiver") },
-    { id: "internship", label: t("filters.internship") },
-    { id: "vocational_training", label: t("filters.vocational") },
-    { id: "other", label: t("filters.general") },
-  ];
-
-  const selectClass =
-    "px-2 py-1.5 rounded-lg border border-border bg-background text-xs sm:text-sm";
-
-  return (
-    <section className="pb-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
-        <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 flex flex-col gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
-              type="search"
-              value={search.q ?? ""}
-              onChange={(e) => onChange({ q: e.target.value })}
-              placeholder={t("searchPlaceholder")}
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-background border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-warm/40"
-              role="searchbox"
-            />
-          </div>
-          <div className="flex flex-wrap gap-2" role="tablist" aria-label={t("filters.programTypes")}>
-            {programFilters.map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                role="tab"
-                aria-selected={(search.program ?? "All") === f.id}
-                onClick={() => onChange({ program: f.id })}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                  (search.program ?? "All") === f.id
-                    ? "bg-warm text-warm-foreground"
-                    : "bg-background border border-border text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <label className="text-xs">
-              <span className="text-muted-foreground block mb-1">{t("filters.applicationStatus")}</span>
-              <select
-                className={selectClass}
-                value={search.status ?? ""}
-                onChange={(e) => onChange({ status: e.target.value })}
-              >
-                <option value="">{t("filters.allStatuses")}</option>
-                {APPLICATION_STATUS_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>
-                    {o.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="text-xs">
-              <span className="text-muted-foreground block mb-1">{t("filters.germanLevel")}</span>
-              <select
-                className={selectClass}
-                value={search.german ?? ""}
-                onChange={(e) => onChange({ german: e.target.value })}
-              >
-                <option value="">{t("filters.allLevels")}</option>
-                {GERMAN_LEVEL_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>
-                    {o.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="text-xs">
-              <span className="text-muted-foreground block mb-1">{t("filters.intake")}</span>
-              <select
-                className={selectClass}
-                value={search.intake ?? ""}
-                onChange={(e) => onChange({ intake: e.target.value })}
-              >
-                <option value="">{t("filters.allIntakes")}</option>
-                {INTAKE_MONTH_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>
-                    {o.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="text-xs">
-              <span className="text-muted-foreground block mb-1">{t("filters.tag")}</span>
-              <select className={selectClass} value={search.tag ?? ""} onChange={(e) => onChange({ tag: e.target.value })}>
-                <option value="">{t("filters.allTags")}</option>
-                {SCHOLARSHIP_TAGS_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>
-                    {o.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-        </div>
-      </div>
-    </section>
   );
 }
 
@@ -314,7 +189,12 @@ function AuthenticatedScholarshipsListing({ email }: { email: string }) {
     <ScholarshipsShell
       listing={
         <>
-          <ScholarshipFilters search={search} onChange={patchSearch} />
+          <ScholarshipFilters
+            search={search}
+            onChange={patchSearch}
+            onApply={(next) => navigate({ search: next, replace: true })}
+            onClear={clearFilters}
+          />
           <section className="pb-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <p className="text-sm text-muted-foreground mb-6">

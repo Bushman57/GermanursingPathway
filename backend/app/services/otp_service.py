@@ -3,7 +3,9 @@ import hmac
 import logging
 import secrets
 import uuid
+from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
+from typing import Literal
 from urllib.parse import urlparse
 
 import jwt
@@ -18,6 +20,18 @@ PORTAL_JWT_AUD = "portal"
 logger = logging.getLogger(__name__)
 
 OtpRequestReason = str  # "not_registered" | "rate_limited"
+
+MagicLinkFailureReason = Literal["invalid", "expired", "already_used"]
+
+
+@dataclass(frozen=True)
+class MagicLinkVerifyResult:
+    email: str | None = None
+    reason: MagicLinkFailureReason | None = None
+
+    @property
+    def success(self) -> bool:
+        return self.email is not None
 
 
 class OtpRequestResult:
@@ -167,16 +181,16 @@ def verify_magic_link(
     token: str,
     *,
     settings: Settings | None = None,
-) -> str | None:
+) -> MagicLinkVerifyResult:
     settings = settings or get_settings()
     parts = token.strip().split(".", 1)
     if len(parts) != 2:
-        return None
+        return MagicLinkVerifyResult(reason="invalid")
     challenge_id_raw, sig = parts
     try:
         challenge_id = uuid.UUID(challenge_id_raw)
     except ValueError:
-        return None
+        return MagicLinkVerifyResult(reason="invalid")
 
     expected_sig = hmac.new(
         settings.jwt_secret.encode(),
@@ -184,18 +198,20 @@ def verify_magic_link(
         hashlib.sha256,
     ).hexdigest()[:32]
     if not secrets.compare_digest(sig, expected_sig):
-        return None
+        return MagicLinkVerifyResult(reason="invalid")
 
     now = datetime.now(timezone.utc)
     challenge = db.get(OtpChallenge, challenge_id)
     if challenge is None:
-        return None
-    if challenge.consumed_at is not None or challenge.expires_at <= now:
-        return None
+        return MagicLinkVerifyResult(reason="invalid")
+    if challenge.consumed_at is not None:
+        return MagicLinkVerifyResult(reason="already_used")
+    if challenge.expires_at <= now:
+        return MagicLinkVerifyResult(reason="expired")
 
     challenge.consumed_at = now
     db.commit()
-    return normalize_email(challenge.email)
+    return MagicLinkVerifyResult(email=normalize_email(challenge.email))
 
 
 def issue_portal_token(email: str, settings: Settings | None = None) -> str:

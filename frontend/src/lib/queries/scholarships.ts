@@ -15,6 +15,7 @@ export function useScholarshipsQuery(
     queryKey: queryKeys.scholarships.list(filters),
     queryFn: () => fetchScholarships(filters),
     enabled: options?.enabled !== false,
+    placeholderData: (prev) => prev,
   });
 }
 

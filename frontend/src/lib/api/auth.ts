@@ -57,6 +57,25 @@ export async function verifyOtp(email: string, code: string): Promise<{
   return parseJsonResponse<{ message: string; email: string; fullName: string }>(res);
 }
 
+export type MagicLinkFailureReason = "already_used" | "expired" | "invalid";
+
+export class MagicLinkVerifyError extends Error {
+  reason: MagicLinkFailureReason;
+
+  constructor(message: string, reason: MagicLinkFailureReason) {
+    super(message);
+    this.name = "MagicLinkVerifyError";
+    this.reason = reason;
+  }
+}
+
+function parseMagicLinkFailureReason(value: unknown): MagicLinkFailureReason {
+  if (value === "already_used" || value === "expired" || value === "invalid") {
+    return value;
+  }
+  return "invalid";
+}
+
 export async function verifyMagicLink(token: string): Promise<{
   message: string;
   email: string;
@@ -68,7 +87,19 @@ export async function verifyMagicLink(token: string): Promise<{
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ token: token.trim() }),
   });
-  if (!res.ok) throw new Error(await parseApiError(res));
+  if (!res.ok) {
+    const text = await res.text();
+    try {
+      const data = JSON.parse(text) as { error?: string; reason?: string };
+      if (typeof data.error === "string" || typeof data.reason === "string") {
+        const reason = parseMagicLinkFailureReason(data.reason);
+        throw new MagicLinkVerifyError(data.error ?? "Invalid sign-in link", reason);
+      }
+    } catch (err) {
+      if (err instanceof MagicLinkVerifyError) throw err;
+    }
+    throw new Error(text.trim() ? text : `Request failed (${res.status})`);
+  }
   return parseJsonResponse<{ message: string; email: string; fullName: string }>(res);
 }
 
