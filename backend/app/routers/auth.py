@@ -24,6 +24,11 @@ router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 logger = logging.getLogger(__name__)
 
+MAGIC_LINK_ERROR_MESSAGES = {
+    "already_used": "This sign-in link has already been used.",
+    "expired": "This sign-in link has expired.",
+    "invalid": "Invalid or expired sign-in link.",
+}
 GENERIC_OTP_MESSAGE = "A sign-in code has been sent to your email."
 NOT_REGISTERED_OTP_MESSAGE = (
     "No account found for this email. Register your interest first, then sign in with the same address."
@@ -192,11 +197,18 @@ def verify_magic_link_route(
             detail="Portal auth is not configured. Set JWT_SECRET in backend/.env",
         )
 
-    email = verify_magic_link(db, body.token, settings=settings)
-    if email is None:
-        raise HTTPException(status_code=401, detail="Invalid or expired sign-in link")
+    result = verify_magic_link(db, body.token, settings=settings)
+    if not result.success or result.email is None:
+        reason = result.reason or "invalid"
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": MAGIC_LINK_ERROR_MESSAGES.get(reason, MAGIC_LINK_ERROR_MESSAGES["invalid"]),
+                "reason": reason,
+            },
+        )
 
-    return _complete_portal_sign_in(email, db, response, settings)
+    return _complete_portal_sign_in(result.email, db, response, settings)
 
 
 @router.post("/logout")

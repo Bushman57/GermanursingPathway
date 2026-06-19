@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -24,6 +25,12 @@ import { queryKeys } from "@/lib/queries/keys";
 import { Loader2, GraduationCap, ArrowRight, Heart } from "lucide-react";
 
 export const Route = createFileRoute("/portal")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    magicLink:
+      search.magicLink === "used" || search.magicLink === "expired" || search.magicLink === "invalid"
+        ? search.magicLink
+        : "",
+  }),
   head: () => ({
     meta: [
       { title: "Student Portal — German Nursing Pathway" },
@@ -38,8 +45,22 @@ export const Route = createFileRoute("/portal")({
 
 function PortalPage() {
   const { t } = useTranslation("portal");
+  const { magicLink } = Route.useSearch();
+  const navigate = useNavigate();
   const { data: me, isLoading, isError, error } = useAuthMeQuery();
   const serviceUnavailable = isError && error instanceof PortalUnavailableError;
+
+  useEffect(() => {
+    if (!magicLink) return;
+    if (magicLink === "used") {
+      toast.error(t("otp.magicLinkAlreadyUsed"));
+    } else if (magicLink === "expired") {
+      toast.error(t("otp.magicLinkExpired"));
+    } else {
+      toast.error(t("otp.magicLinkInvalid"));
+    }
+    void navigate({ to: "/portal", search: { magicLink: "" }, replace: true });
+  }, [magicLink, navigate, t]);
 
   const handleSignOut = async () => {
     await signOutPortal();

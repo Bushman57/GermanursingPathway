@@ -31,7 +31,12 @@
     "allStatuses": "All statuses",
     "allLevels": "All levels",
     "allTags": "All tags",
-    "allIntakes": "All intakes"
+    "allIntakes": "All intakes",
+    "open": "Filters",
+    "apply": "Apply filters",
+    "clear": "Clear all",
+    "activeCount": "{{count}} active",
+    "sheetHint": "Choose filters, then tap Apply."
   },
   "deadline": {
     "soon": "Closing soon",

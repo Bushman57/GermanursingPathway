@@ -3,16 +3,22 @@ import { scholarshipText } from "@/lib/scholarships";
 
 export type ScholarshipsSearch = {
   q?: string;
-  program?: string;
   status?: string;
   german?: string;
   tag?: string;
   intake?: string;
 };
 
-export const defaultScholarshipsSearch: ScholarshipsSearch = {
-  program: "All",
-};
+export const defaultScholarshipsSearch: ScholarshipsSearch = {};
+
+export function countActiveScholarshipFilters(search: ScholarshipsSearch): number {
+  let count = 0;
+  if (search.status) count += 1;
+  if (search.german) count += 1;
+  if (search.intake) count += 1;
+  if (search.tag) count += 1;
+  return count;
+}
 
 export function searchToApiFilters(search: ScholarshipsSearch) {
   const filters: {
@@ -24,9 +30,6 @@ export function searchToApiFilters(search: ScholarshipsSearch) {
   if (search.status) filters.application_status = search.status;
   if (search.german) filters.german_level_required = search.german;
   if (search.intake) filters.intake_month = search.intake;
-  if (search.program && search.program !== "All" && search.program !== "verified") {
-    filters.program_type = search.program;
-  }
   return Object.keys(filters).length > 0 ? filters : undefined;
 }
 
@@ -41,8 +44,7 @@ export function filterScholarshipsClient(
     const provider = scholarshipText(s, "provider", lang).toLowerCase();
     const short = scholarshipText(s, "shortDescription", lang).toLowerCase();
     const matchesQuery = !q || title.includes(q) || provider.includes(q) || short.includes(q);
-    const matchesVerified = search.program !== "verified" || s.verified;
     const matchesTag = !search.tag || (Array.isArray(s.tags) && s.tags.includes(search.tag));
-    return matchesQuery && matchesVerified && matchesTag;
+    return matchesQuery && matchesTag;
   });
 }

@@ -26,9 +26,16 @@
     "applicationStatus": "Bewerbungsstatus",
     "germanLevel": "Deutschniveau",
     "tag": "Schlagwort",
+    "intake": "Startmonat",
     "allStatuses": "Alle Status",
     "allLevels": "Alle Niveaus",
-    "allTags": "Alle Schlagwörter"
+    "allTags": "Alle Schlagwörter",
+    "allIntakes": "Alle Startmonate",
+    "open": "Filter",
+    "apply": "Filter anwenden",
+    "clear": "Alle zurücksetzen",
+    "activeCount": "{{count}} aktiv",
+    "sheetHint": "Filter wählen, dann „Filter anwenden“ tippen."
   },
   "applicationStatusBadge": "Status",
   "verifiedBadge": "Verifiziert",

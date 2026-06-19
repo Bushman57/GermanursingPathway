@@ -257,7 +257,6 @@ function Eligibility() {
                       to="/scholarships"
                       search={{
                         german: germanFilter,
-                        program: "All",
                         q: "",
                         status: "",
                         tag: "",
