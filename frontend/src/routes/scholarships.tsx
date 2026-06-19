@@ -11,6 +11,7 @@ import {
 import { metaFromScholarshipsPage } from "@/lib/pageMeta";
 import { Award, Search } from "lucide-react";
 import { SubscriptionUpgradePanel } from "@/components/pricing/SubscriptionUpgradePanel";
+import { useSubscriptionsEnabled } from "@/lib/queries/siteConfig";
 import { ScholarshipRegisterGate } from "@/components/scholarships/ScholarshipRegisterGate";
 import { SubscriptionRequiredError } from "@/lib/api/scholarships";
 import { ScholarshipsGridSkeleton } from "@/components/scholarships/ScholarshipsGridSkeleton";
@@ -268,6 +269,7 @@ function ScholarshipsPage() {
 
 function AuthenticatedScholarshipsListing({ email }: { email: string }) {
   const { t, i18n } = useTranslation("scholarshipsPage");
+  const subscriptionsEnabled = useSubscriptionsEnabled();
   const lang = i18n.language;
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
@@ -296,7 +298,7 @@ function AuthenticatedScholarshipsListing({ email }: { email: string }) {
     return <ScholarshipsShell listing={<ScholarshipsListingSkeleton />} />;
   }
 
-  if (error instanceof SubscriptionRequiredError) {
+  if (error instanceof SubscriptionRequiredError && subscriptionsEnabled) {
     return (
       <ScholarshipsShell
         listing={

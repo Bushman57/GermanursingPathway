@@ -2,6 +2,7 @@ import { Outlet, Link, createRootRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { DocumentLang } from "@/components/DocumentLang";
 import { GlobalShell } from "@/components/layout/GlobalShell";
+import { useSiteConfigQuery } from "@/lib/queries/siteConfig";
 
 function NotFoundComponent() {
   const { t } = useTranslation("common");
@@ -34,6 +35,8 @@ export const Route = createRootRoute({
 });
 
 function RootComponent() {
+  useSiteConfigQuery();
+
   return (
     <GlobalShell>
       <DocumentLang />

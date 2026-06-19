@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSubscriptionsEnabled } from "@/lib/queries/siteConfig";
 
 type Props = {
   tier?: "essential" | "plus" | "premium";
@@ -9,7 +10,9 @@ type Props = {
 };
 
 export function SubscriptionUpgradePanel({ tier = "plus", message }: Props) {
+  const subscriptionsEnabled = useSubscriptionsEnabled();
   const { t } = useTranslation("pricing");
+  if (!subscriptionsEnabled) return null;
   const body =
     message ??
     (tier === "plus" ? t("upgradePlusBody") : t("upgradeEssentialBody"));

@@ -20,6 +20,7 @@ import { usePaymentReturnConfirm } from "@/features/payments/hooks/usePaymentRet
 import { launchPaystackCheckout } from "@/features/payments/launchPaystackCheckout";
 import type { PaymentConfig, PaymentStatus, PaymentStep } from "@/features/payments/types";
 import { useAuthMeQuery } from "@/lib/queries/auth";
+import { useSubscriptionsEnabled } from "@/lib/queries/siteConfig";
 import { queryKeys } from "@/lib/queries/keys";
 import { queryClient } from "@/lib/queryClient";
 
@@ -47,6 +48,7 @@ export function LearningHubUnlockDialog({
 }: Props) {
   const { t } = useTranslation("payment");
   const { data: me } = useAuthMeQuery();
+  const subscriptionsEnabled = useSubscriptionsEnabled();
   const [config, setConfig] = useState<PaymentConfig | null>(null);
   const [configError, setConfigError] = useState("");
   const [step, setStep] = useState<PaymentStep>("idle");
@@ -250,11 +252,13 @@ export function LearningHubUnlockDialog({
                 )}
               </Button>
               <p className="text-xs text-muted-foreground text-center">{t("learningHubPayHint")}</p>
-              <p className="text-xs text-center">
-                <Link to="/pricing" className="text-warm font-medium hover:underline">
-                  {t("viewSubscriptionPlans", { defaultValue: "View Essential / Plus / Premium plans" })}
-                </Link>
-              </p>
+              {subscriptionsEnabled ? (
+                <p className="text-xs text-center">
+                  <Link to="/pricing" className="text-warm font-medium hover:underline">
+                    {t("viewSubscriptionPlans", { defaultValue: "View Essential / Plus / Premium plans" })}
+                  </Link>
+                </p>
+              ) : null}
             </form>
           </>
         )}

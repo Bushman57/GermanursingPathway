@@ -22,6 +22,11 @@ def optional_db() -> Generator[Session, None, None]:
 
 def require_payment_config(purpose: str, settings: Settings) -> None:
     if purpose in SUBSCRIPTION_PURPOSES:
+        if not settings.subscriptions_enabled:
+            raise HTTPException(
+                status_code=503,
+                detail="Subscriptions are disabled. Set SUBSCRIPTIONS_ENABLED=true to enable checkout.",
+            )
         if not settings.subscription_payments_configured:
             raise HTTPException(
                 status_code=503,

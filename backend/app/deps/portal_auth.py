@@ -89,8 +89,11 @@ def _portal_db() -> Generator[Session, None, None]:
 def require_plus_subscription(
     user: PortalUser = Depends(require_portal_user),
     db: Session = Depends(_portal_db),
+    settings: Settings = Depends(get_settings),
 ) -> PortalUser:
-    if not has_min_tier(db, user.email, "plus"):
+    if not settings.subscriptions_enabled:
+        return user
+    if not has_min_tier(db, user.email, "plus", settings=settings):
         raise HTTPException(
             status_code=403,
             detail={

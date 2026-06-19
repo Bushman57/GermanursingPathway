@@ -1,6 +1,9 @@
 import type { PublicScholarshipFilters } from "@/lib/api/scholarships";
 
 export const queryKeys = {
+  site: {
+    config: ["site", "config"] as const,
+  },
   auth: {
     me: ["auth", "me"] as const,
   },

@@ -23,6 +23,19 @@ SUBSCRIPTION_PAYMENT_PURPOSES = {
     "subscription_premium": "premium",
 }
 
+ALL_SUBSCRIPTION_FEATURES = {
+    "pathwayChat": True,
+    "resources": True,
+    "scholarships": True,
+    "scholarshipChat": True,
+    "cvRevamp": True,
+}
+
+
+def subscriptions_active(settings: Settings | None = None) -> bool:
+    settings = settings or get_settings()
+    return settings.subscriptions_enabled
+
 
 def tier_from_payment_purpose(purpose: str) -> str | None:
     return SUBSCRIPTION_PAYMENT_PURPOSES.get(purpose)
@@ -54,7 +67,16 @@ def get_active_subscription(db: Session, email: str) -> Subscription | None:
     )
 
 
-def has_min_tier(db: Session, email: str, min_tier: SubscriptionTier) -> bool:
+def has_min_tier(
+    db: Session,
+    email: str,
+    min_tier: SubscriptionTier,
+    *,
+    settings: Settings | None = None,
+) -> bool:
+    settings = settings or get_settings()
+    if not settings.subscriptions_enabled:
+        return True
     sub = get_active_subscription(db, email)
     if sub is None:
         return False
@@ -103,10 +125,22 @@ def grant_subscription(
 
 def subscription_status_dict(db: Session, email: str, *, settings: Settings | None = None) -> dict:
     settings = settings or get_settings()
+    if not settings.subscriptions_enabled:
+        return {
+            "subscriptionsEnabled": False,
+            "active": False,
+            "tier": None,
+            "expiresAt": None,
+            "daysRemaining": 0,
+            "features": dict(ALL_SUBSCRIPTION_FEATURES),
+            "freeTrialTurnsRemaining": 0,
+        }
+
     sub = get_active_subscription(db, email)
     now = datetime.now(timezone.utc)
     if sub is None:
         return {
+            "subscriptionsEnabled": True,
             "active": False,
             "tier": None,
             "expiresAt": None,
@@ -128,6 +162,7 @@ def subscription_status_dict(db: Session, email: str, *, settings: Settings | No
     tier = sub.tier
     rank = TIER_RANK.get(tier, 0)
     return {
+        "subscriptionsEnabled": True,
         "active": True,
         "tier": tier,
         "expiresAt": sub.expires_at.isoformat(),
@@ -199,7 +234,9 @@ def can_use_pathway_chat(
     settings: Settings | None = None,
 ) -> tuple[bool, str | None]:
     settings = settings or get_settings()
-    if email and has_min_tier(db, email, "essential"):
+    if not settings.subscriptions_enabled:
+        return True, None
+    if email and has_min_tier(db, email, "essential", settings=settings):
         return True, None
     turns = get_chat_user_turns(db, email, "pathway", session_id)
     if turns < settings.pathway_chat_free_trial_turns:
@@ -207,9 +244,17 @@ def can_use_pathway_chat(
     return False, "essential"
 
 
-def can_use_scholarship_chat(db: Session, email: str | None) -> tuple[bool, str | None]:
+def can_use_scholarship_chat(
+    db: Session,
+    email: str | None,
+    *,
+    settings: Settings | None = None,
+) -> tuple[bool, str | None]:
+    settings = settings or get_settings()
+    if not settings.subscriptions_enabled:
+        return True, None
     if not email:
         return False, "plus"
-    if has_min_tier(db, email, "plus"):
+    if has_min_tier(db, email, "plus", settings=settings):
         return True, None
     return False, "plus"
